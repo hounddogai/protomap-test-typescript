@@ -1,0 +1,227 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.experiments.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/experiments/v1/experiments.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Experiments.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/experiments/v1;experimentsv1";
+option java_multiple_files = true;
+option java_outer_classname = "ExposureSyncServiceProto";
+option java_package = "com.acme.experiments.v1";
+
+// Keeps exposures in step with the systems of record in other regions.
+service ExposureSyncService {
+  // Syncs an exposure.
+  rpc SyncExposures(SyncExposuresRequest) returns (SyncExposuresResponse);
+
+  // Pushs an exposure.
+  rpc PushExposure(PushExposureRequest) returns (PushExposureResponse);
+
+  // Pulls an exposure.
+  rpc PullExposures(PullExposuresRequest) returns (PullExposuresResponse);
+
+  // Reconciles an exposure.
+  rpc ReconcileExposures(ReconcileExposuresRequest) returns (ReconcileExposuresResponse);
+
+  // Resolves an exposure.
+  rpc ResolveExposureConflict(ResolveExposureConflictRequest) returns (ResolveExposureConflictResponse);
+
+  // Returns an exposure.
+  rpc GetExposureSyncState(GetExposureSyncStateRequest) returns (GetExposureSyncStateResponse);
+}
+
+// The request of `SyncExposures`.
+message SyncExposuresRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  SyncExposuresRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SyncExposures`.
+message SyncExposuresResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  SyncExposuresResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PushExposure`.
+message PushExposureRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  PushExposureRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PushExposure`.
+message PushExposureResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  PushExposureResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PullExposures`.
+message PullExposuresRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  PullExposuresRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PullExposures`.
+message PullExposuresResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  PullExposuresResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReconcileExposures`.
+message ReconcileExposuresRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  ReconcileExposuresRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ReconcileExposures`.
+message ReconcileExposuresResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  ReconcileExposuresResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResolveExposureConflict`.
+message ResolveExposureConflictRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  ResolveExposureConflictRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResolveExposureConflict`.
+message ResolveExposureConflictResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  ResolveExposureConflictResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetExposureSyncState`.
+message GetExposureSyncStateRequest {
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetExposureSyncState`.
+message GetExposureSyncStateResponse {
+  Exposure exposure = 1;
+  acme.common.v1.OperationResult result = 2;
+}

@@ -1,0 +1,335 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.chat.v1;
+
+import "acme/chat/v1/chat.proto";
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Chat.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/chat/v1;chatv1";
+option java_multiple_files = true;
+option java_outer_classname = "HandoffCalculationServiceProto";
+option java_package = "com.acme.chat.v1";
+
+// Computes the figures of a handoff, such as totals, taxes, and estimates.
+service HandoffCalculationService {
+  // Calculates a handoff.
+  rpc CalculateHandoff(CalculateHandoffRequest) returns (CalculateHandoffResponse);
+
+  // Estimates a handoff.
+  rpc EstimateHandoff(EstimateHandoffRequest) returns (EstimateHandoffResponse);
+
+  // Quotes a handoff.
+  rpc QuoteHandoff(QuoteHandoffRequest) returns (QuoteHandoffResponse);
+
+  // Compares a handoff.
+  rpc CompareHandoffOptions(CompareHandoffOptionsRequest) returns (CompareHandoffOptionsResponse);
+
+  // Recalculates a handoff.
+  rpc RecalculateHandoffs(RecalculateHandoffsRequest) returns (RecalculateHandoffsResponse);
+
+  // Simulates a handoff.
+  rpc SimulateHandoff(SimulateHandoffRequest) returns (SimulateHandoffResponse);
+
+  // Explains a handoff.
+  rpc ExplainHandoffCalculation(ExplainHandoffCalculationRequest) returns (ExplainHandoffCalculationResponse);
+
+  // Returns a handoff.
+  rpc GetHandoffRates(GetHandoffRatesRequest) returns (GetHandoffRatesResponse);
+}
+
+// The request of `CalculateHandoff`.
+message CalculateHandoffRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  CalculateHandoffRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateHandoff`.
+message CalculateHandoffResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateHandoffResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Handoff handoff = 1;
+  CalculateHandoffResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateHandoff`.
+message EstimateHandoffRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  EstimateHandoffRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateHandoff`.
+message EstimateHandoffResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateHandoffResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Handoff handoff = 1;
+  EstimateHandoffResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteHandoff`.
+message QuoteHandoffRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  QuoteHandoffRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteHandoff`.
+message QuoteHandoffResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteHandoffResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Handoff handoff = 1;
+  QuoteHandoffResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareHandoffOptions`.
+message CompareHandoffOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  CompareHandoffOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareHandoffOptions`.
+message CompareHandoffOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareHandoffOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Handoff handoff = 1;
+  CompareHandoffOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculateHandoffs`.
+message RecalculateHandoffsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  RecalculateHandoffsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculateHandoffs`.
+message RecalculateHandoffsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculateHandoffsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Handoff handoff = 1;
+  RecalculateHandoffsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateHandoff`.
+message SimulateHandoffRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  SimulateHandoffRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateHandoff`.
+message SimulateHandoffResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateHandoffResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Handoff handoff = 1;
+  SimulateHandoffResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainHandoffCalculation`.
+message ExplainHandoffCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  ExplainHandoffCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainHandoffCalculation`.
+message ExplainHandoffCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  ExplainHandoffCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetHandoffRates`.
+message GetHandoffRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetHandoffRates`.
+message GetHandoffRatesResponse {
+  Handoff handoff = 1;
+  acme.common.v1.OperationResult result = 2;
+}

@@ -1,0 +1,334 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.localization.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/localization/v1/localization.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Localization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/localization/v1;localizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "TranslationKeyWorkflowServiceProto";
+option java_package = "com.acme.localization.v1";
+
+// Runs the long-lived workflow that takes a translation key from start to finish.
+service TranslationKeyWorkflowService {
+  // Starts a translation key.
+  rpc StartTranslationKeyWorkflow(StartTranslationKeyWorkflowRequest) returns (StartTranslationKeyWorkflowResponse);
+
+  // Advances a translation key.
+  rpc AdvanceTranslationKeyWorkflow(AdvanceTranslationKeyWorkflowRequest) returns (AdvanceTranslationKeyWorkflowResponse);
+
+  // Cancels a translation key.
+  rpc CancelTranslationKeyWorkflow(CancelTranslationKeyWorkflowRequest) returns (CancelTranslationKeyWorkflowResponse);
+
+  // Retrys a translation key.
+  rpc RetryTranslationKeyWorkflow(RetryTranslationKeyWorkflowRequest) returns (RetryTranslationKeyWorkflowResponse);
+
+  // Pauses a translation key.
+  rpc PauseTranslationKeyWorkflow(PauseTranslationKeyWorkflowRequest) returns (PauseTranslationKeyWorkflowResponse);
+
+  // Resumes a translation key.
+  rpc ResumeTranslationKeyWorkflow(ResumeTranslationKeyWorkflowRequest) returns (ResumeTranslationKeyWorkflowResponse);
+
+  // Returns a translation key.
+  rpc InspectTranslationKeyWorkflow(InspectTranslationKeyWorkflowRequest) returns (InspectTranslationKeyWorkflowResponse);
+
+  // Lists translation keys a page at a time.
+  rpc ListTranslationKeyWorkflows(ListTranslationKeyWorkflowsRequest) returns (ListTranslationKeyWorkflowsResponse);
+
+  // Signals a translation key.
+  rpc SignalTranslationKeyWorkflow(SignalTranslationKeyWorkflowRequest) returns (SignalTranslationKeyWorkflowResponse);
+}
+
+// The request of `StartTranslationKeyWorkflow`.
+message StartTranslationKeyWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_key_id = 2;
+  TranslationKey translation_key = 3;
+  StartTranslationKeyWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartTranslationKeyWorkflow`.
+message StartTranslationKeyWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationKey translation_key = 1;
+  StartTranslationKeyWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceTranslationKeyWorkflow`.
+message AdvanceTranslationKeyWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_key_id = 2;
+  TranslationKey translation_key = 3;
+  AdvanceTranslationKeyWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceTranslationKeyWorkflow`.
+message AdvanceTranslationKeyWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationKey translation_key = 1;
+  AdvanceTranslationKeyWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelTranslationKeyWorkflow`.
+message CancelTranslationKeyWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_key_id = 2;
+  TranslationKey translation_key = 3;
+  CancelTranslationKeyWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelTranslationKeyWorkflow`.
+message CancelTranslationKeyWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationKey translation_key = 1;
+  CancelTranslationKeyWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryTranslationKeyWorkflow`.
+message RetryTranslationKeyWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_key_id = 2;
+  TranslationKey translation_key = 3;
+  RetryTranslationKeyWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryTranslationKeyWorkflow`.
+message RetryTranslationKeyWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationKey translation_key = 1;
+  RetryTranslationKeyWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseTranslationKeyWorkflow`.
+message PauseTranslationKeyWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_key_id = 2;
+  TranslationKey translation_key = 3;
+  PauseTranslationKeyWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseTranslationKeyWorkflow`.
+message PauseTranslationKeyWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationKey translation_key = 1;
+  PauseTranslationKeyWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumeTranslationKeyWorkflow`.
+message ResumeTranslationKeyWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_key_id = 2;
+  TranslationKey translation_key = 3;
+  ResumeTranslationKeyWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumeTranslationKeyWorkflow`.
+message ResumeTranslationKeyWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationKey translation_key = 1;
+  ResumeTranslationKeyWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectTranslationKeyWorkflow`.
+message InspectTranslationKeyWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string translation_key_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectTranslationKeyWorkflow`.
+message InspectTranslationKeyWorkflowResponse {
+  TranslationKey translation_key = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListTranslationKeyWorkflows`.
+message ListTranslationKeyWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated TranslationKeyStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListTranslationKeyWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListTranslationKeyWorkflows`.
+message ListTranslationKeyWorkflowsResponse {
+  repeated TranslationKey translation_keys = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalTranslationKeyWorkflow`.
+message SignalTranslationKeyWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_key_id = 2;
+  TranslationKey translation_key = 3;
+  SignalTranslationKeyWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalTranslationKeyWorkflow`.
+message SignalTranslationKeyWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationKey translation_key = 1;
+  SignalTranslationKeyWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

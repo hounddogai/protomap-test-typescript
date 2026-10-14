@@ -1,0 +1,268 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.notifications.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/notifications/v1/notifications.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Notifications.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/notifications/v1;notificationsv1";
+option java_multiple_files = true;
+option java_outer_classname = "NotificationTemplateValidationServiceProto";
+option java_package = "com.acme.notifications.v1";
+
+// Checks notification templates against the rules before anything acts on them.
+service NotificationTemplateValidationService {
+  // Validates a notification template.
+  rpc ValidateNotificationTemplate(ValidateNotificationTemplateRequest) returns (ValidateNotificationTemplateResponse);
+
+  // Previews a notification template.
+  rpc PreviewNotificationTemplate(PreviewNotificationTemplateRequest) returns (PreviewNotificationTemplateResponse);
+
+  // Checks a notification template.
+  rpc CheckNotificationTemplateEligibility(CheckNotificationTemplateEligibilityRequest) returns (CheckNotificationTemplateEligibilityResponse);
+
+  // Explains a notification template.
+  rpc ExplainNotificationTemplateDecision(ExplainNotificationTemplateDecisionRequest) returns (ExplainNotificationTemplateDecisionResponse);
+
+  // Scores a notification template.
+  rpc ScoreNotificationTemplate(ScoreNotificationTemplateRequest) returns (ScoreNotificationTemplateResponse);
+
+  // Lints a notification template.
+  rpc LintNotificationTemplates(LintNotificationTemplatesRequest) returns (LintNotificationTemplatesResponse);
+
+  // Returns a notification template.
+  rpc GetNotificationTemplateRules(GetNotificationTemplateRulesRequest) returns (GetNotificationTemplateRulesResponse);
+}
+
+// The request of `ValidateNotificationTemplate`.
+message ValidateNotificationTemplateRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  NotificationTemplate notification_template = 3;
+  ValidateNotificationTemplateRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateNotificationTemplate`.
+message ValidateNotificationTemplateResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  NotificationTemplate notification_template = 1;
+  ValidateNotificationTemplateResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewNotificationTemplate`.
+message PreviewNotificationTemplateRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  NotificationTemplate notification_template = 3;
+  PreviewNotificationTemplateRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewNotificationTemplate`.
+message PreviewNotificationTemplateResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  NotificationTemplate notification_template = 1;
+  PreviewNotificationTemplateResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckNotificationTemplateEligibility`.
+message CheckNotificationTemplateEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  NotificationTemplate notification_template = 3;
+  CheckNotificationTemplateEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckNotificationTemplateEligibility`.
+message CheckNotificationTemplateEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  NotificationTemplate notification_template = 1;
+  CheckNotificationTemplateEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainNotificationTemplateDecision`.
+message ExplainNotificationTemplateDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  NotificationTemplate notification_template = 3;
+  ExplainNotificationTemplateDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainNotificationTemplateDecision`.
+message ExplainNotificationTemplateDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  NotificationTemplate notification_template = 1;
+  ExplainNotificationTemplateDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreNotificationTemplate`.
+message ScoreNotificationTemplateRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  NotificationTemplate notification_template = 3;
+  ScoreNotificationTemplateRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreNotificationTemplate`.
+message ScoreNotificationTemplateResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreNotificationTemplateResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  NotificationTemplate notification_template = 1;
+  ScoreNotificationTemplateResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintNotificationTemplates`.
+message LintNotificationTemplatesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  NotificationTemplate notification_template = 3;
+  LintNotificationTemplatesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintNotificationTemplates`.
+message LintNotificationTemplatesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  NotificationTemplate notification_template = 1;
+  LintNotificationTemplatesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetNotificationTemplateRules`.
+message GetNotificationTemplateRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetNotificationTemplateRules`.
+message GetNotificationTemplateRulesResponse {
+  NotificationTemplate notification_template = 1;
+  acme.common.v1.OperationResult result = 2;
+}

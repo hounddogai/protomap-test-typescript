@@ -1,0 +1,335 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.community.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/community/v1/community.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Community.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/community/v1;communityv1";
+option java_multiple_files = true;
+option java_outer_classname = "ModerationCalculationServiceProto";
+option java_package = "com.acme.community.v1";
+
+// Computes the figures of a moderation, such as totals, taxes, and estimates.
+service ModerationCalculationService {
+  // Calculates a moderation.
+  rpc CalculateModeration(CalculateModerationRequest) returns (CalculateModerationResponse);
+
+  // Estimates a moderation.
+  rpc EstimateModeration(EstimateModerationRequest) returns (EstimateModerationResponse);
+
+  // Quotes a moderation.
+  rpc QuoteModeration(QuoteModerationRequest) returns (QuoteModerationResponse);
+
+  // Compares a moderation.
+  rpc CompareModerationOptions(CompareModerationOptionsRequest) returns (CompareModerationOptionsResponse);
+
+  // Recalculates a moderation.
+  rpc RecalculateModerations(RecalculateModerationsRequest) returns (RecalculateModerationsResponse);
+
+  // Simulates a moderation.
+  rpc SimulateModeration(SimulateModerationRequest) returns (SimulateModerationResponse);
+
+  // Explains a moderation.
+  rpc ExplainModerationCalculation(ExplainModerationCalculationRequest) returns (ExplainModerationCalculationResponse);
+
+  // Returns a moderation.
+  rpc GetModerationRates(GetModerationRatesRequest) returns (GetModerationRatesResponse);
+}
+
+// The request of `CalculateModeration`.
+message CalculateModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  CalculateModerationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateModeration`.
+message CalculateModerationResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateModerationResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Moderation moderation = 1;
+  CalculateModerationResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateModeration`.
+message EstimateModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  EstimateModerationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateModeration`.
+message EstimateModerationResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateModerationResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Moderation moderation = 1;
+  EstimateModerationResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteModeration`.
+message QuoteModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  QuoteModerationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteModeration`.
+message QuoteModerationResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteModerationResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Moderation moderation = 1;
+  QuoteModerationResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareModerationOptions`.
+message CompareModerationOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  CompareModerationOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareModerationOptions`.
+message CompareModerationOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareModerationOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Moderation moderation = 1;
+  CompareModerationOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculateModerations`.
+message RecalculateModerationsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  RecalculateModerationsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculateModerations`.
+message RecalculateModerationsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculateModerationsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Moderation moderation = 1;
+  RecalculateModerationsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateModeration`.
+message SimulateModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  SimulateModerationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateModeration`.
+message SimulateModerationResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateModerationResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Moderation moderation = 1;
+  SimulateModerationResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainModerationCalculation`.
+message ExplainModerationCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  ExplainModerationCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainModerationCalculation`.
+message ExplainModerationCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  ExplainModerationCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetModerationRates`.
+message GetModerationRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetModerationRates`.
+message GetModerationRatesResponse {
+  Moderation moderation = 1;
+  acme.common.v1.OperationResult result = 2;
+}

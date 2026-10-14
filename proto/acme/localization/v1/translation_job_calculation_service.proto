@@ -1,0 +1,292 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.localization.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/localization/v1/localization.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Localization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/localization/v1;localizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "TranslationJobCalculationServiceProto";
+option java_package = "com.acme.localization.v1";
+
+// Computes the figures of a translation job, such as totals, taxes, and estimates.
+service TranslationJobCalculationService {
+  // Calculates a translation job.
+  rpc CalculateTranslationJob(CalculateTranslationJobRequest) returns (CalculateTranslationJobResponse);
+
+  // Estimates a translation job.
+  rpc EstimateTranslationJob(EstimateTranslationJobRequest) returns (EstimateTranslationJobResponse);
+
+  // Quotes a translation job.
+  rpc QuoteTranslationJob(QuoteTranslationJobRequest) returns (QuoteTranslationJobResponse);
+
+  // Compares a translation job.
+  rpc CompareTranslationJobOptions(CompareTranslationJobOptionsRequest) returns (CompareTranslationJobOptionsResponse);
+
+  // Recalculates a translation job.
+  rpc RecalculateTranslationJobs(RecalculateTranslationJobsRequest) returns (RecalculateTranslationJobsResponse);
+
+  // Explains a translation job.
+  rpc ExplainTranslationJobCalculation(ExplainTranslationJobCalculationRequest) returns (ExplainTranslationJobCalculationResponse);
+
+  // Returns a translation job.
+  rpc GetTranslationJobRates(GetTranslationJobRatesRequest) returns (GetTranslationJobRatesResponse);
+}
+
+// The request of `CalculateTranslationJob`.
+message CalculateTranslationJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  CalculateTranslationJobRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateTranslationJob`.
+message CalculateTranslationJobResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateTranslationJobResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  TranslationJob translation_job = 1;
+  CalculateTranslationJobResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateTranslationJob`.
+message EstimateTranslationJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  EstimateTranslationJobRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateTranslationJob`.
+message EstimateTranslationJobResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateTranslationJobResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  TranslationJob translation_job = 1;
+  EstimateTranslationJobResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteTranslationJob`.
+message QuoteTranslationJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  QuoteTranslationJobRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteTranslationJob`.
+message QuoteTranslationJobResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteTranslationJobResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  TranslationJob translation_job = 1;
+  QuoteTranslationJobResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareTranslationJobOptions`.
+message CompareTranslationJobOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  CompareTranslationJobOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareTranslationJobOptions`.
+message CompareTranslationJobOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareTranslationJobOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  TranslationJob translation_job = 1;
+  CompareTranslationJobOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculateTranslationJobs`.
+message RecalculateTranslationJobsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  RecalculateTranslationJobsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculateTranslationJobs`.
+message RecalculateTranslationJobsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculateTranslationJobsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  TranslationJob translation_job = 1;
+  RecalculateTranslationJobsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainTranslationJobCalculation`.
+message ExplainTranslationJobCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  ExplainTranslationJobCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainTranslationJobCalculation`.
+message ExplainTranslationJobCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  ExplainTranslationJobCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetTranslationJobRates`.
+message GetTranslationJobRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetTranslationJobRates`.
+message GetTranslationJobRatesResponse {
+  TranslationJob translation_job = 1;
+  acme.common.v1.OperationResult result = 2;
+}

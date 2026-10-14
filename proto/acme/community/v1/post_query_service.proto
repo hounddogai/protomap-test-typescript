@@ -1,0 +1,170 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.community.v1;
+
+import "acme/common/v1/audit.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/community/v1/community.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Community.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/community/v1;communityv1";
+option java_multiple_files = true;
+option java_outer_classname = "PostQueryServiceProto";
+option java_package = "com.acme.community.v1";
+
+// Answers read-only questions about posts, for screens and reports.
+service PostQueryService {
+  // Returns a post.
+  rpc LookupPost(LookupPostRequest) returns (LookupPostResponse);
+
+  // Lists posts a page at a time.
+  rpc BrowsePosts(BrowsePostsRequest) returns (BrowsePostsResponse);
+
+  // Lists posts a page at a time.
+  rpc FindPosts(FindPostsRequest) returns (FindPostsResponse);
+
+  // Counts posts by status.
+  rpc CountPosts(CountPostsRequest) returns (CountPostsResponse);
+
+  // Returns several posts at once.
+  rpc ResolvePosts(ResolvePostsRequest) returns (ResolvePostsResponse);
+
+  // Summarizes a post.
+  rpc SummarizePosts(SummarizePostsRequest) returns (SummarizePostsResponse);
+}
+
+// The request of `LookupPost`.
+message LookupPostRequest {
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `LookupPost`.
+message LookupPostResponse {
+  Post post = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `BrowsePosts`.
+message BrowsePostsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated PostStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  BrowsePostsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `BrowsePosts`.
+message BrowsePostsResponse {
+  repeated Post posts = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `FindPosts`.
+message FindPostsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated PostStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  FindPostsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `FindPosts`.
+message FindPostsResponse {
+  repeated Post posts = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CountPosts`.
+message CountPostsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated PostStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  CountPostsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `CountPosts`.
+message CountPostsResponse {
+  int64 count = 1;
+  map<string, int64> by_status = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResolvePosts`.
+message ResolvePostsRequest {
+  acme.common.v1.RequestContext context = 1;
+  repeated string post_ids = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `ResolvePosts`.
+message ResolvePostsResponse {
+  repeated Post posts = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SummarizePosts`.
+message SummarizePostsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string format = 1;
+    acme.common.v1.TimeWindow period = 2;
+    repeated string recipient_emails = 3;
+    string cron = 4;
+    map<string, string> filters = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  SummarizePostsRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SummarizePosts`.
+message SummarizePostsResponse {
+  string report_id = 1;
+  string download_uri = 2;
+  map<string, string> summary = 3;
+  acme.common.v1.TimeWindow period = 4;
+  acme.common.v1.OperationResult result = 5;
+}

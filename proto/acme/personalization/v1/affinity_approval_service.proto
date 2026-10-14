@@ -1,0 +1,333 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.personalization.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/personalization/v1/personalization.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Personalization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/personalization/v1;personalizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "AffinityApprovalServiceProto";
+option java_package = "com.acme.personalization.v1";
+
+// Routes affinities through approval, with escalation and delegation.
+service AffinityApprovalService {
+  // Submits an affinity.
+  rpc SubmitAffinity(SubmitAffinityRequest) returns (SubmitAffinityResponse);
+
+  // Approves an affinity.
+  rpc ApproveAffinity(ApproveAffinityRequest) returns (ApproveAffinityResponse);
+
+  // Rejects an affinity.
+  rpc RejectAffinity(RejectAffinityRequest) returns (RejectAffinityResponse);
+
+  // Escalates an affinity.
+  rpc EscalateAffinity(EscalateAffinityRequest) returns (EscalateAffinityResponse);
+
+  // Lists affinities a page at a time.
+  rpc ListPendingAffinities(ListPendingAffinitiesRequest) returns (ListPendingAffinitiesResponse);
+
+  // Delegates an affinity.
+  rpc DelegateAffinityApproval(DelegateAffinityApprovalRequest) returns (DelegateAffinityApprovalResponse);
+
+  // Recalls an affinity.
+  rpc RecallAffinity(RecallAffinityRequest) returns (RecallAffinityResponse);
+
+  // Returns an affinity.
+  rpc GetAffinityApprovalStatus(GetAffinityApprovalStatusRequest) returns (GetAffinityApprovalStatusResponse);
+
+  // Comments an affinity.
+  rpc CommentAffinityApproval(CommentAffinityApprovalRequest) returns (CommentAffinityApprovalResponse);
+}
+
+// The request of `SubmitAffinity`.
+message SubmitAffinityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  SubmitAffinityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitAffinity`.
+message SubmitAffinityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  SubmitAffinityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveAffinity`.
+message ApproveAffinityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  ApproveAffinityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveAffinity`.
+message ApproveAffinityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  ApproveAffinityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectAffinity`.
+message RejectAffinityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  RejectAffinityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectAffinity`.
+message RejectAffinityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  RejectAffinityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateAffinity`.
+message EscalateAffinityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  EscalateAffinityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateAffinity`.
+message EscalateAffinityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  EscalateAffinityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingAffinities`.
+message ListPendingAffinitiesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated AffinityStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingAffinitiesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingAffinities`.
+message ListPendingAffinitiesResponse {
+  repeated Affinity affinities = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateAffinityApproval`.
+message DelegateAffinityApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  DelegateAffinityApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateAffinityApproval`.
+message DelegateAffinityApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  DelegateAffinityApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallAffinity`.
+message RecallAffinityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  RecallAffinityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallAffinity`.
+message RecallAffinityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  RecallAffinityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetAffinityApprovalStatus`.
+message GetAffinityApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetAffinityApprovalStatus`.
+message GetAffinityApprovalStatusResponse {
+  Affinity affinity = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentAffinityApproval`.
+message CommentAffinityApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  CommentAffinityApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentAffinityApproval`.
+message CommentAffinityApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  CommentAffinityApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

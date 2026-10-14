@@ -1,0 +1,258 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.chat.v1;
+
+import "acme/chat/v1/chat.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Chat.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/chat/v1;chatv1";
+option java_multiple_files = true;
+option java_outer_classname = "HandoffLifecycleServiceProto";
+option java_package = "com.acme.chat.v1";
+
+// Moves a handoff between the states of its lifecycle.
+service HandoffLifecycleService {
+  // Activates a handoff.
+  rpc ActivateHandoff(ActivateHandoffRequest) returns (ActivateHandoffResponse);
+
+  // Suspends a handoff.
+  rpc SuspendHandoff(SuspendHandoffRequest) returns (SuspendHandoffResponse);
+
+  // Reinstates a handoff.
+  rpc ReinstateHandoff(ReinstateHandoffRequest) returns (ReinstateHandoffResponse);
+
+  // Renews a handoff.
+  rpc RenewHandoff(RenewHandoffRequest) returns (RenewHandoffResponse);
+
+  // Expires a handoff.
+  rpc ExpireHandoff(ExpireHandoffRequest) returns (ExpireHandoffResponse);
+
+  // Returns a handoff.
+  rpc GetHandoffLifecycle(GetHandoffLifecycleRequest) returns (GetHandoffLifecycleResponse);
+
+  // Schedules a handoff.
+  rpc ScheduleHandoffExpiry(ScheduleHandoffExpiryRequest) returns (ScheduleHandoffExpiryResponse);
+}
+
+// The request of `ActivateHandoff`.
+message ActivateHandoffRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  ActivateHandoffRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ActivateHandoff`.
+message ActivateHandoffResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  ActivateHandoffResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SuspendHandoff`.
+message SuspendHandoffRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  SuspendHandoffRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SuspendHandoff`.
+message SuspendHandoffResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  SuspendHandoffResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReinstateHandoff`.
+message ReinstateHandoffRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  ReinstateHandoffRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ReinstateHandoff`.
+message ReinstateHandoffResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  ReinstateHandoffResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RenewHandoff`.
+message RenewHandoffRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  RenewHandoffRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `RenewHandoff`.
+message RenewHandoffResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  RenewHandoffResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExpireHandoff`.
+message ExpireHandoffRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  ExpireHandoffRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ExpireHandoff`.
+message ExpireHandoffResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  ExpireHandoffResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetHandoffLifecycle`.
+message GetHandoffLifecycleRequest {
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetHandoffLifecycle`.
+message GetHandoffLifecycleResponse {
+  Handoff handoff = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ScheduleHandoffExpiry`.
+message ScheduleHandoffExpiryRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  ScheduleHandoffExpiryRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScheduleHandoffExpiry`.
+message ScheduleHandoffExpiryResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  ScheduleHandoffExpiryResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

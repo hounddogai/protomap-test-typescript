@@ -1,0 +1,305 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.notifications.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/notifications/v1/notifications.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Notifications.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/notifications/v1;notificationsv1";
+option java_multiple_files = true;
+option java_outer_classname = "DeliveryAttemptValidationServiceProto";
+option java_package = "com.acme.notifications.v1";
+
+// Checks delivery attempts against the rules before anything acts on them.
+service DeliveryAttemptValidationService {
+  // Validates a delivery attempt.
+  rpc ValidateDeliveryAttempt(ValidateDeliveryAttemptRequest) returns (ValidateDeliveryAttemptResponse);
+
+  // Previews a delivery attempt.
+  rpc PreviewDeliveryAttempt(PreviewDeliveryAttemptRequest) returns (PreviewDeliveryAttemptResponse);
+
+  // Checks a delivery attempt.
+  rpc CheckDeliveryAttemptEligibility(CheckDeliveryAttemptEligibilityRequest) returns (CheckDeliveryAttemptEligibilityResponse);
+
+  // Normalizes a delivery attempt.
+  rpc NormalizeDeliveryAttempt(NormalizeDeliveryAttemptRequest) returns (NormalizeDeliveryAttemptResponse);
+
+  // Explains a delivery attempt.
+  rpc ExplainDeliveryAttemptDecision(ExplainDeliveryAttemptDecisionRequest) returns (ExplainDeliveryAttemptDecisionResponse);
+
+  // Scores a delivery attempt.
+  rpc ScoreDeliveryAttempt(ScoreDeliveryAttemptRequest) returns (ScoreDeliveryAttemptResponse);
+
+  // Lints a delivery attempt.
+  rpc LintDeliveryAttempts(LintDeliveryAttemptsRequest) returns (LintDeliveryAttemptsResponse);
+
+  // Returns a delivery attempt.
+  rpc GetDeliveryAttemptRules(GetDeliveryAttemptRulesRequest) returns (GetDeliveryAttemptRulesResponse);
+}
+
+// The request of `ValidateDeliveryAttempt`.
+message ValidateDeliveryAttemptRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  ValidateDeliveryAttemptRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateDeliveryAttempt`.
+message ValidateDeliveryAttemptResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  ValidateDeliveryAttemptResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewDeliveryAttempt`.
+message PreviewDeliveryAttemptRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  PreviewDeliveryAttemptRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewDeliveryAttempt`.
+message PreviewDeliveryAttemptResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  PreviewDeliveryAttemptResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckDeliveryAttemptEligibility`.
+message CheckDeliveryAttemptEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  CheckDeliveryAttemptEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckDeliveryAttemptEligibility`.
+message CheckDeliveryAttemptEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  CheckDeliveryAttemptEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeDeliveryAttempt`.
+message NormalizeDeliveryAttemptRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  NormalizeDeliveryAttemptRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeDeliveryAttempt`.
+message NormalizeDeliveryAttemptResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  NormalizeDeliveryAttemptResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainDeliveryAttemptDecision`.
+message ExplainDeliveryAttemptDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  ExplainDeliveryAttemptDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainDeliveryAttemptDecision`.
+message ExplainDeliveryAttemptDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  ExplainDeliveryAttemptDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreDeliveryAttempt`.
+message ScoreDeliveryAttemptRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  ScoreDeliveryAttemptRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreDeliveryAttempt`.
+message ScoreDeliveryAttemptResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreDeliveryAttemptResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  ScoreDeliveryAttemptResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintDeliveryAttempts`.
+message LintDeliveryAttemptsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  LintDeliveryAttemptsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintDeliveryAttempts`.
+message LintDeliveryAttemptsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  LintDeliveryAttemptsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetDeliveryAttemptRules`.
+message GetDeliveryAttemptRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetDeliveryAttemptRules`.
+message GetDeliveryAttemptRulesResponse {
+  DeliveryAttempt delivery_attempt = 1;
+  acme.common.v1.OperationResult result = 2;
+}

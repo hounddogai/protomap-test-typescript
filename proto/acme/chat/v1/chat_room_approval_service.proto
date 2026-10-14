@@ -1,0 +1,295 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.chat.v1;
+
+import "acme/chat/v1/chat.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Chat.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/chat/v1;chatv1";
+option java_multiple_files = true;
+option java_outer_classname = "ChatRoomApprovalServiceProto";
+option java_package = "com.acme.chat.v1";
+
+// Routes chat rooms through approval, with escalation and delegation.
+service ChatRoomApprovalService {
+  // Submits a chat room.
+  rpc SubmitChatRoom(SubmitChatRoomRequest) returns (SubmitChatRoomResponse);
+
+  // Approves a chat room.
+  rpc ApproveChatRoom(ApproveChatRoomRequest) returns (ApproveChatRoomResponse);
+
+  // Rejects a chat room.
+  rpc RejectChatRoom(RejectChatRoomRequest) returns (RejectChatRoomResponse);
+
+  // Lists chat rooms a page at a time.
+  rpc ListPendingChatRooms(ListPendingChatRoomsRequest) returns (ListPendingChatRoomsResponse);
+
+  // Delegates a chat room.
+  rpc DelegateChatRoomApproval(DelegateChatRoomApprovalRequest) returns (DelegateChatRoomApprovalResponse);
+
+  // Recalls a chat room.
+  rpc RecallChatRoom(RecallChatRoomRequest) returns (RecallChatRoomResponse);
+
+  // Returns a chat room.
+  rpc GetChatRoomApprovalStatus(GetChatRoomApprovalStatusRequest) returns (GetChatRoomApprovalStatusResponse);
+
+  // Comments a chat room.
+  rpc CommentChatRoomApproval(CommentChatRoomApprovalRequest) returns (CommentChatRoomApprovalResponse);
+}
+
+// The request of `SubmitChatRoom`.
+message SubmitChatRoomRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  SubmitChatRoomRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitChatRoom`.
+message SubmitChatRoomResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatRoom chat_room = 1;
+  SubmitChatRoomResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveChatRoom`.
+message ApproveChatRoomRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  ApproveChatRoomRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveChatRoom`.
+message ApproveChatRoomResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatRoom chat_room = 1;
+  ApproveChatRoomResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectChatRoom`.
+message RejectChatRoomRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  RejectChatRoomRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectChatRoom`.
+message RejectChatRoomResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatRoom chat_room = 1;
+  RejectChatRoomResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingChatRooms`.
+message ListPendingChatRoomsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ChatRoomStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingChatRoomsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingChatRooms`.
+message ListPendingChatRoomsResponse {
+  repeated ChatRoom chat_rooms = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateChatRoomApproval`.
+message DelegateChatRoomApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  DelegateChatRoomApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateChatRoomApproval`.
+message DelegateChatRoomApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatRoom chat_room = 1;
+  DelegateChatRoomApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallChatRoom`.
+message RecallChatRoomRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  RecallChatRoomRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallChatRoom`.
+message RecallChatRoomResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatRoom chat_room = 1;
+  RecallChatRoomResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetChatRoomApprovalStatus`.
+message GetChatRoomApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetChatRoomApprovalStatus`.
+message GetChatRoomApprovalStatusResponse {
+  ChatRoom chat_room = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentChatRoomApproval`.
+message CommentChatRoomApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  CommentChatRoomApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentChatRoomApproval`.
+message CommentChatRoomApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatRoom chat_room = 1;
+  CommentChatRoomApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

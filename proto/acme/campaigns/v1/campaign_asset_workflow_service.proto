@@ -1,0 +1,334 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.campaigns.v1;
+
+import "acme/campaigns/v1/campaigns.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Campaigns.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/campaigns/v1;campaignsv1";
+option java_multiple_files = true;
+option java_outer_classname = "CampaignAssetWorkflowServiceProto";
+option java_package = "com.acme.campaigns.v1";
+
+// Runs the long-lived workflow that takes a campaign asset from start to finish.
+service CampaignAssetWorkflowService {
+  // Starts a campaign asset.
+  rpc StartCampaignAssetWorkflow(StartCampaignAssetWorkflowRequest) returns (StartCampaignAssetWorkflowResponse);
+
+  // Advances a campaign asset.
+  rpc AdvanceCampaignAssetWorkflow(AdvanceCampaignAssetWorkflowRequest) returns (AdvanceCampaignAssetWorkflowResponse);
+
+  // Cancels a campaign asset.
+  rpc CancelCampaignAssetWorkflow(CancelCampaignAssetWorkflowRequest) returns (CancelCampaignAssetWorkflowResponse);
+
+  // Retrys a campaign asset.
+  rpc RetryCampaignAssetWorkflow(RetryCampaignAssetWorkflowRequest) returns (RetryCampaignAssetWorkflowResponse);
+
+  // Pauses a campaign asset.
+  rpc PauseCampaignAssetWorkflow(PauseCampaignAssetWorkflowRequest) returns (PauseCampaignAssetWorkflowResponse);
+
+  // Resumes a campaign asset.
+  rpc ResumeCampaignAssetWorkflow(ResumeCampaignAssetWorkflowRequest) returns (ResumeCampaignAssetWorkflowResponse);
+
+  // Returns a campaign asset.
+  rpc InspectCampaignAssetWorkflow(InspectCampaignAssetWorkflowRequest) returns (InspectCampaignAssetWorkflowResponse);
+
+  // Lists campaign assets a page at a time.
+  rpc ListCampaignAssetWorkflows(ListCampaignAssetWorkflowsRequest) returns (ListCampaignAssetWorkflowsResponse);
+
+  // Signals a campaign asset.
+  rpc SignalCampaignAssetWorkflow(SignalCampaignAssetWorkflowRequest) returns (SignalCampaignAssetWorkflowResponse);
+}
+
+// The request of `StartCampaignAssetWorkflow`.
+message StartCampaignAssetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_asset_id = 2;
+  CampaignAsset campaign_asset = 3;
+  StartCampaignAssetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartCampaignAssetWorkflow`.
+message StartCampaignAssetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignAsset campaign_asset = 1;
+  StartCampaignAssetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceCampaignAssetWorkflow`.
+message AdvanceCampaignAssetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_asset_id = 2;
+  CampaignAsset campaign_asset = 3;
+  AdvanceCampaignAssetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceCampaignAssetWorkflow`.
+message AdvanceCampaignAssetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignAsset campaign_asset = 1;
+  AdvanceCampaignAssetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelCampaignAssetWorkflow`.
+message CancelCampaignAssetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_asset_id = 2;
+  CampaignAsset campaign_asset = 3;
+  CancelCampaignAssetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelCampaignAssetWorkflow`.
+message CancelCampaignAssetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignAsset campaign_asset = 1;
+  CancelCampaignAssetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryCampaignAssetWorkflow`.
+message RetryCampaignAssetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_asset_id = 2;
+  CampaignAsset campaign_asset = 3;
+  RetryCampaignAssetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryCampaignAssetWorkflow`.
+message RetryCampaignAssetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignAsset campaign_asset = 1;
+  RetryCampaignAssetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseCampaignAssetWorkflow`.
+message PauseCampaignAssetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_asset_id = 2;
+  CampaignAsset campaign_asset = 3;
+  PauseCampaignAssetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseCampaignAssetWorkflow`.
+message PauseCampaignAssetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignAsset campaign_asset = 1;
+  PauseCampaignAssetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumeCampaignAssetWorkflow`.
+message ResumeCampaignAssetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_asset_id = 2;
+  CampaignAsset campaign_asset = 3;
+  ResumeCampaignAssetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumeCampaignAssetWorkflow`.
+message ResumeCampaignAssetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignAsset campaign_asset = 1;
+  ResumeCampaignAssetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectCampaignAssetWorkflow`.
+message InspectCampaignAssetWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string campaign_asset_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectCampaignAssetWorkflow`.
+message InspectCampaignAssetWorkflowResponse {
+  CampaignAsset campaign_asset = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListCampaignAssetWorkflows`.
+message ListCampaignAssetWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated CampaignAssetStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListCampaignAssetWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListCampaignAssetWorkflows`.
+message ListCampaignAssetWorkflowsResponse {
+  repeated CampaignAsset campaign_assets = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalCampaignAssetWorkflow`.
+message SignalCampaignAssetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_asset_id = 2;
+  CampaignAsset campaign_asset = 3;
+  SignalCampaignAssetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalCampaignAssetWorkflow`.
+message SignalCampaignAssetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignAsset campaign_asset = 1;
+  SignalCampaignAssetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

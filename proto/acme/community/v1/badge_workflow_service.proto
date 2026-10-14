@@ -1,0 +1,296 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.community.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/community/v1/community.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Community.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/community/v1;communityv1";
+option java_multiple_files = true;
+option java_outer_classname = "BadgeWorkflowServiceProto";
+option java_package = "com.acme.community.v1";
+
+// Runs the long-lived workflow that takes a badge from start to finish.
+service BadgeWorkflowService {
+  // Starts a badge.
+  rpc StartBadgeWorkflow(StartBadgeWorkflowRequest) returns (StartBadgeWorkflowResponse);
+
+  // Advances a badge.
+  rpc AdvanceBadgeWorkflow(AdvanceBadgeWorkflowRequest) returns (AdvanceBadgeWorkflowResponse);
+
+  // Cancels a badge.
+  rpc CancelBadgeWorkflow(CancelBadgeWorkflowRequest) returns (CancelBadgeWorkflowResponse);
+
+  // Retrys a badge.
+  rpc RetryBadgeWorkflow(RetryBadgeWorkflowRequest) returns (RetryBadgeWorkflowResponse);
+
+  // Pauses a badge.
+  rpc PauseBadgeWorkflow(PauseBadgeWorkflowRequest) returns (PauseBadgeWorkflowResponse);
+
+  // Returns a badge.
+  rpc InspectBadgeWorkflow(InspectBadgeWorkflowRequest) returns (InspectBadgeWorkflowResponse);
+
+  // Lists badges a page at a time.
+  rpc ListBadgeWorkflows(ListBadgeWorkflowsRequest) returns (ListBadgeWorkflowsResponse);
+
+  // Signals a badge.
+  rpc SignalBadgeWorkflow(SignalBadgeWorkflowRequest) returns (SignalBadgeWorkflowResponse);
+}
+
+// The request of `StartBadgeWorkflow`.
+message StartBadgeWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  StartBadgeWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartBadgeWorkflow`.
+message StartBadgeWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Badge badge = 1;
+  StartBadgeWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceBadgeWorkflow`.
+message AdvanceBadgeWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  AdvanceBadgeWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceBadgeWorkflow`.
+message AdvanceBadgeWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Badge badge = 1;
+  AdvanceBadgeWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelBadgeWorkflow`.
+message CancelBadgeWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  CancelBadgeWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelBadgeWorkflow`.
+message CancelBadgeWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Badge badge = 1;
+  CancelBadgeWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryBadgeWorkflow`.
+message RetryBadgeWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  RetryBadgeWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryBadgeWorkflow`.
+message RetryBadgeWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Badge badge = 1;
+  RetryBadgeWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseBadgeWorkflow`.
+message PauseBadgeWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  PauseBadgeWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseBadgeWorkflow`.
+message PauseBadgeWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Badge badge = 1;
+  PauseBadgeWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectBadgeWorkflow`.
+message InspectBadgeWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectBadgeWorkflow`.
+message InspectBadgeWorkflowResponse {
+  Badge badge = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListBadgeWorkflows`.
+message ListBadgeWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated BadgeStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListBadgeWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListBadgeWorkflows`.
+message ListBadgeWorkflowsResponse {
+  repeated Badge badges = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalBadgeWorkflow`.
+message SignalBadgeWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  SignalBadgeWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalBadgeWorkflow`.
+message SignalBadgeWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Badge badge = 1;
+  SignalBadgeWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

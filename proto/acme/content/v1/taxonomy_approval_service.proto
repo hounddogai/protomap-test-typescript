@@ -1,0 +1,295 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.content.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/content/v1/content.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Content.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/content/v1;contentv1";
+option java_multiple_files = true;
+option java_outer_classname = "TaxonomyApprovalServiceProto";
+option java_package = "com.acme.content.v1";
+
+// Routes taxonomies through approval, with escalation and delegation.
+service TaxonomyApprovalService {
+  // Submits a taxonomy.
+  rpc SubmitTaxonomy(SubmitTaxonomyRequest) returns (SubmitTaxonomyResponse);
+
+  // Approves a taxonomy.
+  rpc ApproveTaxonomy(ApproveTaxonomyRequest) returns (ApproveTaxonomyResponse);
+
+  // Escalates a taxonomy.
+  rpc EscalateTaxonomy(EscalateTaxonomyRequest) returns (EscalateTaxonomyResponse);
+
+  // Lists taxonomies a page at a time.
+  rpc ListPendingTaxonomies(ListPendingTaxonomiesRequest) returns (ListPendingTaxonomiesResponse);
+
+  // Delegates a taxonomy.
+  rpc DelegateTaxonomyApproval(DelegateTaxonomyApprovalRequest) returns (DelegateTaxonomyApprovalResponse);
+
+  // Recalls a taxonomy.
+  rpc RecallTaxonomy(RecallTaxonomyRequest) returns (RecallTaxonomyResponse);
+
+  // Returns a taxonomy.
+  rpc GetTaxonomyApprovalStatus(GetTaxonomyApprovalStatusRequest) returns (GetTaxonomyApprovalStatusResponse);
+
+  // Comments a taxonomy.
+  rpc CommentTaxonomyApproval(CommentTaxonomyApprovalRequest) returns (CommentTaxonomyApprovalResponse);
+}
+
+// The request of `SubmitTaxonomy`.
+message SubmitTaxonomyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  Taxonomy taxonomy = 3;
+  SubmitTaxonomyRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitTaxonomy`.
+message SubmitTaxonomyResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  SubmitTaxonomyResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveTaxonomy`.
+message ApproveTaxonomyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  Taxonomy taxonomy = 3;
+  ApproveTaxonomyRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveTaxonomy`.
+message ApproveTaxonomyResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  ApproveTaxonomyResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateTaxonomy`.
+message EscalateTaxonomyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  Taxonomy taxonomy = 3;
+  EscalateTaxonomyRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateTaxonomy`.
+message EscalateTaxonomyResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  EscalateTaxonomyResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingTaxonomies`.
+message ListPendingTaxonomiesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated TaxonomyStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingTaxonomiesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingTaxonomies`.
+message ListPendingTaxonomiesResponse {
+  repeated Taxonomy taxonomies = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateTaxonomyApproval`.
+message DelegateTaxonomyApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  Taxonomy taxonomy = 3;
+  DelegateTaxonomyApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateTaxonomyApproval`.
+message DelegateTaxonomyApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  DelegateTaxonomyApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallTaxonomy`.
+message RecallTaxonomyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  Taxonomy taxonomy = 3;
+  RecallTaxonomyRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallTaxonomy`.
+message RecallTaxonomyResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  RecallTaxonomyResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetTaxonomyApprovalStatus`.
+message GetTaxonomyApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetTaxonomyApprovalStatus`.
+message GetTaxonomyApprovalStatusResponse {
+  Taxonomy taxonomy = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentTaxonomyApproval`.
+message CommentTaxonomyApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  Taxonomy taxonomy = 3;
+  CommentTaxonomyApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentTaxonomyApproval`.
+message CommentTaxonomyApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  CommentTaxonomyApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

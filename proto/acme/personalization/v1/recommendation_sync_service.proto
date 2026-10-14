@@ -1,0 +1,284 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.personalization.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/personalization/v1/personalization.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Personalization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/personalization/v1;personalizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "RecommendationSyncServiceProto";
+option java_package = "com.acme.personalization.v1";
+
+// Keeps recommendations in step with the systems of record in other regions.
+service RecommendationSyncService {
+  // Syncs a recommendation.
+  rpc SyncRecommendations(SyncRecommendationsRequest) returns (SyncRecommendationsResponse);
+
+  // Pushs a recommendation.
+  rpc PushRecommendation(PushRecommendationRequest) returns (PushRecommendationResponse);
+
+  // Pulls a recommendation.
+  rpc PullRecommendations(PullRecommendationsRequest) returns (PullRecommendationsResponse);
+
+  // Reconciles a recommendation.
+  rpc ReconcileRecommendations(ReconcileRecommendationsRequest) returns (ReconcileRecommendationsResponse);
+
+  // Exchanges changes of recommendations with a peer.
+  rpc StreamRecommendationChanges(stream StreamRecommendationChangesRequest) returns (stream StreamRecommendationChangesResponse);
+
+  // Resolves a recommendation.
+  rpc ResolveRecommendationConflict(ResolveRecommendationConflictRequest) returns (ResolveRecommendationConflictResponse);
+
+  // Returns a recommendation.
+  rpc GetRecommendationSyncState(GetRecommendationSyncStateRequest) returns (GetRecommendationSyncStateResponse);
+
+  // Lists recommendations a page at a time.
+  rpc ListRecommendationConflicts(ListRecommendationConflictsRequest) returns (ListRecommendationConflictsResponse);
+}
+
+// The request of `SyncRecommendations`.
+message SyncRecommendationsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string recommendation_id = 2;
+  Recommendation recommendation = 3;
+  SyncRecommendationsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SyncRecommendations`.
+message SyncRecommendationsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Recommendation recommendation = 1;
+  SyncRecommendationsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PushRecommendation`.
+message PushRecommendationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string recommendation_id = 2;
+  Recommendation recommendation = 3;
+  PushRecommendationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PushRecommendation`.
+message PushRecommendationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Recommendation recommendation = 1;
+  PushRecommendationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PullRecommendations`.
+message PullRecommendationsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string recommendation_id = 2;
+  Recommendation recommendation = 3;
+  PullRecommendationsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PullRecommendations`.
+message PullRecommendationsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Recommendation recommendation = 1;
+  PullRecommendationsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReconcileRecommendations`.
+message ReconcileRecommendationsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string recommendation_id = 2;
+  Recommendation recommendation = 3;
+  ReconcileRecommendationsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ReconcileRecommendations`.
+message ReconcileRecommendationsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Recommendation recommendation = 1;
+  ReconcileRecommendationsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `StreamRecommendationChanges`.
+message StreamRecommendationChangesRequest {
+  // An acknowledgment of a change the peer sent.
+  message ChangeAck {
+    int64 sequence = 1;
+    string status = 2;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof frame {
+    Recommendation change = 2;
+    StreamRecommendationChangesRequest.ChangeAck ack = 3;
+  }
+  string cursor = 4;
+}
+
+// The response of `StreamRecommendationChanges`.
+message StreamRecommendationChangesResponse {
+  Recommendation recommendation = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `ResolveRecommendationConflict`.
+message ResolveRecommendationConflictRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string recommendation_id = 2;
+  Recommendation recommendation = 3;
+  ResolveRecommendationConflictRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResolveRecommendationConflict`.
+message ResolveRecommendationConflictResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Recommendation recommendation = 1;
+  ResolveRecommendationConflictResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetRecommendationSyncState`.
+message GetRecommendationSyncStateRequest {
+  acme.common.v1.RequestContext context = 1;
+  string recommendation_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetRecommendationSyncState`.
+message GetRecommendationSyncStateResponse {
+  Recommendation recommendation = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListRecommendationConflicts`.
+message ListRecommendationConflictsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated RecommendationStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListRecommendationConflictsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListRecommendationConflicts`.
+message ListRecommendationConflictsResponse {
+  repeated Recommendation recommendations = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}

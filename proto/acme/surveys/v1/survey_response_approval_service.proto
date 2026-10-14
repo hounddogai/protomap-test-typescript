@@ -1,0 +1,295 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.surveys.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/surveys/v1/surveys.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Surveys.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/surveys/v1;surveysv1";
+option java_multiple_files = true;
+option java_outer_classname = "SurveyResponseApprovalServiceProto";
+option java_package = "com.acme.surveys.v1";
+
+// Routes survey responses through approval, with escalation and delegation.
+service SurveyResponseApprovalService {
+  // Submits a survey response.
+  rpc SubmitSurveyResponse(SubmitSurveyResponseRequest) returns (SubmitSurveyResponseResponse);
+
+  // Approves a survey response.
+  rpc ApproveSurveyResponse(ApproveSurveyResponseRequest) returns (ApproveSurveyResponseResponse);
+
+  // Rejects a survey response.
+  rpc RejectSurveyResponse(RejectSurveyResponseRequest) returns (RejectSurveyResponseResponse);
+
+  // Lists survey responses a page at a time.
+  rpc ListPendingSurveyResponses(ListPendingSurveyResponsesRequest) returns (ListPendingSurveyResponsesResponse);
+
+  // Delegates a survey response.
+  rpc DelegateSurveyResponseApproval(DelegateSurveyResponseApprovalRequest) returns (DelegateSurveyResponseApprovalResponse);
+
+  // Recalls a survey response.
+  rpc RecallSurveyResponse(RecallSurveyResponseRequest) returns (RecallSurveyResponseResponse);
+
+  // Returns a survey response.
+  rpc GetSurveyResponseApprovalStatus(GetSurveyResponseApprovalStatusRequest) returns (GetSurveyResponseApprovalStatusResponse);
+
+  // Comments a survey response.
+  rpc CommentSurveyResponseApproval(CommentSurveyResponseApprovalRequest) returns (CommentSurveyResponseApprovalResponse);
+}
+
+// The request of `SubmitSurveyResponse`.
+message SubmitSurveyResponseRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  SurveyResponse survey_response = 3;
+  SubmitSurveyResponseRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitSurveyResponse`.
+message SubmitSurveyResponseResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  SurveyResponse survey_response = 1;
+  SubmitSurveyResponseResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveSurveyResponse`.
+message ApproveSurveyResponseRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  SurveyResponse survey_response = 3;
+  ApproveSurveyResponseRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveSurveyResponse`.
+message ApproveSurveyResponseResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  SurveyResponse survey_response = 1;
+  ApproveSurveyResponseResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectSurveyResponse`.
+message RejectSurveyResponseRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  SurveyResponse survey_response = 3;
+  RejectSurveyResponseRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectSurveyResponse`.
+message RejectSurveyResponseResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  SurveyResponse survey_response = 1;
+  RejectSurveyResponseResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingSurveyResponses`.
+message ListPendingSurveyResponsesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated SurveyResponseStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingSurveyResponsesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingSurveyResponses`.
+message ListPendingSurveyResponsesResponse {
+  repeated SurveyResponse survey_responses = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateSurveyResponseApproval`.
+message DelegateSurveyResponseApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  SurveyResponse survey_response = 3;
+  DelegateSurveyResponseApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateSurveyResponseApproval`.
+message DelegateSurveyResponseApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  SurveyResponse survey_response = 1;
+  DelegateSurveyResponseApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallSurveyResponse`.
+message RecallSurveyResponseRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  SurveyResponse survey_response = 3;
+  RecallSurveyResponseRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallSurveyResponse`.
+message RecallSurveyResponseResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  SurveyResponse survey_response = 1;
+  RecallSurveyResponseResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetSurveyResponseApprovalStatus`.
+message GetSurveyResponseApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetSurveyResponseApprovalStatus`.
+message GetSurveyResponseApprovalStatusResponse {
+  SurveyResponse survey_response = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentSurveyResponseApproval`.
+message CommentSurveyResponseApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  SurveyResponse survey_response = 3;
+  CommentSurveyResponseApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentSurveyResponseApproval`.
+message CommentSurveyResponseApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  SurveyResponse survey_response = 1;
+  CommentSurveyResponseApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

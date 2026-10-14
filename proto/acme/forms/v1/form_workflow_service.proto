@@ -1,0 +1,296 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.forms.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/forms/v1/forms.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Forms.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/forms/v1;formsv1";
+option java_multiple_files = true;
+option java_outer_classname = "FormWorkflowServiceProto";
+option java_package = "com.acme.forms.v1";
+
+// Runs the long-lived workflow that takes a form from start to finish.
+service FormWorkflowService {
+  // Starts a form.
+  rpc StartFormWorkflow(StartFormWorkflowRequest) returns (StartFormWorkflowResponse);
+
+  // Advances a form.
+  rpc AdvanceFormWorkflow(AdvanceFormWorkflowRequest) returns (AdvanceFormWorkflowResponse);
+
+  // Cancels a form.
+  rpc CancelFormWorkflow(CancelFormWorkflowRequest) returns (CancelFormWorkflowResponse);
+
+  // Retrys a form.
+  rpc RetryFormWorkflow(RetryFormWorkflowRequest) returns (RetryFormWorkflowResponse);
+
+  // Pauses a form.
+  rpc PauseFormWorkflow(PauseFormWorkflowRequest) returns (PauseFormWorkflowResponse);
+
+  // Returns a form.
+  rpc InspectFormWorkflow(InspectFormWorkflowRequest) returns (InspectFormWorkflowResponse);
+
+  // Lists forms a page at a time.
+  rpc ListFormWorkflows(ListFormWorkflowsRequest) returns (ListFormWorkflowsResponse);
+
+  // Signals a form.
+  rpc SignalFormWorkflow(SignalFormWorkflowRequest) returns (SignalFormWorkflowResponse);
+}
+
+// The request of `StartFormWorkflow`.
+message StartFormWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_id = 2;
+  Form form = 3;
+  StartFormWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartFormWorkflow`.
+message StartFormWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Form form = 1;
+  StartFormWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceFormWorkflow`.
+message AdvanceFormWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_id = 2;
+  Form form = 3;
+  AdvanceFormWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceFormWorkflow`.
+message AdvanceFormWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Form form = 1;
+  AdvanceFormWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelFormWorkflow`.
+message CancelFormWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_id = 2;
+  Form form = 3;
+  CancelFormWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelFormWorkflow`.
+message CancelFormWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Form form = 1;
+  CancelFormWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryFormWorkflow`.
+message RetryFormWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_id = 2;
+  Form form = 3;
+  RetryFormWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryFormWorkflow`.
+message RetryFormWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Form form = 1;
+  RetryFormWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseFormWorkflow`.
+message PauseFormWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_id = 2;
+  Form form = 3;
+  PauseFormWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseFormWorkflow`.
+message PauseFormWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Form form = 1;
+  PauseFormWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectFormWorkflow`.
+message InspectFormWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string form_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectFormWorkflow`.
+message InspectFormWorkflowResponse {
+  Form form = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListFormWorkflows`.
+message ListFormWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated FormStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListFormWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListFormWorkflows`.
+message ListFormWorkflowsResponse {
+  repeated Form forms = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalFormWorkflow`.
+message SignalFormWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_id = 2;
+  Form form = 3;
+  SignalFormWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalFormWorkflow`.
+message SignalFormWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Form form = 1;
+  SignalFormWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

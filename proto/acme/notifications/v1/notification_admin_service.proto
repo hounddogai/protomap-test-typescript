@@ -1,0 +1,275 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.notifications.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/notifications/v1/notifications.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Notifications.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/notifications/v1;notificationsv1";
+option java_multiple_files = true;
+option java_outer_classname = "NotificationAdminServiceProto";
+option java_package = "com.acme.notifications.v1";
+
+// Operator actions on notifications that support staff run by hand.
+service NotificationAdminService {
+  // Archives a notification.
+  rpc ArchiveNotification(ArchiveNotificationRequest) returns (ArchiveNotificationResponse);
+
+  // Restores a notification.
+  rpc RestoreNotification(RestoreNotificationRequest) returns (RestoreNotificationResponse);
+
+  // Deletes a notification.
+  rpc PurgeNotification(PurgeNotificationRequest) returns (PurgeNotificationResponse);
+
+  // Reassigns a notification.
+  rpc ReassignNotification(ReassignNotificationRequest) returns (ReassignNotificationResponse);
+
+  // Unlocks a notification.
+  rpc UnlockNotification(UnlockNotificationRequest) returns (UnlockNotificationResponse);
+
+  // Transfers a notification.
+  rpc TransferNotification(TransferNotificationRequest) returns (TransferNotificationResponse);
+
+  // Repairs a notification.
+  rpc RepairNotification(RepairNotificationRequest) returns (RepairNotificationResponse);
+
+  // Returns a notification.
+  rpc InspectNotification(InspectNotificationRequest) returns (InspectNotificationResponse);
+}
+
+// The request of `ArchiveNotification`.
+message ArchiveNotificationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  ArchiveNotificationRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ArchiveNotification`.
+message ArchiveNotificationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Notification notification = 1;
+  ArchiveNotificationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RestoreNotification`.
+message RestoreNotificationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  RestoreNotificationRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `RestoreNotification`.
+message RestoreNotificationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Notification notification = 1;
+  RestoreNotificationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PurgeNotification`.
+message PurgeNotificationRequest {
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  string reason = 3;
+  string etag = 4;
+  bool force = 5;
+}
+
+// The response of `PurgeNotification`.
+message PurgeNotificationResponse {
+  acme.common.v1.OperationResult result = 1;
+  google.protobuf.Timestamp effective_at = 2;
+}
+
+// The request of `ReassignNotification`.
+message ReassignNotificationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    acme.identity.v1.UserRef assignee = 1;
+    string queue = 2;
+    int32 capacity = 3;
+    string assignee_email = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  ReassignNotificationRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ReassignNotification`.
+message ReassignNotificationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Notification notification = 1;
+  ReassignNotificationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `UnlockNotification`.
+message UnlockNotificationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  UnlockNotificationRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `UnlockNotification`.
+message UnlockNotificationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Notification notification = 1;
+  UnlockNotificationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `TransferNotification`.
+message TransferNotificationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  TransferNotificationRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `TransferNotification`.
+message TransferNotificationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Notification notification = 1;
+  TransferNotificationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RepairNotification`.
+message RepairNotificationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  Notification notification = 3;
+  RepairNotificationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RepairNotification`.
+message RepairNotificationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Notification notification = 1;
+  RepairNotificationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectNotification`.
+message InspectNotificationRequest {
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectNotification`.
+message InspectNotificationResponse {
+  Notification notification = 1;
+  acme.common.v1.OperationResult result = 2;
+}

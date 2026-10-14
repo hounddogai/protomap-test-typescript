@@ -1,0 +1,292 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.notifications.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/notifications/v1/notifications.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Notifications.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/notifications/v1;notificationsv1";
+option java_multiple_files = true;
+option java_outer_classname = "DeliveryAttemptCalculationServiceProto";
+option java_package = "com.acme.notifications.v1";
+
+// Computes the figures of a delivery attempt, such as totals, taxes, and estimates.
+service DeliveryAttemptCalculationService {
+  // Calculates a delivery attempt.
+  rpc CalculateDeliveryAttempt(CalculateDeliveryAttemptRequest) returns (CalculateDeliveryAttemptResponse);
+
+  // Estimates a delivery attempt.
+  rpc EstimateDeliveryAttempt(EstimateDeliveryAttemptRequest) returns (EstimateDeliveryAttemptResponse);
+
+  // Quotes a delivery attempt.
+  rpc QuoteDeliveryAttempt(QuoteDeliveryAttemptRequest) returns (QuoteDeliveryAttemptResponse);
+
+  // Recalculates a delivery attempt.
+  rpc RecalculateDeliveryAttempts(RecalculateDeliveryAttemptsRequest) returns (RecalculateDeliveryAttemptsResponse);
+
+  // Simulates a delivery attempt.
+  rpc SimulateDeliveryAttempt(SimulateDeliveryAttemptRequest) returns (SimulateDeliveryAttemptResponse);
+
+  // Explains a delivery attempt.
+  rpc ExplainDeliveryAttemptCalculation(ExplainDeliveryAttemptCalculationRequest) returns (ExplainDeliveryAttemptCalculationResponse);
+
+  // Returns a delivery attempt.
+  rpc GetDeliveryAttemptRates(GetDeliveryAttemptRatesRequest) returns (GetDeliveryAttemptRatesResponse);
+}
+
+// The request of `CalculateDeliveryAttempt`.
+message CalculateDeliveryAttemptRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  CalculateDeliveryAttemptRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateDeliveryAttempt`.
+message CalculateDeliveryAttemptResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateDeliveryAttemptResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  CalculateDeliveryAttemptResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateDeliveryAttempt`.
+message EstimateDeliveryAttemptRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  EstimateDeliveryAttemptRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateDeliveryAttempt`.
+message EstimateDeliveryAttemptResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateDeliveryAttemptResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  EstimateDeliveryAttemptResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteDeliveryAttempt`.
+message QuoteDeliveryAttemptRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  QuoteDeliveryAttemptRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteDeliveryAttempt`.
+message QuoteDeliveryAttemptResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteDeliveryAttemptResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  QuoteDeliveryAttemptResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculateDeliveryAttempts`.
+message RecalculateDeliveryAttemptsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  RecalculateDeliveryAttemptsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculateDeliveryAttempts`.
+message RecalculateDeliveryAttemptsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculateDeliveryAttemptsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  RecalculateDeliveryAttemptsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateDeliveryAttempt`.
+message SimulateDeliveryAttemptRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  SimulateDeliveryAttemptRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateDeliveryAttempt`.
+message SimulateDeliveryAttemptResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateDeliveryAttemptResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  SimulateDeliveryAttemptResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainDeliveryAttemptCalculation`.
+message ExplainDeliveryAttemptCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  ExplainDeliveryAttemptCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainDeliveryAttemptCalculation`.
+message ExplainDeliveryAttemptCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  ExplainDeliveryAttemptCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetDeliveryAttemptRates`.
+message GetDeliveryAttemptRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetDeliveryAttemptRates`.
+message GetDeliveryAttemptRatesResponse {
+  DeliveryAttempt delivery_attempt = 1;
+  acme.common.v1.OperationResult result = 2;
+}

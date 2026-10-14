@@ -1,0 +1,279 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.audiences.v1;
+
+import "acme/audiences/v1/audiences.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Audiences.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/audiences/v1;audiencesv1";
+option java_multiple_files = true;
+option java_outer_classname = "AudienceSyncWorkflowServiceProto";
+option java_package = "com.acme.audiences.v1";
+
+// Runs the long-lived workflow that takes an audience sync from start to finish.
+service AudienceSyncWorkflowService {
+  // Starts an audience sync.
+  rpc StartAudienceSyncWorkflow(StartAudienceSyncWorkflowRequest) returns (StartAudienceSyncWorkflowResponse);
+
+  // Advances an audience sync.
+  rpc AdvanceAudienceSyncWorkflow(AdvanceAudienceSyncWorkflowRequest) returns (AdvanceAudienceSyncWorkflowResponse);
+
+  // Retrys an audience sync.
+  rpc RetryAudienceSyncWorkflow(RetryAudienceSyncWorkflowRequest) returns (RetryAudienceSyncWorkflowResponse);
+
+  // Pauses an audience sync.
+  rpc PauseAudienceSyncWorkflow(PauseAudienceSyncWorkflowRequest) returns (PauseAudienceSyncWorkflowResponse);
+
+  // Resumes an audience sync.
+  rpc ResumeAudienceSyncWorkflow(ResumeAudienceSyncWorkflowRequest) returns (ResumeAudienceSyncWorkflowResponse);
+
+  // Lists audience syncs a page at a time.
+  rpc ListAudienceSyncWorkflows(ListAudienceSyncWorkflowsRequest) returns (ListAudienceSyncWorkflowsResponse);
+
+  // Signals an audience sync.
+  rpc SignalAudienceSyncWorkflow(SignalAudienceSyncWorkflowRequest) returns (SignalAudienceSyncWorkflowResponse);
+}
+
+// The request of `StartAudienceSyncWorkflow`.
+message StartAudienceSyncWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  StartAudienceSyncWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartAudienceSyncWorkflow`.
+message StartAudienceSyncWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  AudienceSync audience_sync = 1;
+  StartAudienceSyncWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceAudienceSyncWorkflow`.
+message AdvanceAudienceSyncWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  AdvanceAudienceSyncWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceAudienceSyncWorkflow`.
+message AdvanceAudienceSyncWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  AudienceSync audience_sync = 1;
+  AdvanceAudienceSyncWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryAudienceSyncWorkflow`.
+message RetryAudienceSyncWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  RetryAudienceSyncWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryAudienceSyncWorkflow`.
+message RetryAudienceSyncWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  AudienceSync audience_sync = 1;
+  RetryAudienceSyncWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseAudienceSyncWorkflow`.
+message PauseAudienceSyncWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  PauseAudienceSyncWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseAudienceSyncWorkflow`.
+message PauseAudienceSyncWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  AudienceSync audience_sync = 1;
+  PauseAudienceSyncWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumeAudienceSyncWorkflow`.
+message ResumeAudienceSyncWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  ResumeAudienceSyncWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumeAudienceSyncWorkflow`.
+message ResumeAudienceSyncWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  AudienceSync audience_sync = 1;
+  ResumeAudienceSyncWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListAudienceSyncWorkflows`.
+message ListAudienceSyncWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated AudienceSyncStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListAudienceSyncWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListAudienceSyncWorkflows`.
+message ListAudienceSyncWorkflowsResponse {
+  repeated AudienceSync audience_syncs = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalAudienceSyncWorkflow`.
+message SignalAudienceSyncWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  SignalAudienceSyncWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalAudienceSyncWorkflow`.
+message SignalAudienceSyncWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  AudienceSync audience_sync = 1;
+  SignalAudienceSyncWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

@@ -1,0 +1,294 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.community.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/community/v1/community.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Community.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/community/v1;communityv1";
+option java_multiple_files = true;
+option java_outer_classname = "ModerationLifecycleServiceProto";
+option java_package = "com.acme.community.v1";
+
+// Moves a moderation between the states of its lifecycle.
+service ModerationLifecycleService {
+  // Activates a moderation.
+  rpc ActivateModeration(ActivateModerationRequest) returns (ActivateModerationResponse);
+
+  // Suspends a moderation.
+  rpc SuspendModeration(SuspendModerationRequest) returns (SuspendModerationResponse);
+
+  // Reinstates a moderation.
+  rpc ReinstateModeration(ReinstateModerationRequest) returns (ReinstateModerationResponse);
+
+  // Terminates a moderation.
+  rpc TerminateModeration(TerminateModerationRequest) returns (TerminateModerationResponse);
+
+  // Renews a moderation.
+  rpc RenewModeration(RenewModerationRequest) returns (RenewModerationResponse);
+
+  // Expires a moderation.
+  rpc ExpireModeration(ExpireModerationRequest) returns (ExpireModerationResponse);
+
+  // Returns a moderation.
+  rpc GetModerationLifecycle(GetModerationLifecycleRequest) returns (GetModerationLifecycleResponse);
+
+  // Schedules a moderation.
+  rpc ScheduleModerationExpiry(ScheduleModerationExpiryRequest) returns (ScheduleModerationExpiryResponse);
+}
+
+// The request of `ActivateModeration`.
+message ActivateModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  ActivateModerationRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ActivateModeration`.
+message ActivateModerationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  ActivateModerationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SuspendModeration`.
+message SuspendModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  SuspendModerationRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SuspendModeration`.
+message SuspendModerationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  SuspendModerationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReinstateModeration`.
+message ReinstateModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  ReinstateModerationRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ReinstateModeration`.
+message ReinstateModerationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  ReinstateModerationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `TerminateModeration`.
+message TerminateModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  TerminateModerationRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `TerminateModeration`.
+message TerminateModerationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  TerminateModerationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RenewModeration`.
+message RenewModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  RenewModerationRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `RenewModeration`.
+message RenewModerationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  RenewModerationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExpireModeration`.
+message ExpireModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  ExpireModerationRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ExpireModeration`.
+message ExpireModerationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  ExpireModerationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetModerationLifecycle`.
+message GetModerationLifecycleRequest {
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetModerationLifecycle`.
+message GetModerationLifecycleResponse {
+  Moderation moderation = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ScheduleModerationExpiry`.
+message ScheduleModerationExpiryRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  ScheduleModerationExpiryRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScheduleModerationExpiry`.
+message ScheduleModerationExpiryResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  ScheduleModerationExpiryResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

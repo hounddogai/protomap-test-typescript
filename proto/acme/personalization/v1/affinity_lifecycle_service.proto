@@ -1,0 +1,258 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.personalization.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/personalization/v1/personalization.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Personalization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/personalization/v1;personalizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "AffinityLifecycleServiceProto";
+option java_package = "com.acme.personalization.v1";
+
+// Moves an affinity between the states of its lifecycle.
+service AffinityLifecycleService {
+  // Activates an affinity.
+  rpc ActivateAffinity(ActivateAffinityRequest) returns (ActivateAffinityResponse);
+
+  // Suspends an affinity.
+  rpc SuspendAffinity(SuspendAffinityRequest) returns (SuspendAffinityResponse);
+
+  // Terminates an affinity.
+  rpc TerminateAffinity(TerminateAffinityRequest) returns (TerminateAffinityResponse);
+
+  // Renews an affinity.
+  rpc RenewAffinity(RenewAffinityRequest) returns (RenewAffinityResponse);
+
+  // Expires an affinity.
+  rpc ExpireAffinity(ExpireAffinityRequest) returns (ExpireAffinityResponse);
+
+  // Returns an affinity.
+  rpc GetAffinityLifecycle(GetAffinityLifecycleRequest) returns (GetAffinityLifecycleResponse);
+
+  // Schedules an affinity.
+  rpc ScheduleAffinityExpiry(ScheduleAffinityExpiryRequest) returns (ScheduleAffinityExpiryResponse);
+}
+
+// The request of `ActivateAffinity`.
+message ActivateAffinityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  ActivateAffinityRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ActivateAffinity`.
+message ActivateAffinityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  ActivateAffinityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SuspendAffinity`.
+message SuspendAffinityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  SuspendAffinityRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SuspendAffinity`.
+message SuspendAffinityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  SuspendAffinityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `TerminateAffinity`.
+message TerminateAffinityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  TerminateAffinityRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `TerminateAffinity`.
+message TerminateAffinityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  TerminateAffinityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RenewAffinity`.
+message RenewAffinityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  RenewAffinityRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `RenewAffinity`.
+message RenewAffinityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  RenewAffinityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExpireAffinity`.
+message ExpireAffinityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  ExpireAffinityRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ExpireAffinity`.
+message ExpireAffinityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  ExpireAffinityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetAffinityLifecycle`.
+message GetAffinityLifecycleRequest {
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetAffinityLifecycle`.
+message GetAffinityLifecycleResponse {
+  Affinity affinity = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ScheduleAffinityExpiry`.
+message ScheduleAffinityExpiryRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  ScheduleAffinityExpiryRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScheduleAffinityExpiry`.
+message ScheduleAffinityExpiryResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  ScheduleAffinityExpiryResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

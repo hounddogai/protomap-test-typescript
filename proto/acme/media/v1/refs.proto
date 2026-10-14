@@ -1,0 +1,33 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.media.v1;
+
+option csharp_namespace = "Acme.Media.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/media/v1;mediav1";
+option java_multiple_files = true;
+option java_outer_classname = "RefsProto";
+option java_package = "com.acme.media.v1";
+
+// A reference to a media asset of the media domain.
+message MediaAssetRef {
+  string media_asset_id = 1;
+  string display_name = 2;
+  string code = 3;
+}
+
+// A reference to a rendition of the media domain.
+message RenditionRef {
+  string rendition_id = 1;
+  string display_name = 2;
+  string code = 3;
+}
+
+// A reference to a transcode job of the media domain.
+message TranscodeJobRef {
+  string transcode_job_id = 1;
+  string display_name = 2;
+  int32 priority = 3;
+}

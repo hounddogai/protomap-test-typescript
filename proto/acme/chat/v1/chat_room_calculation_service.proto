@@ -1,0 +1,318 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.chat.v1;
+
+import "acme/chat/v1/chat.proto";
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Chat.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/chat/v1;chatv1";
+option java_multiple_files = true;
+option java_outer_classname = "ChatRoomCalculationServiceProto";
+option java_package = "com.acme.chat.v1";
+
+// Computes the figures of a chat room, such as totals, taxes, and estimates.
+service ChatRoomCalculationService {
+  // Calculates a chat room.
+  rpc CalculateChatRoom(CalculateChatRoomRequest) returns (CalculateChatRoomResponse);
+
+  // Estimates a chat room.
+  rpc EstimateChatRoom(EstimateChatRoomRequest) returns (EstimateChatRoomResponse);
+
+  // Quotes a chat room.
+  rpc QuoteChatRoom(QuoteChatRoomRequest) returns (QuoteChatRoomResponse);
+
+  // Compares a chat room.
+  rpc CompareChatRoomOptions(CompareChatRoomOptionsRequest) returns (CompareChatRoomOptionsResponse);
+
+  // Recalculates a chat room.
+  rpc RecalculateChatRooms(RecalculateChatRoomsRequest) returns (RecalculateChatRoomsResponse);
+
+  // Simulates a chat room.
+  rpc SimulateChatRoom(SimulateChatRoomRequest) returns (SimulateChatRoomResponse);
+
+  // Explains a chat room.
+  rpc ExplainChatRoomCalculation(ExplainChatRoomCalculationRequest) returns (ExplainChatRoomCalculationResponse);
+}
+
+// The request of `CalculateChatRoom`.
+message CalculateChatRoomRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  CalculateChatRoomRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateChatRoom`.
+message CalculateChatRoomResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateChatRoomResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ChatRoom chat_room = 1;
+  CalculateChatRoomResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateChatRoom`.
+message EstimateChatRoomRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  EstimateChatRoomRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateChatRoom`.
+message EstimateChatRoomResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateChatRoomResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ChatRoom chat_room = 1;
+  EstimateChatRoomResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteChatRoom`.
+message QuoteChatRoomRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  QuoteChatRoomRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteChatRoom`.
+message QuoteChatRoomResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteChatRoomResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ChatRoom chat_room = 1;
+  QuoteChatRoomResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareChatRoomOptions`.
+message CompareChatRoomOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  CompareChatRoomOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareChatRoomOptions`.
+message CompareChatRoomOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareChatRoomOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ChatRoom chat_room = 1;
+  CompareChatRoomOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculateChatRooms`.
+message RecalculateChatRoomsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  RecalculateChatRoomsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculateChatRooms`.
+message RecalculateChatRoomsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculateChatRoomsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ChatRoom chat_room = 1;
+  RecalculateChatRoomsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateChatRoom`.
+message SimulateChatRoomRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  SimulateChatRoomRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateChatRoom`.
+message SimulateChatRoomResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateChatRoomResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ChatRoom chat_room = 1;
+  SimulateChatRoomResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainChatRoomCalculation`.
+message ExplainChatRoomCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  ExplainChatRoomCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainChatRoomCalculation`.
+message ExplainChatRoomCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatRoom chat_room = 1;
+  ExplainChatRoomCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

@@ -1,0 +1,201 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.chat.v1;
+
+import "acme/chat/v1/chat.proto";
+import "acme/common/v1/audit.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Chat.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/chat/v1;chatv1";
+option java_multiple_files = true;
+option java_outer_classname = "ChatBotQueryServiceProto";
+option java_package = "com.acme.chat.v1";
+
+// Answers read-only questions about chat bots, for screens and reports.
+service ChatBotQueryService {
+  // Returns a chat bot.
+  rpc LookupChatBot(LookupChatBotRequest) returns (LookupChatBotResponse);
+
+  // Lists chat bots a page at a time.
+  rpc BrowseChatBots(BrowseChatBotsRequest) returns (BrowseChatBotsResponse);
+
+  // Lists chat bots a page at a time.
+  rpc FindChatBots(FindChatBotsRequest) returns (FindChatBotsResponse);
+
+  // Counts chat bots by status.
+  rpc CountChatBots(CountChatBotsRequest) returns (CountChatBotsResponse);
+
+  // Returns several chat bots at once.
+  rpc ResolveChatBots(ResolveChatBotsRequest) returns (ResolveChatBotsResponse);
+
+  // Streams every matching chat bot.
+  rpc ExportChatBots(ExportChatBotsRequest) returns (stream ExportChatBotsResponse);
+
+  // Summarizes a chat bot.
+  rpc SummarizeChatBots(SummarizeChatBotsRequest) returns (SummarizeChatBotsResponse);
+}
+
+// The request of `LookupChatBot`.
+message LookupChatBotRequest {
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `LookupChatBot`.
+message LookupChatBotResponse {
+  ChatBot chat_bot = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `BrowseChatBots`.
+message BrowseChatBotsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ChatBotStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  BrowseChatBotsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `BrowseChatBots`.
+message BrowseChatBotsResponse {
+  repeated ChatBot chat_bots = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `FindChatBots`.
+message FindChatBotsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ChatBotStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  FindChatBotsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `FindChatBots`.
+message FindChatBotsResponse {
+  repeated ChatBot chat_bots = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CountChatBots`.
+message CountChatBotsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ChatBotStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  CountChatBotsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `CountChatBots`.
+message CountChatBotsResponse {
+  int64 count = 1;
+  map<string, int64> by_status = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResolveChatBots`.
+message ResolveChatBotsRequest {
+  acme.common.v1.RequestContext context = 1;
+  repeated string chat_bot_ids = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `ResolveChatBots`.
+message ResolveChatBotsResponse {
+  repeated ChatBot chat_bots = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExportChatBots`.
+message ExportChatBotsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ChatBotStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  ExportChatBotsRequest.Filter filter = 2;
+  string format = 3;
+  google.protobuf.FieldMask fields = 4;
+  string destination_uri = 5;
+}
+
+// The response of `ExportChatBots`.
+message ExportChatBotsResponse {
+  ChatBot chat_bot = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `SummarizeChatBots`.
+message SummarizeChatBotsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string format = 1;
+    acme.common.v1.TimeWindow period = 2;
+    repeated string recipient_emails = 3;
+    string cron = 4;
+    map<string, string> filters = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  SummarizeChatBotsRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SummarizeChatBots`.
+message SummarizeChatBotsResponse {
+  string report_id = 1;
+  string download_uri = 2;
+  map<string, string> summary = 3;
+  acme.common.v1.TimeWindow period = 4;
+  acme.common.v1.OperationResult result = 5;
+}

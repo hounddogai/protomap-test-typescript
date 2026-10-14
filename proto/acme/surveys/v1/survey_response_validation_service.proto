@@ -1,0 +1,223 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.surveys.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/surveys/v1/surveys.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Surveys.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/surveys/v1;surveysv1";
+option java_multiple_files = true;
+option java_outer_classname = "SurveyResponseValidationServiceProto";
+option java_package = "com.acme.surveys.v1";
+
+// Checks survey responses against the rules before anything acts on them.
+service SurveyResponseValidationService {
+  // Validates a survey response.
+  rpc ValidateSurveyResponse(ValidateSurveyResponseRequest) returns (ValidateSurveyResponseResponse);
+
+  // Previews a survey response.
+  rpc PreviewSurveyResponse(PreviewSurveyResponseRequest) returns (PreviewSurveyResponseResponse);
+
+  // Checks a survey response.
+  rpc CheckSurveyResponseEligibility(CheckSurveyResponseEligibilityRequest) returns (CheckSurveyResponseEligibilityResponse);
+
+  // Normalizes a survey response.
+  rpc NormalizeSurveyResponse(NormalizeSurveyResponseRequest) returns (NormalizeSurveyResponseResponse);
+
+  // Explains a survey response.
+  rpc ExplainSurveyResponseDecision(ExplainSurveyResponseDecisionRequest) returns (ExplainSurveyResponseDecisionResponse);
+
+  // Returns a survey response.
+  rpc GetSurveyResponseRules(GetSurveyResponseRulesRequest) returns (GetSurveyResponseRulesResponse);
+}
+
+// The request of `ValidateSurveyResponse`.
+message ValidateSurveyResponseRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  SurveyResponse survey_response = 3;
+  ValidateSurveyResponseRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateSurveyResponse`.
+message ValidateSurveyResponseResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  SurveyResponse survey_response = 1;
+  ValidateSurveyResponseResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewSurveyResponse`.
+message PreviewSurveyResponseRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  SurveyResponse survey_response = 3;
+  PreviewSurveyResponseRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewSurveyResponse`.
+message PreviewSurveyResponseResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  SurveyResponse survey_response = 1;
+  PreviewSurveyResponseResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckSurveyResponseEligibility`.
+message CheckSurveyResponseEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  SurveyResponse survey_response = 3;
+  CheckSurveyResponseEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckSurveyResponseEligibility`.
+message CheckSurveyResponseEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  SurveyResponse survey_response = 1;
+  CheckSurveyResponseEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeSurveyResponse`.
+message NormalizeSurveyResponseRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  SurveyResponse survey_response = 3;
+  NormalizeSurveyResponseRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeSurveyResponse`.
+message NormalizeSurveyResponseResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  SurveyResponse survey_response = 1;
+  NormalizeSurveyResponseResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainSurveyResponseDecision`.
+message ExplainSurveyResponseDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  SurveyResponse survey_response = 3;
+  ExplainSurveyResponseDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainSurveyResponseDecision`.
+message ExplainSurveyResponseDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  SurveyResponse survey_response = 1;
+  ExplainSurveyResponseDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetSurveyResponseRules`.
+message GetSurveyResponseRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetSurveyResponseRules`.
+message GetSurveyResponseRulesResponse {
+  SurveyResponse survey_response = 1;
+  acme.common.v1.OperationResult result = 2;
+}

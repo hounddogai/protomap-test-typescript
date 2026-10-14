@@ -1,0 +1,335 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.notifications.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/notifications/v1/notifications.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Notifications.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/notifications/v1;notificationsv1";
+option java_multiple_files = true;
+option java_outer_classname = "NotificationCalculationServiceProto";
+option java_package = "com.acme.notifications.v1";
+
+// Computes the figures of a notification, such as totals, taxes, and estimates.
+service NotificationCalculationService {
+  // Calculates a notification.
+  rpc CalculateNotification(CalculateNotificationRequest) returns (CalculateNotificationResponse);
+
+  // Estimates a notification.
+  rpc EstimateNotification(EstimateNotificationRequest) returns (EstimateNotificationResponse);
+
+  // Quotes a notification.
+  rpc QuoteNotification(QuoteNotificationRequest) returns (QuoteNotificationResponse);
+
+  // Compares a notification.
+  rpc CompareNotificationOptions(CompareNotificationOptionsRequest) returns (CompareNotificationOptionsResponse);
+
+  // Recalculates a notification.
+  rpc RecalculateNotifications(RecalculateNotificationsRequest) returns (RecalculateNotificationsResponse);
+
+  // Simulates a notification.
+  rpc SimulateNotification(SimulateNotificationRequest) returns (SimulateNotificationResponse);
+
+  // Explains a notification.
+  rpc ExplainNotificationCalculation(ExplainNotificationCalculationRequest) returns (ExplainNotificationCalculationResponse);
+
+  // Returns a notification.
+  rpc GetNotificationRates(GetNotificationRatesRequest) returns (GetNotificationRatesResponse);
+}
+
+// The request of `CalculateNotification`.
+message CalculateNotificationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  Notification notification = 3;
+  CalculateNotificationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateNotification`.
+message CalculateNotificationResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateNotificationResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Notification notification = 1;
+  CalculateNotificationResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateNotification`.
+message EstimateNotificationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  Notification notification = 3;
+  EstimateNotificationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateNotification`.
+message EstimateNotificationResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateNotificationResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Notification notification = 1;
+  EstimateNotificationResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteNotification`.
+message QuoteNotificationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  Notification notification = 3;
+  QuoteNotificationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteNotification`.
+message QuoteNotificationResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteNotificationResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Notification notification = 1;
+  QuoteNotificationResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareNotificationOptions`.
+message CompareNotificationOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  Notification notification = 3;
+  CompareNotificationOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareNotificationOptions`.
+message CompareNotificationOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareNotificationOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Notification notification = 1;
+  CompareNotificationOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculateNotifications`.
+message RecalculateNotificationsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  Notification notification = 3;
+  RecalculateNotificationsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculateNotifications`.
+message RecalculateNotificationsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculateNotificationsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Notification notification = 1;
+  RecalculateNotificationsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateNotification`.
+message SimulateNotificationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  Notification notification = 3;
+  SimulateNotificationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateNotification`.
+message SimulateNotificationResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateNotificationResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Notification notification = 1;
+  SimulateNotificationResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainNotificationCalculation`.
+message ExplainNotificationCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  Notification notification = 3;
+  ExplainNotificationCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainNotificationCalculation`.
+message ExplainNotificationCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Notification notification = 1;
+  ExplainNotificationCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetNotificationRates`.
+message GetNotificationRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetNotificationRates`.
+message GetNotificationRatesResponse {
+  Notification notification = 1;
+  acme.common.v1.OperationResult result = 2;
+}

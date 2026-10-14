@@ -1,0 +1,305 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.audiences.v1;
+
+import "acme/audiences/v1/audiences.proto";
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Audiences.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/audiences/v1;audiencesv1";
+option java_multiple_files = true;
+option java_outer_classname = "AudienceValidationServiceProto";
+option java_package = "com.acme.audiences.v1";
+
+// Checks audiences against the rules before anything acts on them.
+service AudienceValidationService {
+  // Validates an audience.
+  rpc ValidateAudience(ValidateAudienceRequest) returns (ValidateAudienceResponse);
+
+  // Previews an audience.
+  rpc PreviewAudience(PreviewAudienceRequest) returns (PreviewAudienceResponse);
+
+  // Checks an audience.
+  rpc CheckAudienceEligibility(CheckAudienceEligibilityRequest) returns (CheckAudienceEligibilityResponse);
+
+  // Normalizes an audience.
+  rpc NormalizeAudience(NormalizeAudienceRequest) returns (NormalizeAudienceResponse);
+
+  // Explains an audience.
+  rpc ExplainAudienceDecision(ExplainAudienceDecisionRequest) returns (ExplainAudienceDecisionResponse);
+
+  // Scores an audience.
+  rpc ScoreAudience(ScoreAudienceRequest) returns (ScoreAudienceResponse);
+
+  // Lints an audience.
+  rpc LintAudiences(LintAudiencesRequest) returns (LintAudiencesResponse);
+
+  // Returns an audience.
+  rpc GetAudienceRules(GetAudienceRulesRequest) returns (GetAudienceRulesResponse);
+}
+
+// The request of `ValidateAudience`.
+message ValidateAudienceRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_id = 2;
+  Audience audience = 3;
+  ValidateAudienceRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateAudience`.
+message ValidateAudienceResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Audience audience = 1;
+  ValidateAudienceResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewAudience`.
+message PreviewAudienceRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_id = 2;
+  Audience audience = 3;
+  PreviewAudienceRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewAudience`.
+message PreviewAudienceResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Audience audience = 1;
+  PreviewAudienceResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckAudienceEligibility`.
+message CheckAudienceEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_id = 2;
+  Audience audience = 3;
+  CheckAudienceEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckAudienceEligibility`.
+message CheckAudienceEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Audience audience = 1;
+  CheckAudienceEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeAudience`.
+message NormalizeAudienceRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_id = 2;
+  Audience audience = 3;
+  NormalizeAudienceRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeAudience`.
+message NormalizeAudienceResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Audience audience = 1;
+  NormalizeAudienceResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainAudienceDecision`.
+message ExplainAudienceDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_id = 2;
+  Audience audience = 3;
+  ExplainAudienceDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainAudienceDecision`.
+message ExplainAudienceDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Audience audience = 1;
+  ExplainAudienceDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreAudience`.
+message ScoreAudienceRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_id = 2;
+  Audience audience = 3;
+  ScoreAudienceRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreAudience`.
+message ScoreAudienceResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreAudienceResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Audience audience = 1;
+  ScoreAudienceResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintAudiences`.
+message LintAudiencesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_id = 2;
+  Audience audience = 3;
+  LintAudiencesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintAudiences`.
+message LintAudiencesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Audience audience = 1;
+  LintAudiencesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetAudienceRules`.
+message GetAudienceRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string audience_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetAudienceRules`.
+message GetAudienceRulesResponse {
+  Audience audience = 1;
+  acme.common.v1.OperationResult result = 2;
+}

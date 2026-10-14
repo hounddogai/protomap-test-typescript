@@ -1,0 +1,335 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.media.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/media/v1/media.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Media.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/media/v1;mediav1";
+option java_multiple_files = true;
+option java_outer_classname = "TranscodeJobCalculationServiceProto";
+option java_package = "com.acme.media.v1";
+
+// Computes the figures of a transcode job, such as totals, taxes, and estimates.
+service TranscodeJobCalculationService {
+  // Calculates a transcode job.
+  rpc CalculateTranscodeJob(CalculateTranscodeJobRequest) returns (CalculateTranscodeJobResponse);
+
+  // Estimates a transcode job.
+  rpc EstimateTranscodeJob(EstimateTranscodeJobRequest) returns (EstimateTranscodeJobResponse);
+
+  // Quotes a transcode job.
+  rpc QuoteTranscodeJob(QuoteTranscodeJobRequest) returns (QuoteTranscodeJobResponse);
+
+  // Compares a transcode job.
+  rpc CompareTranscodeJobOptions(CompareTranscodeJobOptionsRequest) returns (CompareTranscodeJobOptionsResponse);
+
+  // Recalculates a transcode job.
+  rpc RecalculateTranscodeJobs(RecalculateTranscodeJobsRequest) returns (RecalculateTranscodeJobsResponse);
+
+  // Simulates a transcode job.
+  rpc SimulateTranscodeJob(SimulateTranscodeJobRequest) returns (SimulateTranscodeJobResponse);
+
+  // Explains a transcode job.
+  rpc ExplainTranscodeJobCalculation(ExplainTranscodeJobCalculationRequest) returns (ExplainTranscodeJobCalculationResponse);
+
+  // Returns a transcode job.
+  rpc GetTranscodeJobRates(GetTranscodeJobRatesRequest) returns (GetTranscodeJobRatesResponse);
+}
+
+// The request of `CalculateTranscodeJob`.
+message CalculateTranscodeJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  CalculateTranscodeJobRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateTranscodeJob`.
+message CalculateTranscodeJobResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateTranscodeJobResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  TranscodeJob transcode_job = 1;
+  CalculateTranscodeJobResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateTranscodeJob`.
+message EstimateTranscodeJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  EstimateTranscodeJobRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateTranscodeJob`.
+message EstimateTranscodeJobResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateTranscodeJobResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  TranscodeJob transcode_job = 1;
+  EstimateTranscodeJobResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteTranscodeJob`.
+message QuoteTranscodeJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  QuoteTranscodeJobRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteTranscodeJob`.
+message QuoteTranscodeJobResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteTranscodeJobResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  TranscodeJob transcode_job = 1;
+  QuoteTranscodeJobResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareTranscodeJobOptions`.
+message CompareTranscodeJobOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  CompareTranscodeJobOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareTranscodeJobOptions`.
+message CompareTranscodeJobOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareTranscodeJobOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  TranscodeJob transcode_job = 1;
+  CompareTranscodeJobOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculateTranscodeJobs`.
+message RecalculateTranscodeJobsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  RecalculateTranscodeJobsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculateTranscodeJobs`.
+message RecalculateTranscodeJobsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculateTranscodeJobsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  TranscodeJob transcode_job = 1;
+  RecalculateTranscodeJobsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateTranscodeJob`.
+message SimulateTranscodeJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  SimulateTranscodeJobRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateTranscodeJob`.
+message SimulateTranscodeJobResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateTranscodeJobResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  TranscodeJob transcode_job = 1;
+  SimulateTranscodeJobResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainTranscodeJobCalculation`.
+message ExplainTranscodeJobCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  ExplainTranscodeJobCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainTranscodeJobCalculation`.
+message ExplainTranscodeJobCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  ExplainTranscodeJobCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetTranscodeJobRates`.
+message GetTranscodeJobRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetTranscodeJobRates`.
+message GetTranscodeJobRatesResponse {
+  TranscodeJob transcode_job = 1;
+  acme.common.v1.OperationResult result = 2;
+}

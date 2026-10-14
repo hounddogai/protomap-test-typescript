@@ -1,0 +1,295 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.webhooks.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/webhooks/v1/webhooks.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Webhooks.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/webhooks/v1;webhooksv1";
+option java_multiple_files = true;
+option java_outer_classname = "WebhookEndpointApprovalServiceProto";
+option java_package = "com.acme.webhooks.v1";
+
+// Routes webhook endpoints through approval, with escalation and delegation.
+service WebhookEndpointApprovalService {
+  // Submits a webhook endpoint.
+  rpc SubmitWebhookEndpoint(SubmitWebhookEndpointRequest) returns (SubmitWebhookEndpointResponse);
+
+  // Approves a webhook endpoint.
+  rpc ApproveWebhookEndpoint(ApproveWebhookEndpointRequest) returns (ApproveWebhookEndpointResponse);
+
+  // Rejects a webhook endpoint.
+  rpc RejectWebhookEndpoint(RejectWebhookEndpointRequest) returns (RejectWebhookEndpointResponse);
+
+  // Lists webhook endpoints a page at a time.
+  rpc ListPendingWebhookEndpoints(ListPendingWebhookEndpointsRequest) returns (ListPendingWebhookEndpointsResponse);
+
+  // Delegates a webhook endpoint.
+  rpc DelegateWebhookEndpointApproval(DelegateWebhookEndpointApprovalRequest) returns (DelegateWebhookEndpointApprovalResponse);
+
+  // Recalls a webhook endpoint.
+  rpc RecallWebhookEndpoint(RecallWebhookEndpointRequest) returns (RecallWebhookEndpointResponse);
+
+  // Returns a webhook endpoint.
+  rpc GetWebhookEndpointApprovalStatus(GetWebhookEndpointApprovalStatusRequest) returns (GetWebhookEndpointApprovalStatusResponse);
+
+  // Comments a webhook endpoint.
+  rpc CommentWebhookEndpointApproval(CommentWebhookEndpointApprovalRequest) returns (CommentWebhookEndpointApprovalResponse);
+}
+
+// The request of `SubmitWebhookEndpoint`.
+message SubmitWebhookEndpointRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  SubmitWebhookEndpointRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitWebhookEndpoint`.
+message SubmitWebhookEndpointResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  SubmitWebhookEndpointResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveWebhookEndpoint`.
+message ApproveWebhookEndpointRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  ApproveWebhookEndpointRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveWebhookEndpoint`.
+message ApproveWebhookEndpointResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  ApproveWebhookEndpointResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectWebhookEndpoint`.
+message RejectWebhookEndpointRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  RejectWebhookEndpointRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectWebhookEndpoint`.
+message RejectWebhookEndpointResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  RejectWebhookEndpointResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingWebhookEndpoints`.
+message ListPendingWebhookEndpointsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated WebhookEndpointStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingWebhookEndpointsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingWebhookEndpoints`.
+message ListPendingWebhookEndpointsResponse {
+  repeated WebhookEndpoint webhook_endpoints = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateWebhookEndpointApproval`.
+message DelegateWebhookEndpointApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  DelegateWebhookEndpointApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateWebhookEndpointApproval`.
+message DelegateWebhookEndpointApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  DelegateWebhookEndpointApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallWebhookEndpoint`.
+message RecallWebhookEndpointRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  RecallWebhookEndpointRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallWebhookEndpoint`.
+message RecallWebhookEndpointResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  RecallWebhookEndpointResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetWebhookEndpointApprovalStatus`.
+message GetWebhookEndpointApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetWebhookEndpointApprovalStatus`.
+message GetWebhookEndpointApprovalStatusResponse {
+  WebhookEndpoint webhook_endpoint = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentWebhookEndpointApproval`.
+message CommentWebhookEndpointApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  CommentWebhookEndpointApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentWebhookEndpointApproval`.
+message CommentWebhookEndpointApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  CommentWebhookEndpointApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

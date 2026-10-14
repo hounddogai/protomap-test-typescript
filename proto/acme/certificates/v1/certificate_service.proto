@@ -1,0 +1,231 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.certificates.v1;
+
+import "acme/certificates/v1/certificates.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Certificates.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/certificates/v1;certificatesv1";
+option java_multiple_files = true;
+option java_outer_classname = "CertificateServiceProto";
+option java_package = "com.acme.certificates.v1";
+
+// Manages certificates: creates, reads, changes, and lists them.
+service CertificateService {
+  // Creates a certificate.
+  rpc CreateCertificate(CreateCertificateRequest) returns (CreateCertificateResponse);
+
+  // Returns a certificate.
+  rpc GetCertificate(GetCertificateRequest) returns (GetCertificateResponse);
+
+  // Changes a certificate.
+  rpc UpdateCertificate(UpdateCertificateRequest) returns (UpdateCertificateResponse);
+
+  // Deletes a certificate.
+  rpc DeleteCertificate(DeleteCertificateRequest) returns (DeleteCertificateResponse);
+
+  // Lists certificates a page at a time.
+  rpc ListCertificates(ListCertificatesRequest) returns (ListCertificatesResponse);
+
+  // Returns several certificates at once.
+  rpc BatchGetCertificates(BatchGetCertificatesRequest) returns (BatchGetCertificatesResponse);
+
+  // Lists certificates a page at a time.
+  rpc SearchCertificates(SearchCertificatesRequest) returns (SearchCertificatesResponse);
+
+  // Streams the changes of certificates as they happen.
+  rpc WatchCertificates(WatchCertificatesRequest) returns (stream WatchCertificatesResponse);
+
+  // Takes a stream of certificates and answers once at the end.
+  rpc BatchCreateCertificates(stream BatchCreateCertificatesRequest) returns (BatchCreateCertificatesResponse);
+}
+
+// The request of `CreateCertificate`.
+message CreateCertificateRequest {
+  acme.common.v1.RequestContext context = 1;
+  Certificate certificate = 2;
+  string request_id = 3;
+  bool validate_only = 4;
+}
+
+// The response of `CreateCertificate`.
+message CreateCertificateResponse {
+  Certificate certificate = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `GetCertificate`.
+message GetCertificateRequest {
+  acme.common.v1.RequestContext context = 1;
+  string certificate_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetCertificate`.
+message GetCertificateResponse {
+  Certificate certificate = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `UpdateCertificate`.
+message UpdateCertificateRequest {
+  acme.common.v1.RequestContext context = 1;
+  Certificate certificate = 2;
+  google.protobuf.FieldMask update_mask = 3;
+  bool allow_missing = 4;
+}
+
+// The response of `UpdateCertificate`.
+message UpdateCertificateResponse {
+  Certificate certificate = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `DeleteCertificate`.
+message DeleteCertificateRequest {
+  acme.common.v1.RequestContext context = 1;
+  string certificate_id = 2;
+  string reason = 3;
+  string etag = 4;
+  bool force = 5;
+}
+
+// The response of `DeleteCertificate`.
+message DeleteCertificateResponse {
+  acme.common.v1.OperationResult result = 1;
+  google.protobuf.Timestamp effective_at = 2;
+}
+
+// The request of `ListCertificates`.
+message ListCertificatesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated CertificateStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListCertificatesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListCertificates`.
+message ListCertificatesResponse {
+  repeated Certificate certificates = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `BatchGetCertificates`.
+message BatchGetCertificatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  repeated string certificate_ids = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `BatchGetCertificates`.
+message BatchGetCertificatesResponse {
+  repeated Certificate certificates = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SearchCertificates`.
+message SearchCertificatesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated CertificateStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  SearchCertificatesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `SearchCertificates`.
+message SearchCertificatesResponse {
+  repeated Certificate certificates = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `WatchCertificates`.
+message WatchCertificatesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated CertificateStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  WatchCertificatesRequest.Filter filter = 2;
+  google.protobuf.Timestamp since = 3;
+  int32 max_events = 4;
+  acme.common.v1.ContactInfo subscriber = 5;
+}
+
+// The response of `WatchCertificates`.
+message WatchCertificatesResponse {
+  Certificate certificate = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `BatchCreateCertificates`.
+message BatchCreateCertificatesRequest {
+  // What a stream of records starts with.
+  message StreamHeader {
+    string source = 1;
+    string format = 2;
+    int64 total_records = 3;
+    acme.common.v1.ContactInfo submitted_by = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof chunk {
+    BatchCreateCertificatesRequest.StreamHeader header = 2;
+    Certificate record = 3;
+  }
+  int64 sequence = 4;
+}
+
+// The response of `BatchCreateCertificates`.
+message BatchCreateCertificatesResponse {
+  // A record the import turned down.
+  message Rejection {
+    int64 sequence = 1;
+    string reason = 2;
+    string certificate_id = 3;
+  }
+
+  int64 accepted = 1;
+  int64 rejected = 2;
+  repeated BatchCreateCertificatesResponse.Rejection rejections = 3;
+  acme.common.v1.OperationResult result = 4;
+}

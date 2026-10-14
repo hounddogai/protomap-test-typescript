@@ -1,0 +1,333 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.chat.v1;
+
+import "acme/chat/v1/chat.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Chat.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/chat/v1;chatv1";
+option java_multiple_files = true;
+option java_outer_classname = "ChatBotApprovalServiceProto";
+option java_package = "com.acme.chat.v1";
+
+// Routes chat bots through approval, with escalation and delegation.
+service ChatBotApprovalService {
+  // Submits a chat bot.
+  rpc SubmitChatBot(SubmitChatBotRequest) returns (SubmitChatBotResponse);
+
+  // Approves a chat bot.
+  rpc ApproveChatBot(ApproveChatBotRequest) returns (ApproveChatBotResponse);
+
+  // Rejects a chat bot.
+  rpc RejectChatBot(RejectChatBotRequest) returns (RejectChatBotResponse);
+
+  // Escalates a chat bot.
+  rpc EscalateChatBot(EscalateChatBotRequest) returns (EscalateChatBotResponse);
+
+  // Lists chat bots a page at a time.
+  rpc ListPendingChatBots(ListPendingChatBotsRequest) returns (ListPendingChatBotsResponse);
+
+  // Delegates a chat bot.
+  rpc DelegateChatBotApproval(DelegateChatBotApprovalRequest) returns (DelegateChatBotApprovalResponse);
+
+  // Recalls a chat bot.
+  rpc RecallChatBot(RecallChatBotRequest) returns (RecallChatBotResponse);
+
+  // Returns a chat bot.
+  rpc GetChatBotApprovalStatus(GetChatBotApprovalStatusRequest) returns (GetChatBotApprovalStatusResponse);
+
+  // Comments a chat bot.
+  rpc CommentChatBotApproval(CommentChatBotApprovalRequest) returns (CommentChatBotApprovalResponse);
+}
+
+// The request of `SubmitChatBot`.
+message SubmitChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  SubmitChatBotRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitChatBot`.
+message SubmitChatBotResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  SubmitChatBotResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveChatBot`.
+message ApproveChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  ApproveChatBotRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveChatBot`.
+message ApproveChatBotResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  ApproveChatBotResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectChatBot`.
+message RejectChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  RejectChatBotRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectChatBot`.
+message RejectChatBotResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  RejectChatBotResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateChatBot`.
+message EscalateChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  EscalateChatBotRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateChatBot`.
+message EscalateChatBotResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  EscalateChatBotResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingChatBots`.
+message ListPendingChatBotsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ChatBotStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingChatBotsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingChatBots`.
+message ListPendingChatBotsResponse {
+  repeated ChatBot chat_bots = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateChatBotApproval`.
+message DelegateChatBotApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  DelegateChatBotApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateChatBotApproval`.
+message DelegateChatBotApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  DelegateChatBotApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallChatBot`.
+message RecallChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  RecallChatBotRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallChatBot`.
+message RecallChatBotResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  RecallChatBotResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetChatBotApprovalStatus`.
+message GetChatBotApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetChatBotApprovalStatus`.
+message GetChatBotApprovalStatusResponse {
+  ChatBot chat_bot = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentChatBotApproval`.
+message CommentChatBotApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  CommentChatBotApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentChatBotApproval`.
+message CommentChatBotApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  CommentChatBotApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

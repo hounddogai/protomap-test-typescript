@@ -1,0 +1,294 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.notifications.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/notifications/v1/notifications.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Notifications.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/notifications/v1;notificationsv1";
+option java_multiple_files = true;
+option java_outer_classname = "NotificationTemplateAdminServiceProto";
+option java_package = "com.acme.notifications.v1";
+
+// Operator actions on notification templates that support staff run by hand.
+service NotificationTemplateAdminService {
+  // Archives a notification template.
+  rpc ArchiveNotificationTemplate(ArchiveNotificationTemplateRequest) returns (ArchiveNotificationTemplateResponse);
+
+  // Restores a notification template.
+  rpc RestoreNotificationTemplate(RestoreNotificationTemplateRequest) returns (RestoreNotificationTemplateResponse);
+
+  // Deletes a notification template.
+  rpc PurgeNotificationTemplate(PurgeNotificationTemplateRequest) returns (PurgeNotificationTemplateResponse);
+
+  // Reassigns a notification template.
+  rpc ReassignNotificationTemplate(ReassignNotificationTemplateRequest) returns (ReassignNotificationTemplateResponse);
+
+  // Locks a notification template.
+  rpc LockNotificationTemplate(LockNotificationTemplateRequest) returns (LockNotificationTemplateResponse);
+
+  // Unlocks a notification template.
+  rpc UnlockNotificationTemplate(UnlockNotificationTemplateRequest) returns (UnlockNotificationTemplateResponse);
+
+  // Transfers a notification template.
+  rpc TransferNotificationTemplate(TransferNotificationTemplateRequest) returns (TransferNotificationTemplateResponse);
+
+  // Repairs a notification template.
+  rpc RepairNotificationTemplate(RepairNotificationTemplateRequest) returns (RepairNotificationTemplateResponse);
+}
+
+// The request of `ArchiveNotificationTemplate`.
+message ArchiveNotificationTemplateRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  ArchiveNotificationTemplateRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ArchiveNotificationTemplate`.
+message ArchiveNotificationTemplateResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  NotificationTemplate notification_template = 1;
+  ArchiveNotificationTemplateResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RestoreNotificationTemplate`.
+message RestoreNotificationTemplateRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  RestoreNotificationTemplateRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `RestoreNotificationTemplate`.
+message RestoreNotificationTemplateResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  NotificationTemplate notification_template = 1;
+  RestoreNotificationTemplateResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PurgeNotificationTemplate`.
+message PurgeNotificationTemplateRequest {
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  string reason = 3;
+  string etag = 4;
+  bool force = 5;
+}
+
+// The response of `PurgeNotificationTemplate`.
+message PurgeNotificationTemplateResponse {
+  acme.common.v1.OperationResult result = 1;
+  google.protobuf.Timestamp effective_at = 2;
+}
+
+// The request of `ReassignNotificationTemplate`.
+message ReassignNotificationTemplateRequest {
+  // What the operation needs besides the record.
+  message Details {
+    acme.identity.v1.UserRef assignee = 1;
+    string queue = 2;
+    int32 capacity = 3;
+    string assignee_email = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  ReassignNotificationTemplateRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ReassignNotificationTemplate`.
+message ReassignNotificationTemplateResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  NotificationTemplate notification_template = 1;
+  ReassignNotificationTemplateResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LockNotificationTemplate`.
+message LockNotificationTemplateRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  LockNotificationTemplateRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `LockNotificationTemplate`.
+message LockNotificationTemplateResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  NotificationTemplate notification_template = 1;
+  LockNotificationTemplateResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `UnlockNotificationTemplate`.
+message UnlockNotificationTemplateRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  UnlockNotificationTemplateRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `UnlockNotificationTemplate`.
+message UnlockNotificationTemplateResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  NotificationTemplate notification_template = 1;
+  UnlockNotificationTemplateResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `TransferNotificationTemplate`.
+message TransferNotificationTemplateRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  TransferNotificationTemplateRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `TransferNotificationTemplate`.
+message TransferNotificationTemplateResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  NotificationTemplate notification_template = 1;
+  TransferNotificationTemplateResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RepairNotificationTemplate`.
+message RepairNotificationTemplateRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  NotificationTemplate notification_template = 3;
+  RepairNotificationTemplateRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RepairNotificationTemplate`.
+message RepairNotificationTemplateResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  NotificationTemplate notification_template = 1;
+  RepairNotificationTemplateResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

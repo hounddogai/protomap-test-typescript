@@ -1,0 +1,255 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.experiments.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/experiments/v1/experiments.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Experiments.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/experiments/v1;experimentsv1";
+option java_multiple_files = true;
+option java_outer_classname = "ExposureLifecycleServiceProto";
+option java_package = "com.acme.experiments.v1";
+
+// Moves an exposure between the states of its lifecycle.
+service ExposureLifecycleService {
+  // Activates an exposure.
+  rpc ActivateExposure(ActivateExposureRequest) returns (ActivateExposureResponse);
+
+  // Suspends an exposure.
+  rpc SuspendExposure(SuspendExposureRequest) returns (SuspendExposureResponse);
+
+  // Reinstates an exposure.
+  rpc ReinstateExposure(ReinstateExposureRequest) returns (ReinstateExposureResponse);
+
+  // Terminates an exposure.
+  rpc TerminateExposure(TerminateExposureRequest) returns (TerminateExposureResponse);
+
+  // Renews an exposure.
+  rpc RenewExposure(RenewExposureRequest) returns (RenewExposureResponse);
+
+  // Expires an exposure.
+  rpc ExpireExposure(ExpireExposureRequest) returns (ExpireExposureResponse);
+
+  // Returns an exposure.
+  rpc GetExposureLifecycle(GetExposureLifecycleRequest) returns (GetExposureLifecycleResponse);
+}
+
+// The request of `ActivateExposure`.
+message ActivateExposureRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  ActivateExposureRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ActivateExposure`.
+message ActivateExposureResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  ActivateExposureResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SuspendExposure`.
+message SuspendExposureRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  SuspendExposureRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SuspendExposure`.
+message SuspendExposureResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  SuspendExposureResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReinstateExposure`.
+message ReinstateExposureRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  ReinstateExposureRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ReinstateExposure`.
+message ReinstateExposureResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  ReinstateExposureResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `TerminateExposure`.
+message TerminateExposureRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  TerminateExposureRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `TerminateExposure`.
+message TerminateExposureResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  TerminateExposureResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RenewExposure`.
+message RenewExposureRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  RenewExposureRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `RenewExposure`.
+message RenewExposureResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  RenewExposureResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExpireExposure`.
+message ExpireExposureRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  ExpireExposureRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ExpireExposure`.
+message ExpireExposureResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  ExpireExposureResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetExposureLifecycle`.
+message GetExposureLifecycleRequest {
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetExposureLifecycle`.
+message GetExposureLifecycleResponse {
+  Exposure exposure = 1;
+  acme.common.v1.OperationResult result = 2;
+}

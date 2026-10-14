@@ -1,0 +1,258 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.forms.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/forms/v1/forms.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Forms.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/forms/v1;formsv1";
+option java_multiple_files = true;
+option java_outer_classname = "FormFieldLifecycleServiceProto";
+option java_package = "com.acme.forms.v1";
+
+// Moves a form field between the states of its lifecycle.
+service FormFieldLifecycleService {
+  // Activates a form field.
+  rpc ActivateFormField(ActivateFormFieldRequest) returns (ActivateFormFieldResponse);
+
+  // Suspends a form field.
+  rpc SuspendFormField(SuspendFormFieldRequest) returns (SuspendFormFieldResponse);
+
+  // Reinstates a form field.
+  rpc ReinstateFormField(ReinstateFormFieldRequest) returns (ReinstateFormFieldResponse);
+
+  // Renews a form field.
+  rpc RenewFormField(RenewFormFieldRequest) returns (RenewFormFieldResponse);
+
+  // Expires a form field.
+  rpc ExpireFormField(ExpireFormFieldRequest) returns (ExpireFormFieldResponse);
+
+  // Returns a form field.
+  rpc GetFormFieldLifecycle(GetFormFieldLifecycleRequest) returns (GetFormFieldLifecycleResponse);
+
+  // Schedules a form field.
+  rpc ScheduleFormFieldExpiry(ScheduleFormFieldExpiryRequest) returns (ScheduleFormFieldExpiryResponse);
+}
+
+// The request of `ActivateFormField`.
+message ActivateFormFieldRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  ActivateFormFieldRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ActivateFormField`.
+message ActivateFormFieldResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormField form_field = 1;
+  ActivateFormFieldResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SuspendFormField`.
+message SuspendFormFieldRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  SuspendFormFieldRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SuspendFormField`.
+message SuspendFormFieldResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormField form_field = 1;
+  SuspendFormFieldResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReinstateFormField`.
+message ReinstateFormFieldRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  ReinstateFormFieldRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ReinstateFormField`.
+message ReinstateFormFieldResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormField form_field = 1;
+  ReinstateFormFieldResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RenewFormField`.
+message RenewFormFieldRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  RenewFormFieldRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `RenewFormField`.
+message RenewFormFieldResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormField form_field = 1;
+  RenewFormFieldResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExpireFormField`.
+message ExpireFormFieldRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  ExpireFormFieldRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ExpireFormField`.
+message ExpireFormFieldResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormField form_field = 1;
+  ExpireFormFieldResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetFormFieldLifecycle`.
+message GetFormFieldLifecycleRequest {
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetFormFieldLifecycle`.
+message GetFormFieldLifecycleResponse {
+  FormField form_field = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ScheduleFormFieldExpiry`.
+message ScheduleFormFieldExpiryRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  FormField form_field = 3;
+  ScheduleFormFieldExpiryRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScheduleFormFieldExpiry`.
+message ScheduleFormFieldExpiryResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormField form_field = 1;
+  ScheduleFormFieldExpiryResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

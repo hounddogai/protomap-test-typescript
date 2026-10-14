@@ -1,0 +1,305 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.webhooks.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/webhooks/v1/webhooks.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Webhooks.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/webhooks/v1;webhooksv1";
+option java_multiple_files = true;
+option java_outer_classname = "WebhookEndpointValidationServiceProto";
+option java_package = "com.acme.webhooks.v1";
+
+// Checks webhook endpoints against the rules before anything acts on them.
+service WebhookEndpointValidationService {
+  // Validates a webhook endpoint.
+  rpc ValidateWebhookEndpoint(ValidateWebhookEndpointRequest) returns (ValidateWebhookEndpointResponse);
+
+  // Previews a webhook endpoint.
+  rpc PreviewWebhookEndpoint(PreviewWebhookEndpointRequest) returns (PreviewWebhookEndpointResponse);
+
+  // Checks a webhook endpoint.
+  rpc CheckWebhookEndpointEligibility(CheckWebhookEndpointEligibilityRequest) returns (CheckWebhookEndpointEligibilityResponse);
+
+  // Normalizes a webhook endpoint.
+  rpc NormalizeWebhookEndpoint(NormalizeWebhookEndpointRequest) returns (NormalizeWebhookEndpointResponse);
+
+  // Explains a webhook endpoint.
+  rpc ExplainWebhookEndpointDecision(ExplainWebhookEndpointDecisionRequest) returns (ExplainWebhookEndpointDecisionResponse);
+
+  // Scores a webhook endpoint.
+  rpc ScoreWebhookEndpoint(ScoreWebhookEndpointRequest) returns (ScoreWebhookEndpointResponse);
+
+  // Lints a webhook endpoint.
+  rpc LintWebhookEndpoints(LintWebhookEndpointsRequest) returns (LintWebhookEndpointsResponse);
+
+  // Returns a webhook endpoint.
+  rpc GetWebhookEndpointRules(GetWebhookEndpointRulesRequest) returns (GetWebhookEndpointRulesResponse);
+}
+
+// The request of `ValidateWebhookEndpoint`.
+message ValidateWebhookEndpointRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  ValidateWebhookEndpointRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateWebhookEndpoint`.
+message ValidateWebhookEndpointResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  ValidateWebhookEndpointResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewWebhookEndpoint`.
+message PreviewWebhookEndpointRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  PreviewWebhookEndpointRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewWebhookEndpoint`.
+message PreviewWebhookEndpointResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  PreviewWebhookEndpointResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckWebhookEndpointEligibility`.
+message CheckWebhookEndpointEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  CheckWebhookEndpointEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckWebhookEndpointEligibility`.
+message CheckWebhookEndpointEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  CheckWebhookEndpointEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeWebhookEndpoint`.
+message NormalizeWebhookEndpointRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  NormalizeWebhookEndpointRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeWebhookEndpoint`.
+message NormalizeWebhookEndpointResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  NormalizeWebhookEndpointResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainWebhookEndpointDecision`.
+message ExplainWebhookEndpointDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  ExplainWebhookEndpointDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainWebhookEndpointDecision`.
+message ExplainWebhookEndpointDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  ExplainWebhookEndpointDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreWebhookEndpoint`.
+message ScoreWebhookEndpointRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  ScoreWebhookEndpointRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreWebhookEndpoint`.
+message ScoreWebhookEndpointResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreWebhookEndpointResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  ScoreWebhookEndpointResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintWebhookEndpoints`.
+message LintWebhookEndpointsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  LintWebhookEndpointsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintWebhookEndpoints`.
+message LintWebhookEndpointsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  LintWebhookEndpointsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetWebhookEndpointRules`.
+message GetWebhookEndpointRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetWebhookEndpointRules`.
+message GetWebhookEndpointRulesResponse {
+  WebhookEndpoint webhook_endpoint = 1;
+  acme.common.v1.OperationResult result = 2;
+}

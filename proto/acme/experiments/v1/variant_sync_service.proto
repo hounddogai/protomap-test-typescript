@@ -1,0 +1,284 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.experiments.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/experiments/v1/experiments.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Experiments.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/experiments/v1;experimentsv1";
+option java_multiple_files = true;
+option java_outer_classname = "VariantSyncServiceProto";
+option java_package = "com.acme.experiments.v1";
+
+// Keeps variants in step with the systems of record in other regions.
+service VariantSyncService {
+  // Syncs a variant.
+  rpc SyncVariants(SyncVariantsRequest) returns (SyncVariantsResponse);
+
+  // Pushs a variant.
+  rpc PushVariant(PushVariantRequest) returns (PushVariantResponse);
+
+  // Pulls a variant.
+  rpc PullVariants(PullVariantsRequest) returns (PullVariantsResponse);
+
+  // Reconciles a variant.
+  rpc ReconcileVariants(ReconcileVariantsRequest) returns (ReconcileVariantsResponse);
+
+  // Exchanges changes of variants with a peer.
+  rpc StreamVariantChanges(stream StreamVariantChangesRequest) returns (stream StreamVariantChangesResponse);
+
+  // Resolves a variant.
+  rpc ResolveVariantConflict(ResolveVariantConflictRequest) returns (ResolveVariantConflictResponse);
+
+  // Returns a variant.
+  rpc GetVariantSyncState(GetVariantSyncStateRequest) returns (GetVariantSyncStateResponse);
+
+  // Lists variants a page at a time.
+  rpc ListVariantConflicts(ListVariantConflictsRequest) returns (ListVariantConflictsResponse);
+}
+
+// The request of `SyncVariants`.
+message SyncVariantsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string variant_id = 2;
+  Variant variant = 3;
+  SyncVariantsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SyncVariants`.
+message SyncVariantsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Variant variant = 1;
+  SyncVariantsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PushVariant`.
+message PushVariantRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string variant_id = 2;
+  Variant variant = 3;
+  PushVariantRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PushVariant`.
+message PushVariantResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Variant variant = 1;
+  PushVariantResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PullVariants`.
+message PullVariantsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string variant_id = 2;
+  Variant variant = 3;
+  PullVariantsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PullVariants`.
+message PullVariantsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Variant variant = 1;
+  PullVariantsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReconcileVariants`.
+message ReconcileVariantsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string variant_id = 2;
+  Variant variant = 3;
+  ReconcileVariantsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ReconcileVariants`.
+message ReconcileVariantsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Variant variant = 1;
+  ReconcileVariantsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `StreamVariantChanges`.
+message StreamVariantChangesRequest {
+  // An acknowledgment of a change the peer sent.
+  message ChangeAck {
+    int64 sequence = 1;
+    string status = 2;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof frame {
+    Variant change = 2;
+    StreamVariantChangesRequest.ChangeAck ack = 3;
+  }
+  string cursor = 4;
+}
+
+// The response of `StreamVariantChanges`.
+message StreamVariantChangesResponse {
+  Variant variant = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `ResolveVariantConflict`.
+message ResolveVariantConflictRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string variant_id = 2;
+  Variant variant = 3;
+  ResolveVariantConflictRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResolveVariantConflict`.
+message ResolveVariantConflictResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Variant variant = 1;
+  ResolveVariantConflictResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetVariantSyncState`.
+message GetVariantSyncStateRequest {
+  acme.common.v1.RequestContext context = 1;
+  string variant_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetVariantSyncState`.
+message GetVariantSyncStateResponse {
+  Variant variant = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListVariantConflicts`.
+message ListVariantConflictsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated VariantStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListVariantConflictsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListVariantConflicts`.
+message ListVariantConflictsResponse {
+  repeated Variant variants = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}

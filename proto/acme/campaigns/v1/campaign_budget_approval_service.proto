@@ -1,0 +1,249 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.campaigns.v1;
+
+import "acme/campaigns/v1/campaigns.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Campaigns.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/campaigns/v1;campaignsv1";
+option java_multiple_files = true;
+option java_outer_classname = "CampaignBudgetApprovalServiceProto";
+option java_package = "com.acme.campaigns.v1";
+
+// Routes campaign budgets through approval, with escalation and delegation.
+service CampaignBudgetApprovalService {
+  // Submits a campaign budget.
+  rpc SubmitCampaignBudget(SubmitCampaignBudgetRequest) returns (SubmitCampaignBudgetResponse);
+
+  // Approves a campaign budget.
+  rpc ApproveCampaignBudget(ApproveCampaignBudgetRequest) returns (ApproveCampaignBudgetResponse);
+
+  // Rejects a campaign budget.
+  rpc RejectCampaignBudget(RejectCampaignBudgetRequest) returns (RejectCampaignBudgetResponse);
+
+  // Delegates a campaign budget.
+  rpc DelegateCampaignBudgetApproval(DelegateCampaignBudgetApprovalRequest) returns (DelegateCampaignBudgetApprovalResponse);
+
+  // Recalls a campaign budget.
+  rpc RecallCampaignBudget(RecallCampaignBudgetRequest) returns (RecallCampaignBudgetResponse);
+
+  // Comments a campaign budget.
+  rpc CommentCampaignBudgetApproval(CommentCampaignBudgetApprovalRequest) returns (CommentCampaignBudgetApprovalResponse);
+}
+
+// The request of `SubmitCampaignBudget`.
+message SubmitCampaignBudgetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  CampaignBudget campaign_budget = 3;
+  SubmitCampaignBudgetRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitCampaignBudget`.
+message SubmitCampaignBudgetResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignBudget campaign_budget = 1;
+  SubmitCampaignBudgetResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveCampaignBudget`.
+message ApproveCampaignBudgetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  CampaignBudget campaign_budget = 3;
+  ApproveCampaignBudgetRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveCampaignBudget`.
+message ApproveCampaignBudgetResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignBudget campaign_budget = 1;
+  ApproveCampaignBudgetResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectCampaignBudget`.
+message RejectCampaignBudgetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  CampaignBudget campaign_budget = 3;
+  RejectCampaignBudgetRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectCampaignBudget`.
+message RejectCampaignBudgetResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignBudget campaign_budget = 1;
+  RejectCampaignBudgetResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateCampaignBudgetApproval`.
+message DelegateCampaignBudgetApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  CampaignBudget campaign_budget = 3;
+  DelegateCampaignBudgetApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateCampaignBudgetApproval`.
+message DelegateCampaignBudgetApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignBudget campaign_budget = 1;
+  DelegateCampaignBudgetApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallCampaignBudget`.
+message RecallCampaignBudgetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  CampaignBudget campaign_budget = 3;
+  RecallCampaignBudgetRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallCampaignBudget`.
+message RecallCampaignBudgetResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignBudget campaign_budget = 1;
+  RecallCampaignBudgetResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CommentCampaignBudgetApproval`.
+message CommentCampaignBudgetApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  CampaignBudget campaign_budget = 3;
+  CommentCampaignBudgetApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentCampaignBudgetApproval`.
+message CommentCampaignBudgetApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignBudget campaign_budget = 1;
+  CommentCampaignBudgetApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

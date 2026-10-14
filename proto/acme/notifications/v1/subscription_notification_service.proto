@@ -1,0 +1,247 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.notifications.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/notifications/v1/notifications.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Notifications.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/notifications/v1;notificationsv1";
+option java_multiple_files = true;
+option java_outer_classname = "SubscriptionNotificationServiceProto";
+option java_package = "com.acme.notifications.v1";
+
+// Tells the people who follow a subscription what changed.
+service SubscriptionNotificationService {
+  // Subscribes a subscription.
+  rpc SubscribeSubscriptionUpdates(SubscribeSubscriptionUpdatesRequest) returns (SubscribeSubscriptionUpdatesResponse);
+
+  // Unsubscribes a subscription.
+  rpc UnsubscribeSubscriptionUpdates(UnsubscribeSubscriptionUpdatesRequest) returns (UnsubscribeSubscriptionUpdatesResponse);
+
+  // Notifys a subscription.
+  rpc NotifySubscriptionWatchers(NotifySubscriptionWatchersRequest) returns (NotifySubscriptionWatchersResponse);
+
+  // Lists subscriptions a page at a time.
+  rpc ListSubscriptionSubscriptions(ListSubscriptionSubscriptionsRequest) returns (ListSubscriptionSubscriptionsResponse);
+
+  // Sends a subscription.
+  rpc SendSubscriptionTestNotice(SendSubscriptionTestNoticeRequest) returns (SendSubscriptionTestNoticeResponse);
+
+  // Returns a subscription.
+  rpc GetSubscriptionPreferences(GetSubscriptionPreferencesRequest) returns (GetSubscriptionPreferencesResponse);
+
+  // Streams the changes of subscriptions as they happen.
+  rpc StreamSubscriptionNotices(StreamSubscriptionNoticesRequest) returns (stream StreamSubscriptionNoticesResponse);
+}
+
+// The request of `SubscribeSubscriptionUpdates`.
+message SubscribeSubscriptionUpdatesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    acme.common.v1.ContactInfo recipient = 1;
+    string template_id = 2;
+    map<string, string> variables = 3;
+    google.protobuf.Any payload = 4;
+    string channel = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  SubscribeSubscriptionUpdatesRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SubscribeSubscriptionUpdates`.
+message SubscribeSubscriptionUpdatesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Subscription subscription = 1;
+  SubscribeSubscriptionUpdatesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `UnsubscribeSubscriptionUpdates`.
+message UnsubscribeSubscriptionUpdatesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    acme.common.v1.ContactInfo recipient = 1;
+    string template_id = 2;
+    map<string, string> variables = 3;
+    google.protobuf.Any payload = 4;
+    string channel = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  UnsubscribeSubscriptionUpdatesRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `UnsubscribeSubscriptionUpdates`.
+message UnsubscribeSubscriptionUpdatesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Subscription subscription = 1;
+  UnsubscribeSubscriptionUpdatesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NotifySubscriptionWatchers`.
+message NotifySubscriptionWatchersRequest {
+  // What the operation needs besides the record.
+  message Details {
+    acme.common.v1.ContactInfo recipient = 1;
+    string template_id = 2;
+    map<string, string> variables = 3;
+    google.protobuf.Any payload = 4;
+    string channel = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  NotifySubscriptionWatchersRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `NotifySubscriptionWatchers`.
+message NotifySubscriptionWatchersResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Subscription subscription = 1;
+  NotifySubscriptionWatchersResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListSubscriptionSubscriptions`.
+message ListSubscriptionSubscriptionsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated SubscriptionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListSubscriptionSubscriptionsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListSubscriptionSubscriptions`.
+message ListSubscriptionSubscriptionsResponse {
+  repeated Subscription subscriptions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SendSubscriptionTestNotice`.
+message SendSubscriptionTestNoticeRequest {
+  // What the operation needs besides the record.
+  message Details {
+    acme.common.v1.ContactInfo recipient = 1;
+    string template_id = 2;
+    map<string, string> variables = 3;
+    google.protobuf.Any payload = 4;
+    string channel = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  SendSubscriptionTestNoticeRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SendSubscriptionTestNotice`.
+message SendSubscriptionTestNoticeResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Subscription subscription = 1;
+  SendSubscriptionTestNoticeResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetSubscriptionPreferences`.
+message GetSubscriptionPreferencesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetSubscriptionPreferences`.
+message GetSubscriptionPreferencesResponse {
+  Subscription subscription = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `StreamSubscriptionNotices`.
+message StreamSubscriptionNoticesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated SubscriptionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  StreamSubscriptionNoticesRequest.Filter filter = 2;
+  google.protobuf.Timestamp since = 3;
+  int32 max_events = 4;
+  acme.common.v1.ContactInfo subscriber = 5;
+}
+
+// The response of `StreamSubscriptionNotices`.
+message StreamSubscriptionNoticesResponse {
+  Subscription subscription = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}

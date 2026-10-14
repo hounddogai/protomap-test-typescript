@@ -1,0 +1,284 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.messaging.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/messaging/v1/messaging.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Messaging.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/messaging/v1;messagingv1";
+option java_multiple_files = true;
+option java_outer_classname = "ParticipantSyncServiceProto";
+option java_package = "com.acme.messaging.v1";
+
+// Keeps participants in step with the systems of record in other regions.
+service ParticipantSyncService {
+  // Syncs a participant.
+  rpc SyncParticipants(SyncParticipantsRequest) returns (SyncParticipantsResponse);
+
+  // Pushs a participant.
+  rpc PushParticipant(PushParticipantRequest) returns (PushParticipantResponse);
+
+  // Pulls a participant.
+  rpc PullParticipants(PullParticipantsRequest) returns (PullParticipantsResponse);
+
+  // Reconciles a participant.
+  rpc ReconcileParticipants(ReconcileParticipantsRequest) returns (ReconcileParticipantsResponse);
+
+  // Exchanges changes of participants with a peer.
+  rpc StreamParticipantChanges(stream StreamParticipantChangesRequest) returns (stream StreamParticipantChangesResponse);
+
+  // Resolves a participant.
+  rpc ResolveParticipantConflict(ResolveParticipantConflictRequest) returns (ResolveParticipantConflictResponse);
+
+  // Returns a participant.
+  rpc GetParticipantSyncState(GetParticipantSyncStateRequest) returns (GetParticipantSyncStateResponse);
+
+  // Lists participants a page at a time.
+  rpc ListParticipantConflicts(ListParticipantConflictsRequest) returns (ListParticipantConflictsResponse);
+}
+
+// The request of `SyncParticipants`.
+message SyncParticipantsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  Participant participant = 3;
+  SyncParticipantsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SyncParticipants`.
+message SyncParticipantsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Participant participant = 1;
+  SyncParticipantsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PushParticipant`.
+message PushParticipantRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  Participant participant = 3;
+  PushParticipantRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PushParticipant`.
+message PushParticipantResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Participant participant = 1;
+  PushParticipantResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PullParticipants`.
+message PullParticipantsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  Participant participant = 3;
+  PullParticipantsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PullParticipants`.
+message PullParticipantsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Participant participant = 1;
+  PullParticipantsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReconcileParticipants`.
+message ReconcileParticipantsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  Participant participant = 3;
+  ReconcileParticipantsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ReconcileParticipants`.
+message ReconcileParticipantsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Participant participant = 1;
+  ReconcileParticipantsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `StreamParticipantChanges`.
+message StreamParticipantChangesRequest {
+  // An acknowledgment of a change the peer sent.
+  message ChangeAck {
+    int64 sequence = 1;
+    string status = 2;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof frame {
+    Participant change = 2;
+    StreamParticipantChangesRequest.ChangeAck ack = 3;
+  }
+  string cursor = 4;
+}
+
+// The response of `StreamParticipantChanges`.
+message StreamParticipantChangesResponse {
+  Participant participant = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `ResolveParticipantConflict`.
+message ResolveParticipantConflictRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  Participant participant = 3;
+  ResolveParticipantConflictRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResolveParticipantConflict`.
+message ResolveParticipantConflictResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Participant participant = 1;
+  ResolveParticipantConflictResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetParticipantSyncState`.
+message GetParticipantSyncStateRequest {
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetParticipantSyncState`.
+message GetParticipantSyncStateResponse {
+  Participant participant = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListParticipantConflicts`.
+message ListParticipantConflictsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ParticipantStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListParticipantConflictsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListParticipantConflicts`.
+message ListParticipantConflictsResponse {
+  repeated Participant participants = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}

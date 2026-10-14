@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "rootDir": ".",
+    "outDir": "dist/app",
+    "types": [
+      "node"
+    ],
+    "sourceMap": true,
+    "incremental": true,
+    "tsBuildInfoFile": ".cache/typescript.tsbuildinfo"
+  },
+  "include": [
+    "src/**/*.ts",
+    ".cache/proto/**/*.ts",
+    ".cache/verification/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

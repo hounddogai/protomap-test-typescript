@@ -1,0 +1,296 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.webhooks.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/webhooks/v1/webhooks.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Webhooks.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/webhooks/v1;webhooksv1";
+option java_multiple_files = true;
+option java_outer_classname = "WebhookDeliveryWorkflowServiceProto";
+option java_package = "com.acme.webhooks.v1";
+
+// Runs the long-lived workflow that takes a webhook delivery from start to finish.
+service WebhookDeliveryWorkflowService {
+  // Starts a webhook delivery.
+  rpc StartWebhookDeliveryWorkflow(StartWebhookDeliveryWorkflowRequest) returns (StartWebhookDeliveryWorkflowResponse);
+
+  // Advances a webhook delivery.
+  rpc AdvanceWebhookDeliveryWorkflow(AdvanceWebhookDeliveryWorkflowRequest) returns (AdvanceWebhookDeliveryWorkflowResponse);
+
+  // Retrys a webhook delivery.
+  rpc RetryWebhookDeliveryWorkflow(RetryWebhookDeliveryWorkflowRequest) returns (RetryWebhookDeliveryWorkflowResponse);
+
+  // Pauses a webhook delivery.
+  rpc PauseWebhookDeliveryWorkflow(PauseWebhookDeliveryWorkflowRequest) returns (PauseWebhookDeliveryWorkflowResponse);
+
+  // Resumes a webhook delivery.
+  rpc ResumeWebhookDeliveryWorkflow(ResumeWebhookDeliveryWorkflowRequest) returns (ResumeWebhookDeliveryWorkflowResponse);
+
+  // Returns a webhook delivery.
+  rpc InspectWebhookDeliveryWorkflow(InspectWebhookDeliveryWorkflowRequest) returns (InspectWebhookDeliveryWorkflowResponse);
+
+  // Lists webhook deliveries a page at a time.
+  rpc ListWebhookDeliveryWorkflows(ListWebhookDeliveryWorkflowsRequest) returns (ListWebhookDeliveryWorkflowsResponse);
+
+  // Signals a webhook delivery.
+  rpc SignalWebhookDeliveryWorkflow(SignalWebhookDeliveryWorkflowRequest) returns (SignalWebhookDeliveryWorkflowResponse);
+}
+
+// The request of `StartWebhookDeliveryWorkflow`.
+message StartWebhookDeliveryWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_delivery_id = 2;
+  WebhookDelivery webhook_delivery = 3;
+  StartWebhookDeliveryWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartWebhookDeliveryWorkflow`.
+message StartWebhookDeliveryWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookDelivery webhook_delivery = 1;
+  StartWebhookDeliveryWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceWebhookDeliveryWorkflow`.
+message AdvanceWebhookDeliveryWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_delivery_id = 2;
+  WebhookDelivery webhook_delivery = 3;
+  AdvanceWebhookDeliveryWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceWebhookDeliveryWorkflow`.
+message AdvanceWebhookDeliveryWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookDelivery webhook_delivery = 1;
+  AdvanceWebhookDeliveryWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryWebhookDeliveryWorkflow`.
+message RetryWebhookDeliveryWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_delivery_id = 2;
+  WebhookDelivery webhook_delivery = 3;
+  RetryWebhookDeliveryWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryWebhookDeliveryWorkflow`.
+message RetryWebhookDeliveryWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookDelivery webhook_delivery = 1;
+  RetryWebhookDeliveryWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseWebhookDeliveryWorkflow`.
+message PauseWebhookDeliveryWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_delivery_id = 2;
+  WebhookDelivery webhook_delivery = 3;
+  PauseWebhookDeliveryWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseWebhookDeliveryWorkflow`.
+message PauseWebhookDeliveryWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookDelivery webhook_delivery = 1;
+  PauseWebhookDeliveryWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumeWebhookDeliveryWorkflow`.
+message ResumeWebhookDeliveryWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_delivery_id = 2;
+  WebhookDelivery webhook_delivery = 3;
+  ResumeWebhookDeliveryWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumeWebhookDeliveryWorkflow`.
+message ResumeWebhookDeliveryWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookDelivery webhook_delivery = 1;
+  ResumeWebhookDeliveryWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectWebhookDeliveryWorkflow`.
+message InspectWebhookDeliveryWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string webhook_delivery_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectWebhookDeliveryWorkflow`.
+message InspectWebhookDeliveryWorkflowResponse {
+  WebhookDelivery webhook_delivery = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListWebhookDeliveryWorkflows`.
+message ListWebhookDeliveryWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated WebhookDeliveryStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListWebhookDeliveryWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListWebhookDeliveryWorkflows`.
+message ListWebhookDeliveryWorkflowsResponse {
+  repeated WebhookDelivery webhook_deliveries = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalWebhookDeliveryWorkflow`.
+message SignalWebhookDeliveryWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_delivery_id = 2;
+  WebhookDelivery webhook_delivery = 3;
+  SignalWebhookDeliveryWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalWebhookDeliveryWorkflow`.
+message SignalWebhookDeliveryWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookDelivery webhook_delivery = 1;
+  SignalWebhookDeliveryWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

@@ -1,0 +1,217 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.forms.v1;
+
+import "acme/common/v1/audit.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/forms/v1/forms.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Forms.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/forms/v1;formsv1";
+option java_multiple_files = true;
+option java_outer_classname = "FormSubmissionQueryServiceProto";
+option java_package = "com.acme.forms.v1";
+
+// Answers read-only questions about form submissions, for screens and reports.
+service FormSubmissionQueryService {
+  // Returns a form submission.
+  rpc LookupFormSubmission(LookupFormSubmissionRequest) returns (LookupFormSubmissionResponse);
+
+  // Lists form submissions a page at a time.
+  rpc BrowseFormSubmissions(BrowseFormSubmissionsRequest) returns (BrowseFormSubmissionsResponse);
+
+  // Lists form submissions a page at a time.
+  rpc FindFormSubmissions(FindFormSubmissionsRequest) returns (FindFormSubmissionsResponse);
+
+  // Counts form submissions by status.
+  rpc CountFormSubmissions(CountFormSubmissionsRequest) returns (CountFormSubmissionsResponse);
+
+  // Returns several form submissions at once.
+  rpc ResolveFormSubmissions(ResolveFormSubmissionsRequest) returns (ResolveFormSubmissionsResponse);
+
+  // Streams every matching form submission.
+  rpc ExportFormSubmissions(ExportFormSubmissionsRequest) returns (stream ExportFormSubmissionsResponse);
+
+  // Summarizes a form submission.
+  rpc SummarizeFormSubmissions(SummarizeFormSubmissionsRequest) returns (SummarizeFormSubmissionsResponse);
+
+  // Returns a form submission.
+  rpc PeekFormSubmission(PeekFormSubmissionRequest) returns (PeekFormSubmissionResponse);
+}
+
+// The request of `LookupFormSubmission`.
+message LookupFormSubmissionRequest {
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `LookupFormSubmission`.
+message LookupFormSubmissionResponse {
+  FormSubmission form_submission = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `BrowseFormSubmissions`.
+message BrowseFormSubmissionsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated FormSubmissionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  BrowseFormSubmissionsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `BrowseFormSubmissions`.
+message BrowseFormSubmissionsResponse {
+  repeated FormSubmission form_submissions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `FindFormSubmissions`.
+message FindFormSubmissionsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated FormSubmissionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  FindFormSubmissionsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `FindFormSubmissions`.
+message FindFormSubmissionsResponse {
+  repeated FormSubmission form_submissions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CountFormSubmissions`.
+message CountFormSubmissionsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated FormSubmissionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  CountFormSubmissionsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `CountFormSubmissions`.
+message CountFormSubmissionsResponse {
+  int64 count = 1;
+  map<string, int64> by_status = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResolveFormSubmissions`.
+message ResolveFormSubmissionsRequest {
+  acme.common.v1.RequestContext context = 1;
+  repeated string form_submission_ids = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `ResolveFormSubmissions`.
+message ResolveFormSubmissionsResponse {
+  repeated FormSubmission form_submissions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExportFormSubmissions`.
+message ExportFormSubmissionsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated FormSubmissionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  ExportFormSubmissionsRequest.Filter filter = 2;
+  string format = 3;
+  google.protobuf.FieldMask fields = 4;
+  string destination_uri = 5;
+}
+
+// The response of `ExportFormSubmissions`.
+message ExportFormSubmissionsResponse {
+  FormSubmission form_submission = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `SummarizeFormSubmissions`.
+message SummarizeFormSubmissionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string format = 1;
+    acme.common.v1.TimeWindow period = 2;
+    repeated string recipient_emails = 3;
+    string cron = 4;
+    map<string, string> filters = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  SummarizeFormSubmissionsRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SummarizeFormSubmissions`.
+message SummarizeFormSubmissionsResponse {
+  string report_id = 1;
+  string download_uri = 2;
+  map<string, string> summary = 3;
+  acme.common.v1.TimeWindow period = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `PeekFormSubmission`.
+message PeekFormSubmissionRequest {
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `PeekFormSubmission`.
+message PeekFormSubmissionResponse {
+  FormSubmission form_submission = 1;
+  acme.common.v1.OperationResult result = 2;
+}

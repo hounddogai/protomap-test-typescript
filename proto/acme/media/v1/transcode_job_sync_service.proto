@@ -1,0 +1,284 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.media.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/media/v1/media.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Media.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/media/v1;mediav1";
+option java_multiple_files = true;
+option java_outer_classname = "TranscodeJobSyncServiceProto";
+option java_package = "com.acme.media.v1";
+
+// Keeps transcode jobs in step with the systems of record in other regions.
+service TranscodeJobSyncService {
+  // Syncs a transcode job.
+  rpc SyncTranscodeJobs(SyncTranscodeJobsRequest) returns (SyncTranscodeJobsResponse);
+
+  // Pushs a transcode job.
+  rpc PushTranscodeJob(PushTranscodeJobRequest) returns (PushTranscodeJobResponse);
+
+  // Pulls a transcode job.
+  rpc PullTranscodeJobs(PullTranscodeJobsRequest) returns (PullTranscodeJobsResponse);
+
+  // Reconciles a transcode job.
+  rpc ReconcileTranscodeJobs(ReconcileTranscodeJobsRequest) returns (ReconcileTranscodeJobsResponse);
+
+  // Exchanges changes of transcode jobs with a peer.
+  rpc StreamTranscodeJobChanges(stream StreamTranscodeJobChangesRequest) returns (stream StreamTranscodeJobChangesResponse);
+
+  // Resolves a transcode job.
+  rpc ResolveTranscodeJobConflict(ResolveTranscodeJobConflictRequest) returns (ResolveTranscodeJobConflictResponse);
+
+  // Returns a transcode job.
+  rpc GetTranscodeJobSyncState(GetTranscodeJobSyncStateRequest) returns (GetTranscodeJobSyncStateResponse);
+
+  // Lists transcode jobs a page at a time.
+  rpc ListTranscodeJobConflicts(ListTranscodeJobConflictsRequest) returns (ListTranscodeJobConflictsResponse);
+}
+
+// The request of `SyncTranscodeJobs`.
+message SyncTranscodeJobsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  SyncTranscodeJobsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SyncTranscodeJobs`.
+message SyncTranscodeJobsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  SyncTranscodeJobsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PushTranscodeJob`.
+message PushTranscodeJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  PushTranscodeJobRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PushTranscodeJob`.
+message PushTranscodeJobResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  PushTranscodeJobResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PullTranscodeJobs`.
+message PullTranscodeJobsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  PullTranscodeJobsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PullTranscodeJobs`.
+message PullTranscodeJobsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  PullTranscodeJobsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReconcileTranscodeJobs`.
+message ReconcileTranscodeJobsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  ReconcileTranscodeJobsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ReconcileTranscodeJobs`.
+message ReconcileTranscodeJobsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  ReconcileTranscodeJobsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `StreamTranscodeJobChanges`.
+message StreamTranscodeJobChangesRequest {
+  // An acknowledgment of a change the peer sent.
+  message ChangeAck {
+    int64 sequence = 1;
+    string status = 2;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof frame {
+    TranscodeJob change = 2;
+    StreamTranscodeJobChangesRequest.ChangeAck ack = 3;
+  }
+  string cursor = 4;
+}
+
+// The response of `StreamTranscodeJobChanges`.
+message StreamTranscodeJobChangesResponse {
+  TranscodeJob transcode_job = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `ResolveTranscodeJobConflict`.
+message ResolveTranscodeJobConflictRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  ResolveTranscodeJobConflictRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResolveTranscodeJobConflict`.
+message ResolveTranscodeJobConflictResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  ResolveTranscodeJobConflictResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetTranscodeJobSyncState`.
+message GetTranscodeJobSyncStateRequest {
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetTranscodeJobSyncState`.
+message GetTranscodeJobSyncStateResponse {
+  TranscodeJob transcode_job = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListTranscodeJobConflicts`.
+message ListTranscodeJobConflictsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated TranscodeJobStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListTranscodeJobConflictsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListTranscodeJobConflicts`.
+message ListTranscodeJobConflictsResponse {
+  repeated TranscodeJob transcode_jobs = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}

@@ -1,0 +1,317 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.personalization.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/personalization/v1/personalization.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Personalization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/personalization/v1;personalizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "RecommendationWorkflowServiceProto";
+option java_package = "com.acme.personalization.v1";
+
+// Runs the long-lived workflow that takes a recommendation from start to finish.
+service RecommendationWorkflowService {
+  // Starts a recommendation.
+  rpc StartRecommendationWorkflow(StartRecommendationWorkflowRequest) returns (StartRecommendationWorkflowResponse);
+
+  // Advances a recommendation.
+  rpc AdvanceRecommendationWorkflow(AdvanceRecommendationWorkflowRequest) returns (AdvanceRecommendationWorkflowResponse);
+
+  // Cancels a recommendation.
+  rpc CancelRecommendationWorkflow(CancelRecommendationWorkflowRequest) returns (CancelRecommendationWorkflowResponse);
+
+  // Retrys a recommendation.
+  rpc RetryRecommendationWorkflow(RetryRecommendationWorkflowRequest) returns (RetryRecommendationWorkflowResponse);
+
+  // Pauses a recommendation.
+  rpc PauseRecommendationWorkflow(PauseRecommendationWorkflowRequest) returns (PauseRecommendationWorkflowResponse);
+
+  // Resumes a recommendation.
+  rpc ResumeRecommendationWorkflow(ResumeRecommendationWorkflowRequest) returns (ResumeRecommendationWorkflowResponse);
+
+  // Lists recommendations a page at a time.
+  rpc ListRecommendationWorkflows(ListRecommendationWorkflowsRequest) returns (ListRecommendationWorkflowsResponse);
+
+  // Signals a recommendation.
+  rpc SignalRecommendationWorkflow(SignalRecommendationWorkflowRequest) returns (SignalRecommendationWorkflowResponse);
+}
+
+// The request of `StartRecommendationWorkflow`.
+message StartRecommendationWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string recommendation_id = 2;
+  Recommendation recommendation = 3;
+  StartRecommendationWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartRecommendationWorkflow`.
+message StartRecommendationWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Recommendation recommendation = 1;
+  StartRecommendationWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceRecommendationWorkflow`.
+message AdvanceRecommendationWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string recommendation_id = 2;
+  Recommendation recommendation = 3;
+  AdvanceRecommendationWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceRecommendationWorkflow`.
+message AdvanceRecommendationWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Recommendation recommendation = 1;
+  AdvanceRecommendationWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelRecommendationWorkflow`.
+message CancelRecommendationWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string recommendation_id = 2;
+  Recommendation recommendation = 3;
+  CancelRecommendationWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelRecommendationWorkflow`.
+message CancelRecommendationWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Recommendation recommendation = 1;
+  CancelRecommendationWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryRecommendationWorkflow`.
+message RetryRecommendationWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string recommendation_id = 2;
+  Recommendation recommendation = 3;
+  RetryRecommendationWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryRecommendationWorkflow`.
+message RetryRecommendationWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Recommendation recommendation = 1;
+  RetryRecommendationWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseRecommendationWorkflow`.
+message PauseRecommendationWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string recommendation_id = 2;
+  Recommendation recommendation = 3;
+  PauseRecommendationWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseRecommendationWorkflow`.
+message PauseRecommendationWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Recommendation recommendation = 1;
+  PauseRecommendationWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumeRecommendationWorkflow`.
+message ResumeRecommendationWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string recommendation_id = 2;
+  Recommendation recommendation = 3;
+  ResumeRecommendationWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumeRecommendationWorkflow`.
+message ResumeRecommendationWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Recommendation recommendation = 1;
+  ResumeRecommendationWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListRecommendationWorkflows`.
+message ListRecommendationWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated RecommendationStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListRecommendationWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListRecommendationWorkflows`.
+message ListRecommendationWorkflowsResponse {
+  repeated Recommendation recommendations = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalRecommendationWorkflow`.
+message SignalRecommendationWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string recommendation_id = 2;
+  Recommendation recommendation = 3;
+  SignalRecommendationWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalRecommendationWorkflow`.
+message SignalRecommendationWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Recommendation recommendation = 1;
+  SignalRecommendationWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

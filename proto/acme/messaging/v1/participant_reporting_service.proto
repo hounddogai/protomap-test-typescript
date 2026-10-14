@@ -1,0 +1,243 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.messaging.v1;
+
+import "acme/common/v1/audit.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/messaging/v1/messaging.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Messaging.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/messaging/v1;messagingv1";
+option java_multiple_files = true;
+option java_outer_classname = "ParticipantReportingServiceProto";
+option java_package = "com.acme.messaging.v1";
+
+// Builds and schedules reports about participants.
+service ParticipantReportingService {
+  // Generates a participant.
+  rpc GenerateParticipantReport(GenerateParticipantReportRequest) returns (GenerateParticipantReportResponse);
+
+  // Returns a participant.
+  rpc FetchParticipantReport(FetchParticipantReportRequest) returns (FetchParticipantReportResponse);
+
+  // Schedules a participant.
+  rpc ScheduleParticipantReport(ScheduleParticipantReportRequest) returns (ScheduleParticipantReportResponse);
+
+  // Streams the changes of participants as they happen.
+  rpc StreamParticipantMetrics(StreamParticipantMetricsRequest) returns (stream StreamParticipantMetricsResponse);
+
+  // Lists participants a page at a time.
+  rpc ListParticipantReports(ListParticipantReportsRequest) returns (ListParticipantReportsResponse);
+
+  // Shares a participant.
+  rpc ShareParticipantReport(ShareParticipantReportRequest) returns (ShareParticipantReportResponse);
+
+  // Counts participants by status.
+  rpc CountParticipantTotals(CountParticipantTotalsRequest) returns (CountParticipantTotalsResponse);
+
+  // Deletes a participant.
+  rpc DeleteParticipantReport(DeleteParticipantReportRequest) returns (DeleteParticipantReportResponse);
+}
+
+// The request of `GenerateParticipantReport`.
+message GenerateParticipantReportRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string format = 1;
+    acme.common.v1.TimeWindow period = 2;
+    repeated string recipient_emails = 3;
+    string cron = 4;
+    map<string, string> filters = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  GenerateParticipantReportRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `GenerateParticipantReport`.
+message GenerateParticipantReportResponse {
+  string report_id = 1;
+  string download_uri = 2;
+  map<string, string> summary = 3;
+  acme.common.v1.TimeWindow period = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `FetchParticipantReport`.
+message FetchParticipantReportRequest {
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `FetchParticipantReport`.
+message FetchParticipantReportResponse {
+  Participant participant = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ScheduleParticipantReport`.
+message ScheduleParticipantReportRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string format = 1;
+    acme.common.v1.TimeWindow period = 2;
+    repeated string recipient_emails = 3;
+    string cron = 4;
+    map<string, string> filters = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  ScheduleParticipantReportRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ScheduleParticipantReport`.
+message ScheduleParticipantReportResponse {
+  string report_id = 1;
+  string download_uri = 2;
+  map<string, string> summary = 3;
+  acme.common.v1.TimeWindow period = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `StreamParticipantMetrics`.
+message StreamParticipantMetricsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ParticipantStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  StreamParticipantMetricsRequest.Filter filter = 2;
+  google.protobuf.Timestamp since = 3;
+  int32 max_events = 4;
+  acme.common.v1.ContactInfo subscriber = 5;
+}
+
+// The response of `StreamParticipantMetrics`.
+message StreamParticipantMetricsResponse {
+  Participant participant = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `ListParticipantReports`.
+message ListParticipantReportsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ParticipantStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListParticipantReportsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListParticipantReports`.
+message ListParticipantReportsResponse {
+  repeated Participant participants = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ShareParticipantReport`.
+message ShareParticipantReportRequest {
+  // What the operation needs besides the record.
+  message Details {
+    acme.common.v1.ContactInfo recipient = 1;
+    string template_id = 2;
+    map<string, string> variables = 3;
+    google.protobuf.Any payload = 4;
+    string channel = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  ShareParticipantReportRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ShareParticipantReport`.
+message ShareParticipantReportResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Participant participant = 1;
+  ShareParticipantReportResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CountParticipantTotals`.
+message CountParticipantTotalsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ParticipantStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  CountParticipantTotalsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `CountParticipantTotals`.
+message CountParticipantTotalsResponse {
+  int64 count = 1;
+  map<string, int64> by_status = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DeleteParticipantReport`.
+message DeleteParticipantReportRequest {
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  string reason = 3;
+  string etag = 4;
+  bool force = 5;
+}
+
+// The response of `DeleteParticipantReport`.
+message DeleteParticipantReportResponse {
+  acme.common.v1.OperationResult result = 1;
+  google.protobuf.Timestamp effective_at = 2;
+}

@@ -1,0 +1,268 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.localization.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/localization/v1/localization.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Localization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/localization/v1;localizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "TranslationKeyValidationServiceProto";
+option java_package = "com.acme.localization.v1";
+
+// Checks translation keys against the rules before anything acts on them.
+service TranslationKeyValidationService {
+  // Validates a translation key.
+  rpc ValidateTranslationKey(ValidateTranslationKeyRequest) returns (ValidateTranslationKeyResponse);
+
+  // Previews a translation key.
+  rpc PreviewTranslationKey(PreviewTranslationKeyRequest) returns (PreviewTranslationKeyResponse);
+
+  // Checks a translation key.
+  rpc CheckTranslationKeyEligibility(CheckTranslationKeyEligibilityRequest) returns (CheckTranslationKeyEligibilityResponse);
+
+  // Normalizes a translation key.
+  rpc NormalizeTranslationKey(NormalizeTranslationKeyRequest) returns (NormalizeTranslationKeyResponse);
+
+  // Explains a translation key.
+  rpc ExplainTranslationKeyDecision(ExplainTranslationKeyDecisionRequest) returns (ExplainTranslationKeyDecisionResponse);
+
+  // Scores a translation key.
+  rpc ScoreTranslationKey(ScoreTranslationKeyRequest) returns (ScoreTranslationKeyResponse);
+
+  // Returns a translation key.
+  rpc GetTranslationKeyRules(GetTranslationKeyRulesRequest) returns (GetTranslationKeyRulesResponse);
+}
+
+// The request of `ValidateTranslationKey`.
+message ValidateTranslationKeyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_key_id = 2;
+  TranslationKey translation_key = 3;
+  ValidateTranslationKeyRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateTranslationKey`.
+message ValidateTranslationKeyResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationKey translation_key = 1;
+  ValidateTranslationKeyResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewTranslationKey`.
+message PreviewTranslationKeyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_key_id = 2;
+  TranslationKey translation_key = 3;
+  PreviewTranslationKeyRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewTranslationKey`.
+message PreviewTranslationKeyResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationKey translation_key = 1;
+  PreviewTranslationKeyResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckTranslationKeyEligibility`.
+message CheckTranslationKeyEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_key_id = 2;
+  TranslationKey translation_key = 3;
+  CheckTranslationKeyEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckTranslationKeyEligibility`.
+message CheckTranslationKeyEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationKey translation_key = 1;
+  CheckTranslationKeyEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeTranslationKey`.
+message NormalizeTranslationKeyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_key_id = 2;
+  TranslationKey translation_key = 3;
+  NormalizeTranslationKeyRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeTranslationKey`.
+message NormalizeTranslationKeyResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationKey translation_key = 1;
+  NormalizeTranslationKeyResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainTranslationKeyDecision`.
+message ExplainTranslationKeyDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_key_id = 2;
+  TranslationKey translation_key = 3;
+  ExplainTranslationKeyDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainTranslationKeyDecision`.
+message ExplainTranslationKeyDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationKey translation_key = 1;
+  ExplainTranslationKeyDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreTranslationKey`.
+message ScoreTranslationKeyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_key_id = 2;
+  TranslationKey translation_key = 3;
+  ScoreTranslationKeyRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreTranslationKey`.
+message ScoreTranslationKeyResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreTranslationKeyResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  TranslationKey translation_key = 1;
+  ScoreTranslationKeyResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetTranslationKeyRules`.
+message GetTranslationKeyRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string translation_key_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetTranslationKeyRules`.
+message GetTranslationKeyRulesResponse {
+  TranslationKey translation_key = 1;
+  acme.common.v1.OperationResult result = 2;
+}

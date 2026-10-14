@@ -1,0 +1,232 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.notifications.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/notifications/v1/notifications.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Notifications.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/notifications/v1;notificationsv1";
+option java_multiple_files = true;
+option java_outer_classname = "SubscriptionHistoryServiceProto";
+option java_package = "com.acme.notifications.v1";
+
+// Keeps every version of a subscription and restores earlier ones.
+service SubscriptionHistoryService {
+  // Records a subscription.
+  rpc RecordSubscriptionVersion(RecordSubscriptionVersionRequest) returns (RecordSubscriptionVersionResponse);
+
+  // Lists subscriptions a page at a time.
+  rpc ListSubscriptionVersions(ListSubscriptionVersionsRequest) returns (ListSubscriptionVersionsResponse);
+
+  // Returns a subscription.
+  rpc GetSubscriptionVersion(GetSubscriptionVersionRequest) returns (GetSubscriptionVersionResponse);
+
+  // Compares a subscription.
+  rpc CompareSubscriptionVersions(CompareSubscriptionVersionsRequest) returns (CompareSubscriptionVersionsResponse);
+
+  // Reverts a subscription.
+  rpc RevertSubscription(RevertSubscriptionRequest) returns (RevertSubscriptionResponse);
+
+  // Annotates a subscription.
+  rpc AnnotateSubscriptionVersion(AnnotateSubscriptionVersionRequest) returns (AnnotateSubscriptionVersionResponse);
+
+  // Deletes a subscription.
+  rpc PruneSubscriptionVersions(PruneSubscriptionVersionsRequest) returns (PruneSubscriptionVersionsResponse);
+}
+
+// The request of `RecordSubscriptionVersion`.
+message RecordSubscriptionVersionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    int64 version = 1;
+    int64 other_version = 2;
+    bytes snapshot = 3;
+    string author_email = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  Subscription subscription = 3;
+  RecordSubscriptionVersionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecordSubscriptionVersion`.
+message RecordSubscriptionVersionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Subscription subscription = 1;
+  RecordSubscriptionVersionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListSubscriptionVersions`.
+message ListSubscriptionVersionsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated SubscriptionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListSubscriptionVersionsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListSubscriptionVersions`.
+message ListSubscriptionVersionsResponse {
+  repeated Subscription subscriptions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetSubscriptionVersion`.
+message GetSubscriptionVersionRequest {
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetSubscriptionVersion`.
+message GetSubscriptionVersionResponse {
+  Subscription subscription = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CompareSubscriptionVersions`.
+message CompareSubscriptionVersionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    int64 version = 1;
+    int64 other_version = 2;
+    bytes snapshot = 3;
+    string author_email = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  Subscription subscription = 3;
+  CompareSubscriptionVersionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareSubscriptionVersions`.
+message CompareSubscriptionVersionsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Subscription subscription = 1;
+  CompareSubscriptionVersionsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RevertSubscription`.
+message RevertSubscriptionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    int64 version = 1;
+    int64 other_version = 2;
+    bytes snapshot = 3;
+    string author_email = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  Subscription subscription = 3;
+  RevertSubscriptionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RevertSubscription`.
+message RevertSubscriptionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Subscription subscription = 1;
+  RevertSubscriptionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AnnotateSubscriptionVersion`.
+message AnnotateSubscriptionVersionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    int64 version = 1;
+    int64 other_version = 2;
+    bytes snapshot = 3;
+    string author_email = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  Subscription subscription = 3;
+  AnnotateSubscriptionVersionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AnnotateSubscriptionVersion`.
+message AnnotateSubscriptionVersionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Subscription subscription = 1;
+  AnnotateSubscriptionVersionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PruneSubscriptionVersions`.
+message PruneSubscriptionVersionsRequest {
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  string reason = 3;
+  string etag = 4;
+  bool force = 5;
+}
+
+// The response of `PruneSubscriptionVersions`.
+message PruneSubscriptionVersionsResponse {
+  acme.common.v1.OperationResult result = 1;
+  google.protobuf.Timestamp effective_at = 2;
+}

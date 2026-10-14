@@ -1,0 +1,243 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.personalization.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/personalization/v1/personalization.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Personalization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/personalization/v1;personalizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "AffinityValidationServiceProto";
+option java_package = "com.acme.personalization.v1";
+
+// Checks affinities against the rules before anything acts on them.
+service AffinityValidationService {
+  // Validates an affinity.
+  rpc ValidateAffinity(ValidateAffinityRequest) returns (ValidateAffinityResponse);
+
+  // Previews an affinity.
+  rpc PreviewAffinity(PreviewAffinityRequest) returns (PreviewAffinityResponse);
+
+  // Checks an affinity.
+  rpc CheckAffinityEligibility(CheckAffinityEligibilityRequest) returns (CheckAffinityEligibilityResponse);
+
+  // Normalizes an affinity.
+  rpc NormalizeAffinity(NormalizeAffinityRequest) returns (NormalizeAffinityResponse);
+
+  // Explains an affinity.
+  rpc ExplainAffinityDecision(ExplainAffinityDecisionRequest) returns (ExplainAffinityDecisionResponse);
+
+  // Lints an affinity.
+  rpc LintAffinities(LintAffinitiesRequest) returns (LintAffinitiesResponse);
+}
+
+// The request of `ValidateAffinity`.
+message ValidateAffinityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  ValidateAffinityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateAffinity`.
+message ValidateAffinityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  ValidateAffinityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewAffinity`.
+message PreviewAffinityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  PreviewAffinityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewAffinity`.
+message PreviewAffinityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  PreviewAffinityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckAffinityEligibility`.
+message CheckAffinityEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  CheckAffinityEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckAffinityEligibility`.
+message CheckAffinityEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  CheckAffinityEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeAffinity`.
+message NormalizeAffinityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  NormalizeAffinityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeAffinity`.
+message NormalizeAffinityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  NormalizeAffinityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainAffinityDecision`.
+message ExplainAffinityDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  ExplainAffinityDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainAffinityDecision`.
+message ExplainAffinityDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  ExplainAffinityDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintAffinities`.
+message LintAffinitiesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  LintAffinitiesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintAffinities`.
+message LintAffinitiesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  LintAffinitiesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

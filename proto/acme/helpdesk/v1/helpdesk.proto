@@ -1,0 +1,278 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.helpdesk.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/audit.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/money.proto";
+import "acme/employees/v1/refs.proto";
+import "acme/helpdesk/v1/refs.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Helpdesk.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/helpdesk/v1;helpdeskv1";
+option java_multiple_files = true;
+option java_outer_classname = "HelpdeskProto";
+option java_package = "com.acme.helpdesk.v1";
+
+// Where a ticket is in its lifecycle.
+enum TicketStatus {
+  TICKET_STATUS_UNSPECIFIED = 0;
+  TICKET_STATUS_NEW = 1;
+  TICKET_STATUS_OPEN = 2;
+  TICKET_STATUS_WAITING = 3;
+  TICKET_STATUS_RESOLVED = 4;
+  TICKET_STATUS_CLOSED = 5;
+}
+
+// Where a knowledge article is in its lifecycle.
+enum KnowledgeArticleStatus {
+  KNOWLEDGE_ARTICLE_STATUS_UNSPECIFIED = 0;
+  KNOWLEDGE_ARTICLE_STATUS_DRAFT = 1;
+  KNOWLEDGE_ARTICLE_STATUS_ISSUED = 2;
+  KNOWLEDGE_ARTICLE_STATUS_APPROVED = 3;
+  KNOWLEDGE_ARTICLE_STATUS_PAID = 4;
+  KNOWLEDGE_ARTICLE_STATUS_VOID = 5;
+}
+
+// Where a sla policy is in its lifecycle.
+enum SlaPolicyStatus {
+  SLA_POLICY_STATUS_UNSPECIFIED = 0;
+  SLA_POLICY_STATUS_DRAFT = 1;
+  SLA_POLICY_STATUS_ENABLED = 2;
+  SLA_POLICY_STATUS_DISABLED = 3;
+  SLA_POLICY_STATUS_RETIRED = 4;
+}
+
+// Where an escalation is in its lifecycle.
+enum EscalationStatus {
+  ESCALATION_STATUS_UNSPECIFIED = 0;
+  ESCALATION_STATUS_NEW = 1;
+  ESCALATION_STATUS_OPEN = 2;
+  ESCALATION_STATUS_WAITING = 3;
+  ESCALATION_STATUS_RESOLVED = 4;
+  ESCALATION_STATUS_CLOSED = 5;
+}
+
+// The comment of a ticket.
+message TicketComment {
+  string comment_id = 1;
+  string author_email = 2;
+  string body = 3;
+  google.protobuf.Timestamp created_at = 4;
+  string visibility = 5;
+}
+
+// The sla of a ticket.
+message TicketSla {
+  string policy_id = 1;
+  google.protobuf.Timestamp due_at = 2;
+  bool breached = 3;
+  google.protobuf.Duration paused_for = 4;
+}
+
+// The channel origin of a ticket.
+message TicketChannelOrigin {
+  string channel = 1;
+  string address = 2;
+}
+
+// The status change of a ticket.
+message TicketStatusChange {
+  string from_status = 1;
+  string to_status = 2;
+  string changed_by = 3;
+  google.protobuf.Timestamp changed_at = 4;
+}
+
+// A ticket of the helpdesk domain.
+message Ticket {
+  string ticket_id = 1;
+  string subject = 2;
+  TicketStatus status = 3;
+  int32 priority = 4;
+  acme.identity.v1.UserRef assignee = 5;
+  acme.common.v1.ContactInfo requester = 6;
+  repeated TicketComment comments = 7;
+  TicketSla sla = 8;
+  oneof origin {
+    KnowledgeArticleRef customer = 9;
+    string external_reference = 10;
+    TicketChannelOrigin channel = 11;
+  }
+  repeated TicketStatusChange history = 12;
+  repeated string tags = 13;
+  map<string, string> custom_fields = 14;
+  acme.common.v1.AuditInfo audit = 15;
+}
+
+// The line of a knowledge article.
+message KnowledgeArticleLine {
+  string line_id = 1;
+  string sku = 2;
+  string description = 3;
+  int64 quantity = 4;
+  acme.common.v1.Money unit_price = 5;
+  acme.common.v1.Money amount = 6;
+  KnowledgeArticleLineTax tax = 7;
+  map<string, string> attributes = 8;
+}
+
+// The tax of a knowledge article line.
+message KnowledgeArticleLineTax {
+  string jurisdiction = 1;
+  double rate = 2;
+  acme.common.v1.Money amount = 3;
+  repeated string exemptions = 4;
+}
+
+// The card settlement of a knowledge article.
+message KnowledgeArticleCardSettlement {
+  string holder_name = 1;
+  string last4 = 2;
+  string network = 3;
+  string token = 4;
+}
+
+// The bank settlement of a knowledge article.
+message KnowledgeArticleBankSettlement {
+  string iban = 1;
+  string bic = 2;
+  string account_holder = 3;
+}
+
+// The attachment of a knowledge article.
+message KnowledgeArticleAttachment {
+  string file_name = 1;
+  string content_type = 2;
+  int64 size_bytes = 3;
+  string checksum = 4;
+  string uri = 5;
+}
+
+// A knowledge article of the helpdesk domain.
+message KnowledgeArticle {
+  string knowledge_article_id = 1;
+  string number = 2;
+  KnowledgeArticleStatus status = 3;
+  acme.employees.v1.EmployeeRef counterparty = 4;
+  repeated KnowledgeArticleLine lines = 5;
+  acme.common.v1.Money total = 6;
+  acme.common.v1.PostalAddress billing_address = 7;
+  oneof settlement {
+    KnowledgeArticleCardSettlement card = 8;
+    KnowledgeArticleBankSettlement bank = 9;
+    string voucher_code = 10;
+  }
+  google.protobuf.Timestamp issued_at = 11;
+  google.protobuf.Timestamp due_at = 12;
+  string notes = 13;
+  repeated KnowledgeArticleAttachment attachments = 14;
+  map<string, string> metadata = 15;
+  acme.common.v1.AuditInfo audit = 16;
+}
+
+// The condition of a sla policy.
+message SlaPolicyCondition {
+  string attribute = 1;
+  string operator = 2;
+  string value = 3;
+  bool negate = 4;
+}
+
+// The discount action of a sla policy.
+message SlaPolicyDiscountAction {
+  double percent = 1;
+  acme.common.v1.Money amount = 2;
+}
+
+// The route action of a sla policy.
+message SlaPolicyRouteAction {
+  string target = 1;
+  int32 weight = 2;
+}
+
+// The block action of a sla policy.
+message SlaPolicyBlockAction {
+  string reason = 1;
+  string notify_email = 2;
+}
+
+// A sla policy of the helpdesk domain.
+message SlaPolicy {
+  string sla_policy_id = 1;
+  string name = 2;
+  string description = 3;
+  SlaPolicyStatus status = 4;
+  int32 priority = 5;
+  repeated SlaPolicyCondition conditions = 6;
+  oneof action {
+    SlaPolicyDiscountAction discount = 7;
+    SlaPolicyRouteAction route = 8;
+    SlaPolicyBlockAction block = 9;
+  }
+  acme.common.v1.TimeWindow effective = 10;
+  repeated string scopes = 11;
+  map<string, string> parameters = 12;
+  int64 version = 13;
+  acme.identity.v1.UserRef owner = 14;
+  acme.common.v1.AuditInfo audit = 15;
+}
+
+// The comment of an escalation.
+message EscalationComment {
+  string comment_id = 1;
+  string author_email = 2;
+  string body = 3;
+  google.protobuf.Timestamp created_at = 4;
+  string visibility = 5;
+}
+
+// The sla of an escalation.
+message EscalationSla {
+  string policy_id = 1;
+  google.protobuf.Timestamp due_at = 2;
+  bool breached = 3;
+  google.protobuf.Duration paused_for = 4;
+}
+
+// The channel origin of an escalation.
+message EscalationChannelOrigin {
+  string channel = 1;
+  string address = 2;
+}
+
+// The status change of an escalation.
+message EscalationStatusChange {
+  string from_status = 1;
+  string to_status = 2;
+  string changed_by = 3;
+  google.protobuf.Timestamp changed_at = 4;
+}
+
+// An escalation of the helpdesk domain.
+message Escalation {
+  string escalation_id = 1;
+  string subject = 2;
+  EscalationStatus status = 3;
+  int32 priority = 4;
+  acme.identity.v1.UserRef assignee = 5;
+  acme.common.v1.ContactInfo requester = 6;
+  repeated EscalationComment comments = 7;
+  EscalationSla sla = 8;
+  oneof origin {
+    TicketRef customer = 9;
+    string external_reference = 10;
+    EscalationChannelOrigin channel = 11;
+  }
+  repeated EscalationStatusChange history = 12;
+  repeated string tags = 13;
+  map<string, string> custom_fields = 14;
+  acme.common.v1.AuditInfo audit = 15;
+}
