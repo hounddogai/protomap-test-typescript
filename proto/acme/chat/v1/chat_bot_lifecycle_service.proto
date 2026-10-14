@@ -1,0 +1,294 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.chat.v1;
+
+import "acme/chat/v1/chat.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Chat.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/chat/v1;chatv1";
+option java_multiple_files = true;
+option java_outer_classname = "ChatBotLifecycleServiceProto";
+option java_package = "com.acme.chat.v1";
+
+// Moves a chat bot between the states of its lifecycle.
+service ChatBotLifecycleService {
+  // Activates a chat bot.
+  rpc ActivateChatBot(ActivateChatBotRequest) returns (ActivateChatBotResponse);
+
+  // Suspends a chat bot.
+  rpc SuspendChatBot(SuspendChatBotRequest) returns (SuspendChatBotResponse);
+
+  // Reinstates a chat bot.
+  rpc ReinstateChatBot(ReinstateChatBotRequest) returns (ReinstateChatBotResponse);
+
+  // Terminates a chat bot.
+  rpc TerminateChatBot(TerminateChatBotRequest) returns (TerminateChatBotResponse);
+
+  // Renews a chat bot.
+  rpc RenewChatBot(RenewChatBotRequest) returns (RenewChatBotResponse);
+
+  // Expires a chat bot.
+  rpc ExpireChatBot(ExpireChatBotRequest) returns (ExpireChatBotResponse);
+
+  // Returns a chat bot.
+  rpc GetChatBotLifecycle(GetChatBotLifecycleRequest) returns (GetChatBotLifecycleResponse);
+
+  // Schedules a chat bot.
+  rpc ScheduleChatBotExpiry(ScheduleChatBotExpiryRequest) returns (ScheduleChatBotExpiryResponse);
+}
+
+// The request of `ActivateChatBot`.
+message ActivateChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ActivateChatBotRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ActivateChatBot`.
+message ActivateChatBotResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  ActivateChatBotResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SuspendChatBot`.
+message SuspendChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  SuspendChatBotRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SuspendChatBot`.
+message SuspendChatBotResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  SuspendChatBotResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReinstateChatBot`.
+message ReinstateChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ReinstateChatBotRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ReinstateChatBot`.
+message ReinstateChatBotResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  ReinstateChatBotResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `TerminateChatBot`.
+message TerminateChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  TerminateChatBotRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `TerminateChatBot`.
+message TerminateChatBotResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  TerminateChatBotResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RenewChatBot`.
+message RenewChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  RenewChatBotRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `RenewChatBot`.
+message RenewChatBotResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  RenewChatBotResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExpireChatBot`.
+message ExpireChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ExpireChatBotRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ExpireChatBot`.
+message ExpireChatBotResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  ExpireChatBotResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetChatBotLifecycle`.
+message GetChatBotLifecycleRequest {
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetChatBotLifecycle`.
+message GetChatBotLifecycleResponse {
+  ChatBot chat_bot = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ScheduleChatBotExpiry`.
+message ScheduleChatBotExpiryRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  ScheduleChatBotExpiryRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScheduleChatBotExpiry`.
+message ScheduleChatBotExpiryResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  ScheduleChatBotExpiryResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

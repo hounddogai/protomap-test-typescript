@@ -1,0 +1,14 @@
+import assert from "node:assert/strict";
+import { test } from "node:test";
+import { newMemoryRegionalPlacementAllocationStore } from "./regional-placement-allocation-store.js";
+import { newRegionalPlacementAllocation } from "./regional-placement-allocation.js";
+
+test("MemoryRegionalPlacementAllocationStore finds what it saved", () => {
+  const store = newMemoryRegionalPlacementAllocationStore();
+  const item = newRegionalPlacementAllocation("code-837", "title-520");
+  store.save(item);
+  const found = store.find(item.code);
+  if (found === undefined) assert.fail("unexpected empty result");
+  assert.equal(found.code, item.code, "code");
+  assert.equal(store.list().length, 1, "count");
+});

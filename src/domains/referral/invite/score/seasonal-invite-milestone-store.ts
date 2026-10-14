@@ -1,0 +1,152 @@
+import * as cache from "../../../../kit/cache.js";
+import * as clock from "../../../../kit/clock.js";
+import * as collections from "../../../../kit/collections.js";
+import * as text from "../../../../kit/text.js";
+import { SeasonalInviteMilestone } from "./seasonal-invite-milestone.js";
+
+/** Keeps seasonal invite milestones by code. */
+export interface SeasonalInviteMilestoneStore {
+  find(code: string): SeasonalInviteMilestone | undefined;
+  save(item: SeasonalInviteMilestone): void;
+  remove(code: string): boolean;
+  list(): SeasonalInviteMilestone[];
+}
+
+/** Keeps records in memory, in the order they were first saved. */
+export class MemorySeasonalInviteMilestoneStore implements SeasonalInviteMilestoneStore {
+  items: Map<string, SeasonalInviteMilestone>;
+  order: string[];
+
+  constructor(items: Map<string, SeasonalInviteMilestone>, order: string[]) {
+    this.items = items;
+    this.order = order;
+  }
+
+  find(code: string): SeasonalInviteMilestone | undefined {
+    const found = this.items.get(code);
+    if (found === undefined) return undefined;
+    return found;
+  }
+
+  save(item: SeasonalInviteMilestone): void {
+    if (!this.items.has(item.code)) {
+      this.order.push(item.code);
+    }
+    this.items.set(item.code, item);
+  }
+
+  remove(code: string): boolean {
+    if (!this.items.has(code)) return false;
+    this.items.delete(code);
+    const kept: string[] = [];
+    for (const existing of this.order) {
+      if (existing !== code) {
+        kept.push(existing);
+      }
+    }
+    this.order = kept;
+    return true;
+  }
+
+  list(): SeasonalInviteMilestone[] {
+    const out: SeasonalInviteMilestone[] = [];
+    for (const key of this.order) {
+      const found = this.items.get(key);
+      if (found === undefined) continue;
+      out.push(found);
+    }
+    return out;
+  }
+}
+
+export function newMemorySeasonalInviteMilestoneStore(): SeasonalInviteMilestoneStore {
+  return new MemorySeasonalInviteMilestoneStore(new Map<string, SeasonalInviteMilestone>(), []);
+}
+
+/** Serves reads from a short-lived cache in front of another store. */
+export class CachedSeasonalInviteMilestoneStore implements SeasonalInviteMilestoneStore {
+  inner: SeasonalInviteMilestoneStore;
+  cache: cache.TtlCache<SeasonalInviteMilestone>;
+  hits: number;
+  misses: number;
+
+  constructor(
+    inner: SeasonalInviteMilestoneStore,
+    cacheValue: cache.TtlCache<SeasonalInviteMilestone>,
+    hits: number,
+    misses: number,
+  ) {
+    this.inner = inner;
+    this.cache = cacheValue;
+    this.hits = hits;
+    this.misses = misses;
+  }
+
+  find(code: string): SeasonalInviteMilestone | undefined {
+    const hit = this.cache.get(code);
+    if (hit === undefined) {
+      this.misses += 1;
+      const found = this.inner.find(code);
+      if (found === undefined) return undefined;
+      this.cache.put(code, found);
+      return found;
+    }
+    this.hits += 1;
+    return hit;
+  }
+
+  save(item: SeasonalInviteMilestone): void {
+    this.inner.save(item);
+    this.cache.put(item.code, item);
+  }
+
+  remove(code: string): boolean {
+    // A cached copy expires on its own; reads after a removal may still see it until then.
+    return this.inner.remove(code);
+  }
+
+  list(): SeasonalInviteMilestone[] {
+    return this.inner.list();
+  }
+}
+
+export function newCachedSeasonalInviteMilestoneStore(inner: SeasonalInviteMilestoneStore, ttl: number, clockValue: clock.Clock): SeasonalInviteMilestoneStore {
+  return new CachedSeasonalInviteMilestoneStore(
+    inner,
+    cache.newTtlCache<SeasonalInviteMilestone>(256, ttl, clockValue),
+    0,
+    0,
+  );
+}
+
+/** Selects seasonal invite milestones. Empty fields match all. */
+export class SeasonalInviteMilestoneQuery {
+  title: string;
+  minThreshold: number;
+  statuses: string[];
+  limit: number;
+
+  constructor(title: string, minThreshold: number, statuses: string[], limit: number) {
+    this.title = title;
+    this.minThreshold = minThreshold;
+    this.statuses = statuses;
+    this.limit = limit;
+  }
+
+  matches(item: SeasonalInviteMilestone): boolean {
+    if (this.title !== "" && text.normalize(item.title) !== text.normalize(this.title)) return false;
+    if (item.threshold < this.minThreshold) return false;
+    if (this.statuses.length > 0 && !this.statuses.includes(`${item.status}`)) return false;
+    return true;
+  }
+
+  apply(items: SeasonalInviteMilestone[]): SeasonalInviteMilestone[] {
+    const matched = collections.filter(items, (candidate: SeasonalInviteMilestone): boolean => this.matches(candidate));
+    if (this.limit > 0 && matched.length > this.limit) return collections.take(matched, this.limit);
+    return matched;
+  }
+}
+
+export function findSeasonalInviteMilestones(store: SeasonalInviteMilestoneStore, query: SeasonalInviteMilestoneQuery): SeasonalInviteMilestone[] {
+  return query.apply(store.list());
+}

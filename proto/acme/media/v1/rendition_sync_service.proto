@@ -1,0 +1,284 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.media.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/media/v1/media.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Media.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/media/v1;mediav1";
+option java_multiple_files = true;
+option java_outer_classname = "RenditionSyncServiceProto";
+option java_package = "com.acme.media.v1";
+
+// Keeps renditions in step with the systems of record in other regions.
+service RenditionSyncService {
+  // Syncs a rendition.
+  rpc SyncRenditions(SyncRenditionsRequest) returns (SyncRenditionsResponse);
+
+  // Pushs a rendition.
+  rpc PushRendition(PushRenditionRequest) returns (PushRenditionResponse);
+
+  // Pulls a rendition.
+  rpc PullRenditions(PullRenditionsRequest) returns (PullRenditionsResponse);
+
+  // Reconciles a rendition.
+  rpc ReconcileRenditions(ReconcileRenditionsRequest) returns (ReconcileRenditionsResponse);
+
+  // Exchanges changes of renditions with a peer.
+  rpc StreamRenditionChanges(stream StreamRenditionChangesRequest) returns (stream StreamRenditionChangesResponse);
+
+  // Resolves a rendition.
+  rpc ResolveRenditionConflict(ResolveRenditionConflictRequest) returns (ResolveRenditionConflictResponse);
+
+  // Returns a rendition.
+  rpc GetRenditionSyncState(GetRenditionSyncStateRequest) returns (GetRenditionSyncStateResponse);
+
+  // Lists renditions a page at a time.
+  rpc ListRenditionConflicts(ListRenditionConflictsRequest) returns (ListRenditionConflictsResponse);
+}
+
+// The request of `SyncRenditions`.
+message SyncRenditionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  Rendition rendition = 3;
+  SyncRenditionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SyncRenditions`.
+message SyncRenditionsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  SyncRenditionsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PushRendition`.
+message PushRenditionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  Rendition rendition = 3;
+  PushRenditionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PushRendition`.
+message PushRenditionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  PushRenditionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PullRenditions`.
+message PullRenditionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  Rendition rendition = 3;
+  PullRenditionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PullRenditions`.
+message PullRenditionsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  PullRenditionsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReconcileRenditions`.
+message ReconcileRenditionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  Rendition rendition = 3;
+  ReconcileRenditionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ReconcileRenditions`.
+message ReconcileRenditionsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  ReconcileRenditionsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `StreamRenditionChanges`.
+message StreamRenditionChangesRequest {
+  // An acknowledgment of a change the peer sent.
+  message ChangeAck {
+    int64 sequence = 1;
+    string status = 2;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof frame {
+    Rendition change = 2;
+    StreamRenditionChangesRequest.ChangeAck ack = 3;
+  }
+  string cursor = 4;
+}
+
+// The response of `StreamRenditionChanges`.
+message StreamRenditionChangesResponse {
+  Rendition rendition = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `ResolveRenditionConflict`.
+message ResolveRenditionConflictRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  Rendition rendition = 3;
+  ResolveRenditionConflictRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResolveRenditionConflict`.
+message ResolveRenditionConflictResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  ResolveRenditionConflictResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetRenditionSyncState`.
+message GetRenditionSyncStateRequest {
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetRenditionSyncState`.
+message GetRenditionSyncStateResponse {
+  Rendition rendition = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListRenditionConflicts`.
+message ListRenditionConflictsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated RenditionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListRenditionConflictsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListRenditionConflicts`.
+message ListRenditionConflictsResponse {
+  repeated Rendition renditions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}

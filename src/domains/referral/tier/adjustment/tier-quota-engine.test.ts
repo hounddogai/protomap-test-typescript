@@ -1,0 +1,13 @@
+import assert from "node:assert/strict";
+import { test } from "node:test";
+import * as flags from "../../../../kit/flags.js";
+import { defaultTierQuotaEngine } from "./tier-quota-engine.js";
+import { newTierQuota } from "./tier-quota.js";
+
+test("TierQuotaEngine keeps results within bounds", () => {
+  const engine = defaultTierQuotaEngine(flags.newRegistry());
+  const item = newTierQuota("code-511", "name-711");
+  const result = engine.run(item);
+  assert.ok(result >= engine.floor && result <= engine.ceiling, "result out of bounds");
+  assert.ok(engine.trace.length >= 0, "trace");
+});

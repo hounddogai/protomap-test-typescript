@@ -1,0 +1,305 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.chat.v1;
+
+import "acme/chat/v1/chat.proto";
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Chat.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/chat/v1;chatv1";
+option java_multiple_files = true;
+option java_outer_classname = "HandoffValidationServiceProto";
+option java_package = "com.acme.chat.v1";
+
+// Checks handoffs against the rules before anything acts on them.
+service HandoffValidationService {
+  // Validates a handoff.
+  rpc ValidateHandoff(ValidateHandoffRequest) returns (ValidateHandoffResponse);
+
+  // Previews a handoff.
+  rpc PreviewHandoff(PreviewHandoffRequest) returns (PreviewHandoffResponse);
+
+  // Checks a handoff.
+  rpc CheckHandoffEligibility(CheckHandoffEligibilityRequest) returns (CheckHandoffEligibilityResponse);
+
+  // Normalizes a handoff.
+  rpc NormalizeHandoff(NormalizeHandoffRequest) returns (NormalizeHandoffResponse);
+
+  // Explains a handoff.
+  rpc ExplainHandoffDecision(ExplainHandoffDecisionRequest) returns (ExplainHandoffDecisionResponse);
+
+  // Scores a handoff.
+  rpc ScoreHandoff(ScoreHandoffRequest) returns (ScoreHandoffResponse);
+
+  // Lints a handoff.
+  rpc LintHandoffs(LintHandoffsRequest) returns (LintHandoffsResponse);
+
+  // Returns a handoff.
+  rpc GetHandoffRules(GetHandoffRulesRequest) returns (GetHandoffRulesResponse);
+}
+
+// The request of `ValidateHandoff`.
+message ValidateHandoffRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  ValidateHandoffRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateHandoff`.
+message ValidateHandoffResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  ValidateHandoffResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewHandoff`.
+message PreviewHandoffRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  PreviewHandoffRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewHandoff`.
+message PreviewHandoffResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  PreviewHandoffResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckHandoffEligibility`.
+message CheckHandoffEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  CheckHandoffEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckHandoffEligibility`.
+message CheckHandoffEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  CheckHandoffEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeHandoff`.
+message NormalizeHandoffRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  NormalizeHandoffRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeHandoff`.
+message NormalizeHandoffResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  NormalizeHandoffResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainHandoffDecision`.
+message ExplainHandoffDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  ExplainHandoffDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainHandoffDecision`.
+message ExplainHandoffDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  ExplainHandoffDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreHandoff`.
+message ScoreHandoffRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  ScoreHandoffRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreHandoff`.
+message ScoreHandoffResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreHandoffResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Handoff handoff = 1;
+  ScoreHandoffResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintHandoffs`.
+message LintHandoffsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  LintHandoffsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintHandoffs`.
+message LintHandoffsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  LintHandoffsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetHandoffRules`.
+message GetHandoffRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetHandoffRules`.
+message GetHandoffRulesResponse {
+  Handoff handoff = 1;
+  acme.common.v1.OperationResult result = 2;
+}

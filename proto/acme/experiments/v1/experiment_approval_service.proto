@@ -1,0 +1,333 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.experiments.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/experiments/v1/experiments.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Experiments.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/experiments/v1;experimentsv1";
+option java_multiple_files = true;
+option java_outer_classname = "ExperimentApprovalServiceProto";
+option java_package = "com.acme.experiments.v1";
+
+// Routes experiments through approval, with escalation and delegation.
+service ExperimentApprovalService {
+  // Submits an experiment.
+  rpc SubmitExperiment(SubmitExperimentRequest) returns (SubmitExperimentResponse);
+
+  // Approves an experiment.
+  rpc ApproveExperiment(ApproveExperimentRequest) returns (ApproveExperimentResponse);
+
+  // Rejects an experiment.
+  rpc RejectExperiment(RejectExperimentRequest) returns (RejectExperimentResponse);
+
+  // Escalates an experiment.
+  rpc EscalateExperiment(EscalateExperimentRequest) returns (EscalateExperimentResponse);
+
+  // Lists experiments a page at a time.
+  rpc ListPendingExperiments(ListPendingExperimentsRequest) returns (ListPendingExperimentsResponse);
+
+  // Delegates an experiment.
+  rpc DelegateExperimentApproval(DelegateExperimentApprovalRequest) returns (DelegateExperimentApprovalResponse);
+
+  // Recalls an experiment.
+  rpc RecallExperiment(RecallExperimentRequest) returns (RecallExperimentResponse);
+
+  // Returns an experiment.
+  rpc GetExperimentApprovalStatus(GetExperimentApprovalStatusRequest) returns (GetExperimentApprovalStatusResponse);
+
+  // Comments an experiment.
+  rpc CommentExperimentApproval(CommentExperimentApprovalRequest) returns (CommentExperimentApprovalResponse);
+}
+
+// The request of `SubmitExperiment`.
+message SubmitExperimentRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  SubmitExperimentRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitExperiment`.
+message SubmitExperimentResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Experiment experiment = 1;
+  SubmitExperimentResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveExperiment`.
+message ApproveExperimentRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  ApproveExperimentRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveExperiment`.
+message ApproveExperimentResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Experiment experiment = 1;
+  ApproveExperimentResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectExperiment`.
+message RejectExperimentRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  RejectExperimentRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectExperiment`.
+message RejectExperimentResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Experiment experiment = 1;
+  RejectExperimentResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateExperiment`.
+message EscalateExperimentRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  EscalateExperimentRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateExperiment`.
+message EscalateExperimentResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Experiment experiment = 1;
+  EscalateExperimentResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingExperiments`.
+message ListPendingExperimentsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ExperimentStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingExperimentsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingExperiments`.
+message ListPendingExperimentsResponse {
+  repeated Experiment experiments = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateExperimentApproval`.
+message DelegateExperimentApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  DelegateExperimentApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateExperimentApproval`.
+message DelegateExperimentApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Experiment experiment = 1;
+  DelegateExperimentApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallExperiment`.
+message RecallExperimentRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  RecallExperimentRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallExperiment`.
+message RecallExperimentResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Experiment experiment = 1;
+  RecallExperimentResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetExperimentApprovalStatus`.
+message GetExperimentApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetExperimentApprovalStatus`.
+message GetExperimentApprovalStatusResponse {
+  Experiment experiment = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentExperimentApproval`.
+message CommentExperimentApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  CommentExperimentApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentExperimentApproval`.
+message CommentExperimentApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Experiment experiment = 1;
+  CommentExperimentApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

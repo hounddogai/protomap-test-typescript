@@ -1,0 +1,198 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.messaging.v1;
+
+import "acme/common/v1/audit.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/messaging/v1/messaging.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Messaging.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/messaging/v1;messagingv1";
+option java_multiple_files = true;
+option java_outer_classname = "ChatMessageQueryServiceProto";
+option java_package = "com.acme.messaging.v1";
+
+// Answers read-only questions about chat messages, for screens and reports.
+service ChatMessageQueryService {
+  // Returns a chat message.
+  rpc LookupChatMessage(LookupChatMessageRequest) returns (LookupChatMessageResponse);
+
+  // Lists chat messages a page at a time.
+  rpc BrowseChatMessages(BrowseChatMessagesRequest) returns (BrowseChatMessagesResponse);
+
+  // Lists chat messages a page at a time.
+  rpc FindChatMessages(FindChatMessagesRequest) returns (FindChatMessagesResponse);
+
+  // Counts chat messages by status.
+  rpc CountChatMessages(CountChatMessagesRequest) returns (CountChatMessagesResponse);
+
+  // Returns several chat messages at once.
+  rpc ResolveChatMessages(ResolveChatMessagesRequest) returns (ResolveChatMessagesResponse);
+
+  // Summarizes a chat message.
+  rpc SummarizeChatMessages(SummarizeChatMessagesRequest) returns (SummarizeChatMessagesResponse);
+
+  // Lists chat messages a page at a time.
+  rpc SuggestChatMessages(SuggestChatMessagesRequest) returns (SuggestChatMessagesResponse);
+}
+
+// The request of `LookupChatMessage`.
+message LookupChatMessageRequest {
+  acme.common.v1.RequestContext context = 1;
+  string chat_message_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `LookupChatMessage`.
+message LookupChatMessageResponse {
+  ChatMessage chat_message = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `BrowseChatMessages`.
+message BrowseChatMessagesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ChatMessageStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  BrowseChatMessagesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `BrowseChatMessages`.
+message BrowseChatMessagesResponse {
+  repeated ChatMessage chat_messages = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `FindChatMessages`.
+message FindChatMessagesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ChatMessageStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  FindChatMessagesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `FindChatMessages`.
+message FindChatMessagesResponse {
+  repeated ChatMessage chat_messages = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CountChatMessages`.
+message CountChatMessagesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ChatMessageStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  CountChatMessagesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `CountChatMessages`.
+message CountChatMessagesResponse {
+  int64 count = 1;
+  map<string, int64> by_status = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResolveChatMessages`.
+message ResolveChatMessagesRequest {
+  acme.common.v1.RequestContext context = 1;
+  repeated string chat_message_ids = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `ResolveChatMessages`.
+message ResolveChatMessagesResponse {
+  repeated ChatMessage chat_messages = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SummarizeChatMessages`.
+message SummarizeChatMessagesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string format = 1;
+    acme.common.v1.TimeWindow period = 2;
+    repeated string recipient_emails = 3;
+    string cron = 4;
+    map<string, string> filters = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_message_id = 2;
+  SummarizeChatMessagesRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SummarizeChatMessages`.
+message SummarizeChatMessagesResponse {
+  string report_id = 1;
+  string download_uri = 2;
+  map<string, string> summary = 3;
+  acme.common.v1.TimeWindow period = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `SuggestChatMessages`.
+message SuggestChatMessagesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ChatMessageStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  SuggestChatMessagesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `SuggestChatMessages`.
+message SuggestChatMessagesResponse {
+  repeated ChatMessage chat_messages = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}

@@ -1,0 +1,305 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.messaging.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/messaging/v1/messaging.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Messaging.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/messaging/v1;messagingv1";
+option java_multiple_files = true;
+option java_outer_classname = "ConversationValidationServiceProto";
+option java_package = "com.acme.messaging.v1";
+
+// Checks conversations against the rules before anything acts on them.
+service ConversationValidationService {
+  // Validates a conversation.
+  rpc ValidateConversation(ValidateConversationRequest) returns (ValidateConversationResponse);
+
+  // Previews a conversation.
+  rpc PreviewConversation(PreviewConversationRequest) returns (PreviewConversationResponse);
+
+  // Checks a conversation.
+  rpc CheckConversationEligibility(CheckConversationEligibilityRequest) returns (CheckConversationEligibilityResponse);
+
+  // Normalizes a conversation.
+  rpc NormalizeConversation(NormalizeConversationRequest) returns (NormalizeConversationResponse);
+
+  // Explains a conversation.
+  rpc ExplainConversationDecision(ExplainConversationDecisionRequest) returns (ExplainConversationDecisionResponse);
+
+  // Scores a conversation.
+  rpc ScoreConversation(ScoreConversationRequest) returns (ScoreConversationResponse);
+
+  // Lints a conversation.
+  rpc LintConversations(LintConversationsRequest) returns (LintConversationsResponse);
+
+  // Returns a conversation.
+  rpc GetConversationRules(GetConversationRulesRequest) returns (GetConversationRulesResponse);
+}
+
+// The request of `ValidateConversation`.
+message ValidateConversationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string conversation_id = 2;
+  Conversation conversation = 3;
+  ValidateConversationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateConversation`.
+message ValidateConversationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Conversation conversation = 1;
+  ValidateConversationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewConversation`.
+message PreviewConversationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string conversation_id = 2;
+  Conversation conversation = 3;
+  PreviewConversationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewConversation`.
+message PreviewConversationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Conversation conversation = 1;
+  PreviewConversationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckConversationEligibility`.
+message CheckConversationEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string conversation_id = 2;
+  Conversation conversation = 3;
+  CheckConversationEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckConversationEligibility`.
+message CheckConversationEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Conversation conversation = 1;
+  CheckConversationEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeConversation`.
+message NormalizeConversationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string conversation_id = 2;
+  Conversation conversation = 3;
+  NormalizeConversationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeConversation`.
+message NormalizeConversationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Conversation conversation = 1;
+  NormalizeConversationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainConversationDecision`.
+message ExplainConversationDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string conversation_id = 2;
+  Conversation conversation = 3;
+  ExplainConversationDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainConversationDecision`.
+message ExplainConversationDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Conversation conversation = 1;
+  ExplainConversationDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreConversation`.
+message ScoreConversationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string conversation_id = 2;
+  Conversation conversation = 3;
+  ScoreConversationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreConversation`.
+message ScoreConversationResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreConversationResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Conversation conversation = 1;
+  ScoreConversationResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintConversations`.
+message LintConversationsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string conversation_id = 2;
+  Conversation conversation = 3;
+  LintConversationsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintConversations`.
+message LintConversationsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Conversation conversation = 1;
+  LintConversationsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetConversationRules`.
+message GetConversationRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string conversation_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetConversationRules`.
+message GetConversationRulesResponse {
+  Conversation conversation = 1;
+  acme.common.v1.OperationResult result = 2;
+}

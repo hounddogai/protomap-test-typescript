@@ -1,0 +1,292 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.helpdesk.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/helpdesk/v1/helpdesk.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Helpdesk.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/helpdesk/v1;helpdeskv1";
+option java_multiple_files = true;
+option java_outer_classname = "TicketCalculationServiceProto";
+option java_package = "com.acme.helpdesk.v1";
+
+// Computes the figures of a ticket, such as totals, taxes, and estimates.
+service TicketCalculationService {
+  // Calculates a ticket.
+  rpc CalculateTicket(CalculateTicketRequest) returns (CalculateTicketResponse);
+
+  // Estimates a ticket.
+  rpc EstimateTicket(EstimateTicketRequest) returns (EstimateTicketResponse);
+
+  // Quotes a ticket.
+  rpc QuoteTicket(QuoteTicketRequest) returns (QuoteTicketResponse);
+
+  // Compares a ticket.
+  rpc CompareTicketOptions(CompareTicketOptionsRequest) returns (CompareTicketOptionsResponse);
+
+  // Simulates a ticket.
+  rpc SimulateTicket(SimulateTicketRequest) returns (SimulateTicketResponse);
+
+  // Explains a ticket.
+  rpc ExplainTicketCalculation(ExplainTicketCalculationRequest) returns (ExplainTicketCalculationResponse);
+
+  // Returns a ticket.
+  rpc GetTicketRates(GetTicketRatesRequest) returns (GetTicketRatesResponse);
+}
+
+// The request of `CalculateTicket`.
+message CalculateTicketRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string ticket_id = 2;
+  Ticket ticket = 3;
+  CalculateTicketRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateTicket`.
+message CalculateTicketResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateTicketResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Ticket ticket = 1;
+  CalculateTicketResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateTicket`.
+message EstimateTicketRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string ticket_id = 2;
+  Ticket ticket = 3;
+  EstimateTicketRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateTicket`.
+message EstimateTicketResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateTicketResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Ticket ticket = 1;
+  EstimateTicketResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteTicket`.
+message QuoteTicketRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string ticket_id = 2;
+  Ticket ticket = 3;
+  QuoteTicketRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteTicket`.
+message QuoteTicketResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteTicketResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Ticket ticket = 1;
+  QuoteTicketResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareTicketOptions`.
+message CompareTicketOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string ticket_id = 2;
+  Ticket ticket = 3;
+  CompareTicketOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareTicketOptions`.
+message CompareTicketOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareTicketOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Ticket ticket = 1;
+  CompareTicketOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateTicket`.
+message SimulateTicketRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string ticket_id = 2;
+  Ticket ticket = 3;
+  SimulateTicketRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateTicket`.
+message SimulateTicketResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateTicketResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Ticket ticket = 1;
+  SimulateTicketResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainTicketCalculation`.
+message ExplainTicketCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string ticket_id = 2;
+  Ticket ticket = 3;
+  ExplainTicketCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainTicketCalculation`.
+message ExplainTicketCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Ticket ticket = 1;
+  ExplainTicketCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetTicketRates`.
+message GetTicketRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string ticket_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetTicketRates`.
+message GetTicketRatesResponse {
+  Ticket ticket = 1;
+  acme.common.v1.OperationResult result = 2;
+}

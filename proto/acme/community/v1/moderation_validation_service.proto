@@ -1,0 +1,305 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.community.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/community/v1/community.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Community.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/community/v1;communityv1";
+option java_multiple_files = true;
+option java_outer_classname = "ModerationValidationServiceProto";
+option java_package = "com.acme.community.v1";
+
+// Checks moderations against the rules before anything acts on them.
+service ModerationValidationService {
+  // Validates a moderation.
+  rpc ValidateModeration(ValidateModerationRequest) returns (ValidateModerationResponse);
+
+  // Previews a moderation.
+  rpc PreviewModeration(PreviewModerationRequest) returns (PreviewModerationResponse);
+
+  // Checks a moderation.
+  rpc CheckModerationEligibility(CheckModerationEligibilityRequest) returns (CheckModerationEligibilityResponse);
+
+  // Normalizes a moderation.
+  rpc NormalizeModeration(NormalizeModerationRequest) returns (NormalizeModerationResponse);
+
+  // Explains a moderation.
+  rpc ExplainModerationDecision(ExplainModerationDecisionRequest) returns (ExplainModerationDecisionResponse);
+
+  // Scores a moderation.
+  rpc ScoreModeration(ScoreModerationRequest) returns (ScoreModerationResponse);
+
+  // Lints a moderation.
+  rpc LintModerations(LintModerationsRequest) returns (LintModerationsResponse);
+
+  // Returns a moderation.
+  rpc GetModerationRules(GetModerationRulesRequest) returns (GetModerationRulesResponse);
+}
+
+// The request of `ValidateModeration`.
+message ValidateModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  ValidateModerationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateModeration`.
+message ValidateModerationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  ValidateModerationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewModeration`.
+message PreviewModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  PreviewModerationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewModeration`.
+message PreviewModerationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  PreviewModerationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckModerationEligibility`.
+message CheckModerationEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  CheckModerationEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckModerationEligibility`.
+message CheckModerationEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  CheckModerationEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeModeration`.
+message NormalizeModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  NormalizeModerationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeModeration`.
+message NormalizeModerationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  NormalizeModerationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainModerationDecision`.
+message ExplainModerationDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  ExplainModerationDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainModerationDecision`.
+message ExplainModerationDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  ExplainModerationDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreModeration`.
+message ScoreModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  ScoreModerationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreModeration`.
+message ScoreModerationResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreModerationResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Moderation moderation = 1;
+  ScoreModerationResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintModerations`.
+message LintModerationsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  LintModerationsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintModerations`.
+message LintModerationsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  LintModerationsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetModerationRules`.
+message GetModerationRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetModerationRules`.
+message GetModerationRulesResponse {
+  Moderation moderation = 1;
+  acme.common.v1.OperationResult result = 2;
+}

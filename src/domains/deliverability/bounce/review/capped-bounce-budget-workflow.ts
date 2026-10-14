@@ -1,0 +1,88 @@
+import * as clock from "../../../../kit/clock.js";
+import { CappedBounceBudgetEngine, defaultCappedBounceBudgetEngine } from "./capped-bounce-budget-engine.js";
+import { CappedBounceBudgetValidator, defaultCappedBounceBudgetValidator } from "./capped-bounce-budget-rules.js";
+import { CappedBounceBudgetStore } from "./capped-bounce-budget-store.js";
+
+/** Moves capped bounce budgets through their life cycle and keeps a journal of what it did. */
+export class CappedBounceBudgetService {
+  store: CappedBounceBudgetStore;
+  validator: CappedBounceBudgetValidator;
+  clock: clock.Clock;
+  journal: string[];
+  engine: CappedBounceBudgetEngine;
+
+  constructor(
+    store: CappedBounceBudgetStore,
+    validator: CappedBounceBudgetValidator,
+    clockValue: clock.Clock,
+    journal: string[],
+    engine: CappedBounceBudgetEngine,
+  ) {
+    this.store = store;
+    this.validator = validator;
+    this.clock = clockValue;
+    this.journal = journal;
+    this.engine = engine;
+  }
+
+  private note(message: string): void {
+    this.journal.push(`${this.clock.now()} ${message}`);
+  }
+
+  open(code: string): void {
+    const item = this.store.find(code);
+    if (item === undefined) {
+      throw new Error(`capped bounce budget ${code} not found`);
+    }
+    this.validator.requireValid(item);
+    item.moveTo("approved");
+    this.store.save(item);
+    this.note(`${code} is approved`);
+  }
+
+  retire(code: string, reason: string): void {
+    const item = this.store.find(code);
+    if (item === undefined) {
+      throw new Error(`capped bounce budget ${code} not found`);
+    }
+    if (item.isTerminal()) {
+      this.note(`${code} already closed`);
+      return;
+    }
+    item.moveTo("withdrawn");
+    this.store.save(item);
+    this.note(`${code} is withdrawn: ${reason}`);
+  }
+
+  evaluate(code: string): number {
+    const item = this.store.find(code);
+    if (item === undefined) {
+      throw new Error(`capped bounce budget ${code} not found`);
+    }
+    const result = this.engine.price(item);
+    this.note(`${code} evaluated at ${result}`);
+    return result;
+  }
+
+  reviewStale(cutoff: number): number {
+    let changed = 0;
+    for (const item of this.store.list()) {
+      if (item.isTerminal()) continue;
+      const problems = this.validator.validate(item);
+      if (problems.length === 0) continue;
+      this.note(`${item.code} needs attention: ${problems.join(", ")}`);
+      changed += 1;
+    }
+    return changed;
+  }
+}
+
+export function newCappedBounceBudgetService(store: CappedBounceBudgetStore, clockValue: clock.Clock): CappedBounceBudgetService {
+  return new CappedBounceBudgetService(
+    store,
+    defaultCappedBounceBudgetValidator(),
+    clockValue,
+    [],
+    defaultCappedBounceBudgetEngine(),
+  );
+}

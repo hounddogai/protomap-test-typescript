@@ -1,0 +1,333 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.content.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/content/v1/content.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Content.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/content/v1;contentv1";
+option java_multiple_files = true;
+option java_outer_classname = "ContentBlockApprovalServiceProto";
+option java_package = "com.acme.content.v1";
+
+// Routes content blocks through approval, with escalation and delegation.
+service ContentBlockApprovalService {
+  // Submits a content block.
+  rpc SubmitContentBlock(SubmitContentBlockRequest) returns (SubmitContentBlockResponse);
+
+  // Approves a content block.
+  rpc ApproveContentBlock(ApproveContentBlockRequest) returns (ApproveContentBlockResponse);
+
+  // Rejects a content block.
+  rpc RejectContentBlock(RejectContentBlockRequest) returns (RejectContentBlockResponse);
+
+  // Escalates a content block.
+  rpc EscalateContentBlock(EscalateContentBlockRequest) returns (EscalateContentBlockResponse);
+
+  // Lists content blocks a page at a time.
+  rpc ListPendingContentBlocks(ListPendingContentBlocksRequest) returns (ListPendingContentBlocksResponse);
+
+  // Delegates a content block.
+  rpc DelegateContentBlockApproval(DelegateContentBlockApprovalRequest) returns (DelegateContentBlockApprovalResponse);
+
+  // Recalls a content block.
+  rpc RecallContentBlock(RecallContentBlockRequest) returns (RecallContentBlockResponse);
+
+  // Returns a content block.
+  rpc GetContentBlockApprovalStatus(GetContentBlockApprovalStatusRequest) returns (GetContentBlockApprovalStatusResponse);
+
+  // Comments a content block.
+  rpc CommentContentBlockApproval(CommentContentBlockApprovalRequest) returns (CommentContentBlockApprovalResponse);
+}
+
+// The request of `SubmitContentBlock`.
+message SubmitContentBlockRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_block_id = 2;
+  ContentBlock content_block = 3;
+  SubmitContentBlockRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitContentBlock`.
+message SubmitContentBlockResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentBlock content_block = 1;
+  SubmitContentBlockResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveContentBlock`.
+message ApproveContentBlockRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_block_id = 2;
+  ContentBlock content_block = 3;
+  ApproveContentBlockRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveContentBlock`.
+message ApproveContentBlockResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentBlock content_block = 1;
+  ApproveContentBlockResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectContentBlock`.
+message RejectContentBlockRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_block_id = 2;
+  ContentBlock content_block = 3;
+  RejectContentBlockRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectContentBlock`.
+message RejectContentBlockResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentBlock content_block = 1;
+  RejectContentBlockResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateContentBlock`.
+message EscalateContentBlockRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_block_id = 2;
+  ContentBlock content_block = 3;
+  EscalateContentBlockRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateContentBlock`.
+message EscalateContentBlockResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentBlock content_block = 1;
+  EscalateContentBlockResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingContentBlocks`.
+message ListPendingContentBlocksRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ContentBlockStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingContentBlocksRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingContentBlocks`.
+message ListPendingContentBlocksResponse {
+  repeated ContentBlock content_blocks = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateContentBlockApproval`.
+message DelegateContentBlockApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_block_id = 2;
+  ContentBlock content_block = 3;
+  DelegateContentBlockApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateContentBlockApproval`.
+message DelegateContentBlockApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentBlock content_block = 1;
+  DelegateContentBlockApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallContentBlock`.
+message RecallContentBlockRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_block_id = 2;
+  ContentBlock content_block = 3;
+  RecallContentBlockRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallContentBlock`.
+message RecallContentBlockResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentBlock content_block = 1;
+  RecallContentBlockResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetContentBlockApprovalStatus`.
+message GetContentBlockApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string content_block_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetContentBlockApprovalStatus`.
+message GetContentBlockApprovalStatusResponse {
+  ContentBlock content_block = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentContentBlockApproval`.
+message CommentContentBlockApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_block_id = 2;
+  ContentBlock content_block = 3;
+  CommentContentBlockApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentContentBlockApproval`.
+message CommentContentBlockApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentBlock content_block = 1;
+  CommentContentBlockApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

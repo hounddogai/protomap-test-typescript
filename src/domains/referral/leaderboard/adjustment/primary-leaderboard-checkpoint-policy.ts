@@ -1,0 +1,32 @@
+import * as numbers from "../../../../kit/numbers.js";
+import * as retry from "../../../../kit/retry.js";
+
+/** Runs the default retry policy against a probe that succeeds late. */
+export function probePrimaryLeaderboardCheckpoint(): number {
+  const policy = retry.defaultPolicy("primary-leaderboard-checkpoint");
+  let calls = 0;
+  let used: number;
+  try {
+    used = policy.run((attempt: number): boolean => attempt >= 3);
+  } catch {
+    return -1;
+  }
+  calls += used;
+  return calls;
+}
+
+/** Puts a primary leaderboard checkpoint code in its canonical PLC- form. */
+export function normalizePrimaryLeaderboardCheckpointCode(code: string): string {
+  const clean = code.trim().toUpperCase();
+  if (clean === "") return "";
+  if (clean.startsWith("PLC-")) return clean;
+  return `PLC-${clean.replaceAll(" ", "-")}`;
+}
+
+export function primaryLeaderboardCheckpointWeight(priority: number, active: boolean): number {
+  let weight = numbers.clamp(priority, 0, 10) * 1.48;
+  if (!active) {
+    weight = weight / 2;
+  }
+  return Math.round(weight * 100) / 100;
+}

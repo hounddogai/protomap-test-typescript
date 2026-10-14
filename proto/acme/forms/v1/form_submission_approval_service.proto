@@ -1,0 +1,333 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.forms.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/forms/v1/forms.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Forms.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/forms/v1;formsv1";
+option java_multiple_files = true;
+option java_outer_classname = "FormSubmissionApprovalServiceProto";
+option java_package = "com.acme.forms.v1";
+
+// Routes form submissions through approval, with escalation and delegation.
+service FormSubmissionApprovalService {
+  // Submits a form submission.
+  rpc SubmitFormSubmission(SubmitFormSubmissionRequest) returns (SubmitFormSubmissionResponse);
+
+  // Approves a form submission.
+  rpc ApproveFormSubmission(ApproveFormSubmissionRequest) returns (ApproveFormSubmissionResponse);
+
+  // Rejects a form submission.
+  rpc RejectFormSubmission(RejectFormSubmissionRequest) returns (RejectFormSubmissionResponse);
+
+  // Escalates a form submission.
+  rpc EscalateFormSubmission(EscalateFormSubmissionRequest) returns (EscalateFormSubmissionResponse);
+
+  // Lists form submissions a page at a time.
+  rpc ListPendingFormSubmissions(ListPendingFormSubmissionsRequest) returns (ListPendingFormSubmissionsResponse);
+
+  // Delegates a form submission.
+  rpc DelegateFormSubmissionApproval(DelegateFormSubmissionApprovalRequest) returns (DelegateFormSubmissionApprovalResponse);
+
+  // Recalls a form submission.
+  rpc RecallFormSubmission(RecallFormSubmissionRequest) returns (RecallFormSubmissionResponse);
+
+  // Returns a form submission.
+  rpc GetFormSubmissionApprovalStatus(GetFormSubmissionApprovalStatusRequest) returns (GetFormSubmissionApprovalStatusResponse);
+
+  // Comments a form submission.
+  rpc CommentFormSubmissionApproval(CommentFormSubmissionApprovalRequest) returns (CommentFormSubmissionApprovalResponse);
+}
+
+// The request of `SubmitFormSubmission`.
+message SubmitFormSubmissionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  FormSubmission form_submission = 3;
+  SubmitFormSubmissionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitFormSubmission`.
+message SubmitFormSubmissionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormSubmission form_submission = 1;
+  SubmitFormSubmissionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveFormSubmission`.
+message ApproveFormSubmissionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  FormSubmission form_submission = 3;
+  ApproveFormSubmissionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveFormSubmission`.
+message ApproveFormSubmissionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormSubmission form_submission = 1;
+  ApproveFormSubmissionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectFormSubmission`.
+message RejectFormSubmissionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  FormSubmission form_submission = 3;
+  RejectFormSubmissionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectFormSubmission`.
+message RejectFormSubmissionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormSubmission form_submission = 1;
+  RejectFormSubmissionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateFormSubmission`.
+message EscalateFormSubmissionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  FormSubmission form_submission = 3;
+  EscalateFormSubmissionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateFormSubmission`.
+message EscalateFormSubmissionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormSubmission form_submission = 1;
+  EscalateFormSubmissionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingFormSubmissions`.
+message ListPendingFormSubmissionsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated FormSubmissionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingFormSubmissionsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingFormSubmissions`.
+message ListPendingFormSubmissionsResponse {
+  repeated FormSubmission form_submissions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateFormSubmissionApproval`.
+message DelegateFormSubmissionApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  FormSubmission form_submission = 3;
+  DelegateFormSubmissionApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateFormSubmissionApproval`.
+message DelegateFormSubmissionApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormSubmission form_submission = 1;
+  DelegateFormSubmissionApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallFormSubmission`.
+message RecallFormSubmissionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  FormSubmission form_submission = 3;
+  RecallFormSubmissionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallFormSubmission`.
+message RecallFormSubmissionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormSubmission form_submission = 1;
+  RecallFormSubmissionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetFormSubmissionApprovalStatus`.
+message GetFormSubmissionApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetFormSubmissionApprovalStatus`.
+message GetFormSubmissionApprovalStatusResponse {
+  FormSubmission form_submission = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentFormSubmissionApproval`.
+message CommentFormSubmissionApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  FormSubmission form_submission = 3;
+  CommentFormSubmissionApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentFormSubmissionApproval`.
+message CommentFormSubmissionApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormSubmission form_submission = 1;
+  CommentFormSubmissionApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

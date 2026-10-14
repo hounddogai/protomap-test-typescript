@@ -1,0 +1,305 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.content.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/content/v1/content.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Content.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/content/v1;contentv1";
+option java_multiple_files = true;
+option java_outer_classname = "ArticleValidationServiceProto";
+option java_package = "com.acme.content.v1";
+
+// Checks articles against the rules before anything acts on them.
+service ArticleValidationService {
+  // Validates an article.
+  rpc ValidateArticle(ValidateArticleRequest) returns (ValidateArticleResponse);
+
+  // Previews an article.
+  rpc PreviewArticle(PreviewArticleRequest) returns (PreviewArticleResponse);
+
+  // Checks an article.
+  rpc CheckArticleEligibility(CheckArticleEligibilityRequest) returns (CheckArticleEligibilityResponse);
+
+  // Normalizes an article.
+  rpc NormalizeArticle(NormalizeArticleRequest) returns (NormalizeArticleResponse);
+
+  // Explains an article.
+  rpc ExplainArticleDecision(ExplainArticleDecisionRequest) returns (ExplainArticleDecisionResponse);
+
+  // Scores an article.
+  rpc ScoreArticle(ScoreArticleRequest) returns (ScoreArticleResponse);
+
+  // Lints an article.
+  rpc LintArticles(LintArticlesRequest) returns (LintArticlesResponse);
+
+  // Returns an article.
+  rpc GetArticleRules(GetArticleRulesRequest) returns (GetArticleRulesResponse);
+}
+
+// The request of `ValidateArticle`.
+message ValidateArticleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  ValidateArticleRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateArticle`.
+message ValidateArticleResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Article article = 1;
+  ValidateArticleResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewArticle`.
+message PreviewArticleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  PreviewArticleRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewArticle`.
+message PreviewArticleResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Article article = 1;
+  PreviewArticleResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckArticleEligibility`.
+message CheckArticleEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  CheckArticleEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckArticleEligibility`.
+message CheckArticleEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Article article = 1;
+  CheckArticleEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeArticle`.
+message NormalizeArticleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  NormalizeArticleRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeArticle`.
+message NormalizeArticleResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Article article = 1;
+  NormalizeArticleResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainArticleDecision`.
+message ExplainArticleDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  ExplainArticleDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainArticleDecision`.
+message ExplainArticleDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Article article = 1;
+  ExplainArticleDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreArticle`.
+message ScoreArticleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  ScoreArticleRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreArticle`.
+message ScoreArticleResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreArticleResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Article article = 1;
+  ScoreArticleResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintArticles`.
+message LintArticlesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  LintArticlesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintArticles`.
+message LintArticlesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Article article = 1;
+  LintArticlesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetArticleRules`.
+message GetArticleRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetArticleRules`.
+message GetArticleRulesResponse {
+  Article article = 1;
+  acme.common.v1.OperationResult result = 2;
+}

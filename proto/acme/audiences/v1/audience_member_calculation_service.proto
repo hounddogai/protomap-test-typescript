@@ -1,0 +1,292 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.audiences.v1;
+
+import "acme/audiences/v1/audiences.proto";
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Audiences.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/audiences/v1;audiencesv1";
+option java_multiple_files = true;
+option java_outer_classname = "AudienceMemberCalculationServiceProto";
+option java_package = "com.acme.audiences.v1";
+
+// Computes the figures of an audience member, such as totals, taxes, and estimates.
+service AudienceMemberCalculationService {
+  // Calculates an audience member.
+  rpc CalculateAudienceMember(CalculateAudienceMemberRequest) returns (CalculateAudienceMemberResponse);
+
+  // Estimates an audience member.
+  rpc EstimateAudienceMember(EstimateAudienceMemberRequest) returns (EstimateAudienceMemberResponse);
+
+  // Quotes an audience member.
+  rpc QuoteAudienceMember(QuoteAudienceMemberRequest) returns (QuoteAudienceMemberResponse);
+
+  // Compares an audience member.
+  rpc CompareAudienceMemberOptions(CompareAudienceMemberOptionsRequest) returns (CompareAudienceMemberOptionsResponse);
+
+  // Simulates an audience member.
+  rpc SimulateAudienceMember(SimulateAudienceMemberRequest) returns (SimulateAudienceMemberResponse);
+
+  // Explains an audience member.
+  rpc ExplainAudienceMemberCalculation(ExplainAudienceMemberCalculationRequest) returns (ExplainAudienceMemberCalculationResponse);
+
+  // Returns an audience member.
+  rpc GetAudienceMemberRates(GetAudienceMemberRatesRequest) returns (GetAudienceMemberRatesResponse);
+}
+
+// The request of `CalculateAudienceMember`.
+message CalculateAudienceMemberRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_member_id = 2;
+  AudienceMember audience_member = 3;
+  CalculateAudienceMemberRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateAudienceMember`.
+message CalculateAudienceMemberResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateAudienceMemberResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  AudienceMember audience_member = 1;
+  CalculateAudienceMemberResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateAudienceMember`.
+message EstimateAudienceMemberRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_member_id = 2;
+  AudienceMember audience_member = 3;
+  EstimateAudienceMemberRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateAudienceMember`.
+message EstimateAudienceMemberResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateAudienceMemberResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  AudienceMember audience_member = 1;
+  EstimateAudienceMemberResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteAudienceMember`.
+message QuoteAudienceMemberRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_member_id = 2;
+  AudienceMember audience_member = 3;
+  QuoteAudienceMemberRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteAudienceMember`.
+message QuoteAudienceMemberResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteAudienceMemberResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  AudienceMember audience_member = 1;
+  QuoteAudienceMemberResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareAudienceMemberOptions`.
+message CompareAudienceMemberOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_member_id = 2;
+  AudienceMember audience_member = 3;
+  CompareAudienceMemberOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareAudienceMemberOptions`.
+message CompareAudienceMemberOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareAudienceMemberOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  AudienceMember audience_member = 1;
+  CompareAudienceMemberOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateAudienceMember`.
+message SimulateAudienceMemberRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_member_id = 2;
+  AudienceMember audience_member = 3;
+  SimulateAudienceMemberRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateAudienceMember`.
+message SimulateAudienceMemberResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateAudienceMemberResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  AudienceMember audience_member = 1;
+  SimulateAudienceMemberResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainAudienceMemberCalculation`.
+message ExplainAudienceMemberCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_member_id = 2;
+  AudienceMember audience_member = 3;
+  ExplainAudienceMemberCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainAudienceMemberCalculation`.
+message ExplainAudienceMemberCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  AudienceMember audience_member = 1;
+  ExplainAudienceMemberCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetAudienceMemberRates`.
+message GetAudienceMemberRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string audience_member_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetAudienceMemberRates`.
+message GetAudienceMemberRatesResponse {
+  AudienceMember audience_member = 1;
+  acme.common.v1.OperationResult result = 2;
+}

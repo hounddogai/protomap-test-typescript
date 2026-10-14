@@ -1,0 +1,253 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.experiments.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/experiments/v1/experiments.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Experiments.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/experiments/v1;experimentsv1";
+option java_multiple_files = true;
+option java_outer_classname = "ExposureImportServiceProto";
+option java_package = "com.acme.experiments.v1";
+
+// Takes exposures in bulk from partners and legacy systems.
+service ExposureImportService {
+  // Takes a stream of exposures and answers once at the end.
+  rpc ImportExposures(stream ImportExposuresRequest) returns (ImportExposuresResponse);
+
+  // Returns an exposure.
+  rpc GetExposureImportStatus(GetExposureImportStatusRequest) returns (GetExposureImportStatusResponse);
+
+  // Cancels an exposure.
+  rpc CancelExposureImport(CancelExposureImportRequest) returns (CancelExposureImportResponse);
+
+  // Validates an exposure.
+  rpc ValidateExposureImport(ValidateExposureImportRequest) returns (ValidateExposureImportResponse);
+
+  // Lists exposures a page at a time.
+  rpc ListExposureImports(ListExposureImportsRequest) returns (ListExposureImportsResponse);
+
+  // Retrys an exposure.
+  rpc RetryExposureImport(RetryExposureImportRequest) returns (RetryExposureImportResponse);
+
+  // Maps an exposure.
+  rpc MapExposureImportColumns(MapExposureImportColumnsRequest) returns (MapExposureImportColumnsResponse);
+}
+
+// The request of `ImportExposures`.
+message ImportExposuresRequest {
+  // What a stream of records starts with.
+  message StreamHeader {
+    string source = 1;
+    string format = 2;
+    int64 total_records = 3;
+    acme.common.v1.ContactInfo submitted_by = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof chunk {
+    ImportExposuresRequest.StreamHeader header = 2;
+    Exposure record = 3;
+  }
+  int64 sequence = 4;
+}
+
+// The response of `ImportExposures`.
+message ImportExposuresResponse {
+  // A record the import turned down.
+  message Rejection {
+    int64 sequence = 1;
+    string reason = 2;
+    string exposure_id = 3;
+  }
+
+  int64 accepted = 1;
+  int64 rejected = 2;
+  repeated ImportExposuresResponse.Rejection rejections = 3;
+  acme.common.v1.OperationResult result = 4;
+}
+
+// The request of `GetExposureImportStatus`.
+message GetExposureImportStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetExposureImportStatus`.
+message GetExposureImportStatusResponse {
+  Exposure exposure = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CancelExposureImport`.
+message CancelExposureImportRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  CancelExposureImportRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `CancelExposureImport`.
+message CancelExposureImportResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  CancelExposureImportResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ValidateExposureImport`.
+message ValidateExposureImportRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  ValidateExposureImportRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateExposureImport`.
+message ValidateExposureImportResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  ValidateExposureImportResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListExposureImports`.
+message ListExposureImportsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ExposureStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListExposureImportsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListExposureImports`.
+message ListExposureImportsResponse {
+  repeated Exposure exposures = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryExposureImport`.
+message RetryExposureImportRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  RetryExposureImportRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryExposureImport`.
+message RetryExposureImportResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  RetryExposureImportResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `MapExposureImportColumns`.
+message MapExposureImportColumnsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  MapExposureImportColumnsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `MapExposureImportColumns`.
+message MapExposureImportColumnsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  MapExposureImportColumnsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

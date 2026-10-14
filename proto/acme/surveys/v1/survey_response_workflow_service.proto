@@ -1,0 +1,334 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.surveys.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/surveys/v1/surveys.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Surveys.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/surveys/v1;surveysv1";
+option java_multiple_files = true;
+option java_outer_classname = "SurveyResponseWorkflowServiceProto";
+option java_package = "com.acme.surveys.v1";
+
+// Runs the long-lived workflow that takes a survey response from start to finish.
+service SurveyResponseWorkflowService {
+  // Starts a survey response.
+  rpc StartSurveyResponseWorkflow(StartSurveyResponseWorkflowRequest) returns (StartSurveyResponseWorkflowResponse);
+
+  // Advances a survey response.
+  rpc AdvanceSurveyResponseWorkflow(AdvanceSurveyResponseWorkflowRequest) returns (AdvanceSurveyResponseWorkflowResponse);
+
+  // Cancels a survey response.
+  rpc CancelSurveyResponseWorkflow(CancelSurveyResponseWorkflowRequest) returns (CancelSurveyResponseWorkflowResponse);
+
+  // Retrys a survey response.
+  rpc RetrySurveyResponseWorkflow(RetrySurveyResponseWorkflowRequest) returns (RetrySurveyResponseWorkflowResponse);
+
+  // Pauses a survey response.
+  rpc PauseSurveyResponseWorkflow(PauseSurveyResponseWorkflowRequest) returns (PauseSurveyResponseWorkflowResponse);
+
+  // Resumes a survey response.
+  rpc ResumeSurveyResponseWorkflow(ResumeSurveyResponseWorkflowRequest) returns (ResumeSurveyResponseWorkflowResponse);
+
+  // Returns a survey response.
+  rpc InspectSurveyResponseWorkflow(InspectSurveyResponseWorkflowRequest) returns (InspectSurveyResponseWorkflowResponse);
+
+  // Lists survey responses a page at a time.
+  rpc ListSurveyResponseWorkflows(ListSurveyResponseWorkflowsRequest) returns (ListSurveyResponseWorkflowsResponse);
+
+  // Signals a survey response.
+  rpc SignalSurveyResponseWorkflow(SignalSurveyResponseWorkflowRequest) returns (SignalSurveyResponseWorkflowResponse);
+}
+
+// The request of `StartSurveyResponseWorkflow`.
+message StartSurveyResponseWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  SurveyResponse survey_response = 3;
+  StartSurveyResponseWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartSurveyResponseWorkflow`.
+message StartSurveyResponseWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  SurveyResponse survey_response = 1;
+  StartSurveyResponseWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceSurveyResponseWorkflow`.
+message AdvanceSurveyResponseWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  SurveyResponse survey_response = 3;
+  AdvanceSurveyResponseWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceSurveyResponseWorkflow`.
+message AdvanceSurveyResponseWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  SurveyResponse survey_response = 1;
+  AdvanceSurveyResponseWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelSurveyResponseWorkflow`.
+message CancelSurveyResponseWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  SurveyResponse survey_response = 3;
+  CancelSurveyResponseWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelSurveyResponseWorkflow`.
+message CancelSurveyResponseWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  SurveyResponse survey_response = 1;
+  CancelSurveyResponseWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetrySurveyResponseWorkflow`.
+message RetrySurveyResponseWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  SurveyResponse survey_response = 3;
+  RetrySurveyResponseWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetrySurveyResponseWorkflow`.
+message RetrySurveyResponseWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  SurveyResponse survey_response = 1;
+  RetrySurveyResponseWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseSurveyResponseWorkflow`.
+message PauseSurveyResponseWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  SurveyResponse survey_response = 3;
+  PauseSurveyResponseWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseSurveyResponseWorkflow`.
+message PauseSurveyResponseWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  SurveyResponse survey_response = 1;
+  PauseSurveyResponseWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumeSurveyResponseWorkflow`.
+message ResumeSurveyResponseWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  SurveyResponse survey_response = 3;
+  ResumeSurveyResponseWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumeSurveyResponseWorkflow`.
+message ResumeSurveyResponseWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  SurveyResponse survey_response = 1;
+  ResumeSurveyResponseWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectSurveyResponseWorkflow`.
+message InspectSurveyResponseWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectSurveyResponseWorkflow`.
+message InspectSurveyResponseWorkflowResponse {
+  SurveyResponse survey_response = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListSurveyResponseWorkflows`.
+message ListSurveyResponseWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated SurveyResponseStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListSurveyResponseWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListSurveyResponseWorkflows`.
+message ListSurveyResponseWorkflowsResponse {
+  repeated SurveyResponse survey_responses = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalSurveyResponseWorkflow`.
+message SignalSurveyResponseWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string survey_response_id = 2;
+  SurveyResponse survey_response = 3;
+  SignalSurveyResponseWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalSurveyResponseWorkflow`.
+message SignalSurveyResponseWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  SurveyResponse survey_response = 1;
+  SignalSurveyResponseWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

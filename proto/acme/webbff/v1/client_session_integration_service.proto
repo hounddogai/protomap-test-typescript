@@ -1,0 +1,300 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.webbff.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/webbff/v1/webbff.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Webbff.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/webbff/v1;webbffv1";
+option java_multiple_files = true;
+option java_outer_classname = "ClientSessionIntegrationServiceProto";
+option java_package = "com.acme.webbff.v1";
+
+// Connects external systems that send client session events.
+service ClientSessionIntegrationService {
+  // Connects a client session.
+  rpc ConnectClientSessionSource(ConnectClientSessionSourceRequest) returns (ConnectClientSessionSourceResponse);
+
+  // Disconnects a client session.
+  rpc DisconnectClientSessionSource(DisconnectClientSessionSourceRequest) returns (DisconnectClientSessionSourceResponse);
+
+  // Takes a stream of client sessions and answers once at the end.
+  rpc IngestClientSessionEvents(stream IngestClientSessionEventsRequest) returns (IngestClientSessionEventsResponse);
+
+  // Replays a client session.
+  rpc ReplayClientSessionEvents(ReplayClientSessionEventsRequest) returns (ReplayClientSessionEventsResponse);
+
+  // Acknowledges a client session.
+  rpc AcknowledgeClientSessionEvent(AcknowledgeClientSessionEventRequest) returns (AcknowledgeClientSessionEventResponse);
+
+  // Exchanges changes of client sessions with a peer.
+  rpc RelayClientSessionMessages(stream RelayClientSessionMessagesRequest) returns (stream RelayClientSessionMessagesResponse);
+
+  // Lists client sessions a page at a time.
+  rpc ListClientSessionSources(ListClientSessionSourcesRequest) returns (ListClientSessionSourcesResponse);
+
+  // Tests a client session.
+  rpc TestClientSessionConnection(TestClientSessionConnectionRequest) returns (TestClientSessionConnectionResponse);
+}
+
+// The request of `ConnectClientSessionSource`.
+message ConnectClientSessionSourceRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string endpoint = 1;
+    google.protobuf.Any envelope = 2;
+    string message_id = 3;
+    string source_system = 4;
+    google.protobuf.Timestamp received_at = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string client_session_id = 2;
+  ConnectClientSessionSourceRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ConnectClientSessionSource`.
+message ConnectClientSessionSourceResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ClientSession client_session = 1;
+  ConnectClientSessionSourceResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DisconnectClientSessionSource`.
+message DisconnectClientSessionSourceRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string endpoint = 1;
+    google.protobuf.Any envelope = 2;
+    string message_id = 3;
+    string source_system = 4;
+    google.protobuf.Timestamp received_at = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string client_session_id = 2;
+  DisconnectClientSessionSourceRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `DisconnectClientSessionSource`.
+message DisconnectClientSessionSourceResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ClientSession client_session = 1;
+  DisconnectClientSessionSourceResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `IngestClientSessionEvents`.
+message IngestClientSessionEventsRequest {
+  // What a stream of records starts with.
+  message StreamHeader {
+    string source = 1;
+    string format = 2;
+    int64 total_records = 3;
+    acme.common.v1.ContactInfo submitted_by = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof chunk {
+    IngestClientSessionEventsRequest.StreamHeader header = 2;
+    ClientSession record = 3;
+  }
+  int64 sequence = 4;
+}
+
+// The response of `IngestClientSessionEvents`.
+message IngestClientSessionEventsResponse {
+  // A record the import turned down.
+  message Rejection {
+    int64 sequence = 1;
+    string reason = 2;
+    string client_session_id = 3;
+  }
+
+  int64 accepted = 1;
+  int64 rejected = 2;
+  repeated IngestClientSessionEventsResponse.Rejection rejections = 3;
+  acme.common.v1.OperationResult result = 4;
+}
+
+// The request of `ReplayClientSessionEvents`.
+message ReplayClientSessionEventsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string endpoint = 1;
+    google.protobuf.Any envelope = 2;
+    string message_id = 3;
+    string source_system = 4;
+    google.protobuf.Timestamp received_at = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string client_session_id = 2;
+  ReplayClientSessionEventsRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ReplayClientSessionEvents`.
+message ReplayClientSessionEventsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ClientSession client_session = 1;
+  ReplayClientSessionEventsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AcknowledgeClientSessionEvent`.
+message AcknowledgeClientSessionEventRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string endpoint = 1;
+    google.protobuf.Any envelope = 2;
+    string message_id = 3;
+    string source_system = 4;
+    google.protobuf.Timestamp received_at = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string client_session_id = 2;
+  AcknowledgeClientSessionEventRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `AcknowledgeClientSessionEvent`.
+message AcknowledgeClientSessionEventResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ClientSession client_session = 1;
+  AcknowledgeClientSessionEventResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RelayClientSessionMessages`.
+message RelayClientSessionMessagesRequest {
+  // An acknowledgment of a change the peer sent.
+  message ChangeAck {
+    int64 sequence = 1;
+    string status = 2;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof frame {
+    ClientSession change = 2;
+    RelayClientSessionMessagesRequest.ChangeAck ack = 3;
+  }
+  string cursor = 4;
+}
+
+// The response of `RelayClientSessionMessages`.
+message RelayClientSessionMessagesResponse {
+  ClientSession client_session = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `ListClientSessionSources`.
+message ListClientSessionSourcesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ClientSessionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListClientSessionSourcesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListClientSessionSources`.
+message ListClientSessionSourcesResponse {
+  repeated ClientSession client_sessions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `TestClientSessionConnection`.
+message TestClientSessionConnectionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string endpoint = 1;
+    google.protobuf.Any envelope = 2;
+    string message_id = 3;
+    string source_system = 4;
+    google.protobuf.Timestamp received_at = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string client_session_id = 2;
+  TestClientSessionConnectionRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `TestClientSessionConnection`.
+message TestClientSessionConnectionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ClientSession client_session = 1;
+  TestClientSessionConnectionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

@@ -1,0 +1,334 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.webhooks.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/webhooks/v1/webhooks.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Webhooks.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/webhooks/v1;webhooksv1";
+option java_multiple_files = true;
+option java_outer_classname = "WebhookEndpointWorkflowServiceProto";
+option java_package = "com.acme.webhooks.v1";
+
+// Runs the long-lived workflow that takes a webhook endpoint from start to finish.
+service WebhookEndpointWorkflowService {
+  // Starts a webhook endpoint.
+  rpc StartWebhookEndpointWorkflow(StartWebhookEndpointWorkflowRequest) returns (StartWebhookEndpointWorkflowResponse);
+
+  // Advances a webhook endpoint.
+  rpc AdvanceWebhookEndpointWorkflow(AdvanceWebhookEndpointWorkflowRequest) returns (AdvanceWebhookEndpointWorkflowResponse);
+
+  // Cancels a webhook endpoint.
+  rpc CancelWebhookEndpointWorkflow(CancelWebhookEndpointWorkflowRequest) returns (CancelWebhookEndpointWorkflowResponse);
+
+  // Retrys a webhook endpoint.
+  rpc RetryWebhookEndpointWorkflow(RetryWebhookEndpointWorkflowRequest) returns (RetryWebhookEndpointWorkflowResponse);
+
+  // Pauses a webhook endpoint.
+  rpc PauseWebhookEndpointWorkflow(PauseWebhookEndpointWorkflowRequest) returns (PauseWebhookEndpointWorkflowResponse);
+
+  // Resumes a webhook endpoint.
+  rpc ResumeWebhookEndpointWorkflow(ResumeWebhookEndpointWorkflowRequest) returns (ResumeWebhookEndpointWorkflowResponse);
+
+  // Returns a webhook endpoint.
+  rpc InspectWebhookEndpointWorkflow(InspectWebhookEndpointWorkflowRequest) returns (InspectWebhookEndpointWorkflowResponse);
+
+  // Lists webhook endpoints a page at a time.
+  rpc ListWebhookEndpointWorkflows(ListWebhookEndpointWorkflowsRequest) returns (ListWebhookEndpointWorkflowsResponse);
+
+  // Signals a webhook endpoint.
+  rpc SignalWebhookEndpointWorkflow(SignalWebhookEndpointWorkflowRequest) returns (SignalWebhookEndpointWorkflowResponse);
+}
+
+// The request of `StartWebhookEndpointWorkflow`.
+message StartWebhookEndpointWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  StartWebhookEndpointWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartWebhookEndpointWorkflow`.
+message StartWebhookEndpointWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  StartWebhookEndpointWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceWebhookEndpointWorkflow`.
+message AdvanceWebhookEndpointWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  AdvanceWebhookEndpointWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceWebhookEndpointWorkflow`.
+message AdvanceWebhookEndpointWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  AdvanceWebhookEndpointWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelWebhookEndpointWorkflow`.
+message CancelWebhookEndpointWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  CancelWebhookEndpointWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelWebhookEndpointWorkflow`.
+message CancelWebhookEndpointWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  CancelWebhookEndpointWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryWebhookEndpointWorkflow`.
+message RetryWebhookEndpointWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  RetryWebhookEndpointWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryWebhookEndpointWorkflow`.
+message RetryWebhookEndpointWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  RetryWebhookEndpointWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseWebhookEndpointWorkflow`.
+message PauseWebhookEndpointWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  PauseWebhookEndpointWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseWebhookEndpointWorkflow`.
+message PauseWebhookEndpointWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  PauseWebhookEndpointWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumeWebhookEndpointWorkflow`.
+message ResumeWebhookEndpointWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  ResumeWebhookEndpointWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumeWebhookEndpointWorkflow`.
+message ResumeWebhookEndpointWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  ResumeWebhookEndpointWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectWebhookEndpointWorkflow`.
+message InspectWebhookEndpointWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectWebhookEndpointWorkflow`.
+message InspectWebhookEndpointWorkflowResponse {
+  WebhookEndpoint webhook_endpoint = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListWebhookEndpointWorkflows`.
+message ListWebhookEndpointWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated WebhookEndpointStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListWebhookEndpointWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListWebhookEndpointWorkflows`.
+message ListWebhookEndpointWorkflowsResponse {
+  repeated WebhookEndpoint webhook_endpoints = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalWebhookEndpointWorkflow`.
+message SignalWebhookEndpointWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  WebhookEndpoint webhook_endpoint = 3;
+  SignalWebhookEndpointWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalWebhookEndpointWorkflow`.
+message SignalWebhookEndpointWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookEndpoint webhook_endpoint = 1;
+  SignalWebhookEndpointWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

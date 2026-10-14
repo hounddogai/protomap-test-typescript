@@ -1,0 +1,333 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.community.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/community/v1/community.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Community.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/community/v1;communityv1";
+option java_multiple_files = true;
+option java_outer_classname = "ForumApprovalServiceProto";
+option java_package = "com.acme.community.v1";
+
+// Routes forums through approval, with escalation and delegation.
+service ForumApprovalService {
+  // Submits a forum.
+  rpc SubmitForum(SubmitForumRequest) returns (SubmitForumResponse);
+
+  // Approves a forum.
+  rpc ApproveForum(ApproveForumRequest) returns (ApproveForumResponse);
+
+  // Rejects a forum.
+  rpc RejectForum(RejectForumRequest) returns (RejectForumResponse);
+
+  // Escalates a forum.
+  rpc EscalateForum(EscalateForumRequest) returns (EscalateForumResponse);
+
+  // Lists forums a page at a time.
+  rpc ListPendingForums(ListPendingForumsRequest) returns (ListPendingForumsResponse);
+
+  // Delegates a forum.
+  rpc DelegateForumApproval(DelegateForumApprovalRequest) returns (DelegateForumApprovalResponse);
+
+  // Recalls a forum.
+  rpc RecallForum(RecallForumRequest) returns (RecallForumResponse);
+
+  // Returns a forum.
+  rpc GetForumApprovalStatus(GetForumApprovalStatusRequest) returns (GetForumApprovalStatusResponse);
+
+  // Comments a forum.
+  rpc CommentForumApproval(CommentForumApprovalRequest) returns (CommentForumApprovalResponse);
+}
+
+// The request of `SubmitForum`.
+message SubmitForumRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string forum_id = 2;
+  Forum forum = 3;
+  SubmitForumRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitForum`.
+message SubmitForumResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Forum forum = 1;
+  SubmitForumResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveForum`.
+message ApproveForumRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string forum_id = 2;
+  Forum forum = 3;
+  ApproveForumRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveForum`.
+message ApproveForumResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Forum forum = 1;
+  ApproveForumResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectForum`.
+message RejectForumRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string forum_id = 2;
+  Forum forum = 3;
+  RejectForumRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectForum`.
+message RejectForumResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Forum forum = 1;
+  RejectForumResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateForum`.
+message EscalateForumRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string forum_id = 2;
+  Forum forum = 3;
+  EscalateForumRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateForum`.
+message EscalateForumResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Forum forum = 1;
+  EscalateForumResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingForums`.
+message ListPendingForumsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ForumStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingForumsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingForums`.
+message ListPendingForumsResponse {
+  repeated Forum forums = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateForumApproval`.
+message DelegateForumApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string forum_id = 2;
+  Forum forum = 3;
+  DelegateForumApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateForumApproval`.
+message DelegateForumApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Forum forum = 1;
+  DelegateForumApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallForum`.
+message RecallForumRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string forum_id = 2;
+  Forum forum = 3;
+  RecallForumRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallForum`.
+message RecallForumResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Forum forum = 1;
+  RecallForumResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetForumApprovalStatus`.
+message GetForumApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string forum_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetForumApprovalStatus`.
+message GetForumApprovalStatusResponse {
+  Forum forum = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentForumApproval`.
+message CommentForumApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string forum_id = 2;
+  Forum forum = 3;
+  CommentForumApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentForumApproval`.
+message CommentForumApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Forum forum = 1;
+  CommentForumApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

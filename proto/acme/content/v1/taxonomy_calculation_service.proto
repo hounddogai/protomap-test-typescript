@@ -1,0 +1,249 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.content.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/content/v1/content.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Content.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/content/v1;contentv1";
+option java_multiple_files = true;
+option java_outer_classname = "TaxonomyCalculationServiceProto";
+option java_package = "com.acme.content.v1";
+
+// Computes the figures of a taxonomy, such as totals, taxes, and estimates.
+service TaxonomyCalculationService {
+  // Calculates a taxonomy.
+  rpc CalculateTaxonomy(CalculateTaxonomyRequest) returns (CalculateTaxonomyResponse);
+
+  // Estimates a taxonomy.
+  rpc EstimateTaxonomy(EstimateTaxonomyRequest) returns (EstimateTaxonomyResponse);
+
+  // Compares a taxonomy.
+  rpc CompareTaxonomyOptions(CompareTaxonomyOptionsRequest) returns (CompareTaxonomyOptionsResponse);
+
+  // Simulates a taxonomy.
+  rpc SimulateTaxonomy(SimulateTaxonomyRequest) returns (SimulateTaxonomyResponse);
+
+  // Explains a taxonomy.
+  rpc ExplainTaxonomyCalculation(ExplainTaxonomyCalculationRequest) returns (ExplainTaxonomyCalculationResponse);
+
+  // Returns a taxonomy.
+  rpc GetTaxonomyRates(GetTaxonomyRatesRequest) returns (GetTaxonomyRatesResponse);
+}
+
+// The request of `CalculateTaxonomy`.
+message CalculateTaxonomyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  Taxonomy taxonomy = 3;
+  CalculateTaxonomyRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateTaxonomy`.
+message CalculateTaxonomyResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateTaxonomyResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Taxonomy taxonomy = 1;
+  CalculateTaxonomyResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateTaxonomy`.
+message EstimateTaxonomyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  Taxonomy taxonomy = 3;
+  EstimateTaxonomyRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateTaxonomy`.
+message EstimateTaxonomyResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateTaxonomyResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Taxonomy taxonomy = 1;
+  EstimateTaxonomyResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareTaxonomyOptions`.
+message CompareTaxonomyOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  Taxonomy taxonomy = 3;
+  CompareTaxonomyOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareTaxonomyOptions`.
+message CompareTaxonomyOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareTaxonomyOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Taxonomy taxonomy = 1;
+  CompareTaxonomyOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateTaxonomy`.
+message SimulateTaxonomyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  Taxonomy taxonomy = 3;
+  SimulateTaxonomyRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateTaxonomy`.
+message SimulateTaxonomyResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateTaxonomyResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Taxonomy taxonomy = 1;
+  SimulateTaxonomyResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainTaxonomyCalculation`.
+message ExplainTaxonomyCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  Taxonomy taxonomy = 3;
+  ExplainTaxonomyCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainTaxonomyCalculation`.
+message ExplainTaxonomyCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  ExplainTaxonomyCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetTaxonomyRates`.
+message GetTaxonomyRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetTaxonomyRates`.
+message GetTaxonomyRatesResponse {
+  Taxonomy taxonomy = 1;
+  acme.common.v1.OperationResult result = 2;
+}

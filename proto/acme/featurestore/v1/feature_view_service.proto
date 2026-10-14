@@ -1,0 +1,248 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.featurestore.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/featurestore/v1/featurestore.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Featurestore.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/featurestore/v1;featurestorev1";
+option java_multiple_files = true;
+option java_outer_classname = "FeatureViewServiceProto";
+option java_package = "com.acme.featurestore.v1";
+
+// Manages feature views: creates, reads, changes, and lists them.
+service FeatureViewService {
+  // Creates a feature view.
+  rpc CreateFeatureView(CreateFeatureViewRequest) returns (CreateFeatureViewResponse);
+
+  // Returns a feature view.
+  rpc GetFeatureView(GetFeatureViewRequest) returns (GetFeatureViewResponse);
+
+  // Changes a feature view.
+  rpc UpdateFeatureView(UpdateFeatureViewRequest) returns (UpdateFeatureViewResponse);
+
+  // Deletes a feature view.
+  rpc DeleteFeatureView(DeleteFeatureViewRequest) returns (DeleteFeatureViewResponse);
+
+  // Lists feature views a page at a time.
+  rpc ListFeatureViews(ListFeatureViewsRequest) returns (ListFeatureViewsResponse);
+
+  // Returns several feature views at once.
+  rpc BatchGetFeatureViews(BatchGetFeatureViewsRequest) returns (BatchGetFeatureViewsResponse);
+
+  // Lists feature views a page at a time.
+  rpc SearchFeatureViews(SearchFeatureViewsRequest) returns (SearchFeatureViewsResponse);
+
+  // Streams the changes of feature views as they happen.
+  rpc WatchFeatureViews(WatchFeatureViewsRequest) returns (stream WatchFeatureViewsResponse);
+
+  // Takes a stream of feature views and answers once at the end.
+  rpc BatchCreateFeatureViews(stream BatchCreateFeatureViewsRequest) returns (BatchCreateFeatureViewsResponse);
+
+  // Creates a feature view.
+  rpc CloneFeatureView(CloneFeatureViewRequest) returns (CloneFeatureViewResponse);
+}
+
+// The request of `CreateFeatureView`.
+message CreateFeatureViewRequest {
+  acme.common.v1.RequestContext context = 1;
+  FeatureView feature_view = 2;
+  string request_id = 3;
+  bool validate_only = 4;
+}
+
+// The response of `CreateFeatureView`.
+message CreateFeatureViewResponse {
+  FeatureView feature_view = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `GetFeatureView`.
+message GetFeatureViewRequest {
+  acme.common.v1.RequestContext context = 1;
+  string feature_view_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetFeatureView`.
+message GetFeatureViewResponse {
+  FeatureView feature_view = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `UpdateFeatureView`.
+message UpdateFeatureViewRequest {
+  acme.common.v1.RequestContext context = 1;
+  FeatureView feature_view = 2;
+  google.protobuf.FieldMask update_mask = 3;
+  bool allow_missing = 4;
+}
+
+// The response of `UpdateFeatureView`.
+message UpdateFeatureViewResponse {
+  FeatureView feature_view = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `DeleteFeatureView`.
+message DeleteFeatureViewRequest {
+  acme.common.v1.RequestContext context = 1;
+  string feature_view_id = 2;
+  string reason = 3;
+  string etag = 4;
+  bool force = 5;
+}
+
+// The response of `DeleteFeatureView`.
+message DeleteFeatureViewResponse {
+  acme.common.v1.OperationResult result = 1;
+  google.protobuf.Timestamp effective_at = 2;
+}
+
+// The request of `ListFeatureViews`.
+message ListFeatureViewsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated FeatureViewStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListFeatureViewsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListFeatureViews`.
+message ListFeatureViewsResponse {
+  repeated FeatureView feature_views = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `BatchGetFeatureViews`.
+message BatchGetFeatureViewsRequest {
+  acme.common.v1.RequestContext context = 1;
+  repeated string feature_view_ids = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `BatchGetFeatureViews`.
+message BatchGetFeatureViewsResponse {
+  repeated FeatureView feature_views = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SearchFeatureViews`.
+message SearchFeatureViewsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated FeatureViewStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  SearchFeatureViewsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `SearchFeatureViews`.
+message SearchFeatureViewsResponse {
+  repeated FeatureView feature_views = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `WatchFeatureViews`.
+message WatchFeatureViewsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated FeatureViewStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  WatchFeatureViewsRequest.Filter filter = 2;
+  google.protobuf.Timestamp since = 3;
+  int32 max_events = 4;
+  acme.common.v1.ContactInfo subscriber = 5;
+}
+
+// The response of `WatchFeatureViews`.
+message WatchFeatureViewsResponse {
+  FeatureView feature_view = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `BatchCreateFeatureViews`.
+message BatchCreateFeatureViewsRequest {
+  // What a stream of records starts with.
+  message StreamHeader {
+    string source = 1;
+    string format = 2;
+    int64 total_records = 3;
+    acme.common.v1.ContactInfo submitted_by = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof chunk {
+    BatchCreateFeatureViewsRequest.StreamHeader header = 2;
+    FeatureView record = 3;
+  }
+  int64 sequence = 4;
+}
+
+// The response of `BatchCreateFeatureViews`.
+message BatchCreateFeatureViewsResponse {
+  // A record the import turned down.
+  message Rejection {
+    int64 sequence = 1;
+    string reason = 2;
+    string feature_view_id = 3;
+  }
+
+  int64 accepted = 1;
+  int64 rejected = 2;
+  repeated BatchCreateFeatureViewsResponse.Rejection rejections = 3;
+  acme.common.v1.OperationResult result = 4;
+}
+
+// The request of `CloneFeatureView`.
+message CloneFeatureViewRequest {
+  acme.common.v1.RequestContext context = 1;
+  FeatureView feature_view = 2;
+  string request_id = 3;
+  bool validate_only = 4;
+}
+
+// The response of `CloneFeatureView`.
+message CloneFeatureViewResponse {
+  FeatureView feature_view = 1;
+  acme.common.v1.OperationResult result = 2;
+}

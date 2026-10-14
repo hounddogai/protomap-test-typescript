@@ -1,0 +1,305 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.campaigns.v1;
+
+import "acme/campaigns/v1/campaigns.proto";
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Campaigns.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/campaigns/v1;campaignsv1";
+option java_multiple_files = true;
+option java_outer_classname = "CampaignBudgetValidationServiceProto";
+option java_package = "com.acme.campaigns.v1";
+
+// Checks campaign budgets against the rules before anything acts on them.
+service CampaignBudgetValidationService {
+  // Validates a campaign budget.
+  rpc ValidateCampaignBudget(ValidateCampaignBudgetRequest) returns (ValidateCampaignBudgetResponse);
+
+  // Previews a campaign budget.
+  rpc PreviewCampaignBudget(PreviewCampaignBudgetRequest) returns (PreviewCampaignBudgetResponse);
+
+  // Checks a campaign budget.
+  rpc CheckCampaignBudgetEligibility(CheckCampaignBudgetEligibilityRequest) returns (CheckCampaignBudgetEligibilityResponse);
+
+  // Normalizes a campaign budget.
+  rpc NormalizeCampaignBudget(NormalizeCampaignBudgetRequest) returns (NormalizeCampaignBudgetResponse);
+
+  // Explains a campaign budget.
+  rpc ExplainCampaignBudgetDecision(ExplainCampaignBudgetDecisionRequest) returns (ExplainCampaignBudgetDecisionResponse);
+
+  // Scores a campaign budget.
+  rpc ScoreCampaignBudget(ScoreCampaignBudgetRequest) returns (ScoreCampaignBudgetResponse);
+
+  // Lints a campaign budget.
+  rpc LintCampaignBudgets(LintCampaignBudgetsRequest) returns (LintCampaignBudgetsResponse);
+
+  // Returns a campaign budget.
+  rpc GetCampaignBudgetRules(GetCampaignBudgetRulesRequest) returns (GetCampaignBudgetRulesResponse);
+}
+
+// The request of `ValidateCampaignBudget`.
+message ValidateCampaignBudgetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  CampaignBudget campaign_budget = 3;
+  ValidateCampaignBudgetRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateCampaignBudget`.
+message ValidateCampaignBudgetResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignBudget campaign_budget = 1;
+  ValidateCampaignBudgetResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewCampaignBudget`.
+message PreviewCampaignBudgetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  CampaignBudget campaign_budget = 3;
+  PreviewCampaignBudgetRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewCampaignBudget`.
+message PreviewCampaignBudgetResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignBudget campaign_budget = 1;
+  PreviewCampaignBudgetResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckCampaignBudgetEligibility`.
+message CheckCampaignBudgetEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  CampaignBudget campaign_budget = 3;
+  CheckCampaignBudgetEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckCampaignBudgetEligibility`.
+message CheckCampaignBudgetEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignBudget campaign_budget = 1;
+  CheckCampaignBudgetEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeCampaignBudget`.
+message NormalizeCampaignBudgetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  CampaignBudget campaign_budget = 3;
+  NormalizeCampaignBudgetRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeCampaignBudget`.
+message NormalizeCampaignBudgetResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignBudget campaign_budget = 1;
+  NormalizeCampaignBudgetResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainCampaignBudgetDecision`.
+message ExplainCampaignBudgetDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  CampaignBudget campaign_budget = 3;
+  ExplainCampaignBudgetDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainCampaignBudgetDecision`.
+message ExplainCampaignBudgetDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignBudget campaign_budget = 1;
+  ExplainCampaignBudgetDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreCampaignBudget`.
+message ScoreCampaignBudgetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  CampaignBudget campaign_budget = 3;
+  ScoreCampaignBudgetRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreCampaignBudget`.
+message ScoreCampaignBudgetResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreCampaignBudgetResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  CampaignBudget campaign_budget = 1;
+  ScoreCampaignBudgetResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintCampaignBudgets`.
+message LintCampaignBudgetsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  CampaignBudget campaign_budget = 3;
+  LintCampaignBudgetsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintCampaignBudgets`.
+message LintCampaignBudgetsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignBudget campaign_budget = 1;
+  LintCampaignBudgetsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetCampaignBudgetRules`.
+message GetCampaignBudgetRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetCampaignBudgetRules`.
+message GetCampaignBudgetRulesResponse {
+  CampaignBudget campaign_budget = 1;
+  acme.common.v1.OperationResult result = 2;
+}

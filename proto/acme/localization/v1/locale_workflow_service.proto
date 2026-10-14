@@ -1,0 +1,220 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.localization.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/localization/v1/localization.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Localization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/localization/v1;localizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "LocaleWorkflowServiceProto";
+option java_package = "com.acme.localization.v1";
+
+// Runs the long-lived workflow that takes a locale from start to finish.
+service LocaleWorkflowService {
+  // Starts a locale.
+  rpc StartLocaleWorkflow(StartLocaleWorkflowRequest) returns (StartLocaleWorkflowResponse);
+
+  // Advances a locale.
+  rpc AdvanceLocaleWorkflow(AdvanceLocaleWorkflowRequest) returns (AdvanceLocaleWorkflowResponse);
+
+  // Cancels a locale.
+  rpc CancelLocaleWorkflow(CancelLocaleWorkflowRequest) returns (CancelLocaleWorkflowResponse);
+
+  // Retrys a locale.
+  rpc RetryLocaleWorkflow(RetryLocaleWorkflowRequest) returns (RetryLocaleWorkflowResponse);
+
+  // Returns a locale.
+  rpc InspectLocaleWorkflow(InspectLocaleWorkflowRequest) returns (InspectLocaleWorkflowResponse);
+
+  // Lists locales a page at a time.
+  rpc ListLocaleWorkflows(ListLocaleWorkflowsRequest) returns (ListLocaleWorkflowsResponse);
+}
+
+// The request of `StartLocaleWorkflow`.
+message StartLocaleWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  StartLocaleWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartLocaleWorkflow`.
+message StartLocaleWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Locale locale = 1;
+  StartLocaleWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceLocaleWorkflow`.
+message AdvanceLocaleWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  AdvanceLocaleWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceLocaleWorkflow`.
+message AdvanceLocaleWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Locale locale = 1;
+  AdvanceLocaleWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelLocaleWorkflow`.
+message CancelLocaleWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  CancelLocaleWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelLocaleWorkflow`.
+message CancelLocaleWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Locale locale = 1;
+  CancelLocaleWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryLocaleWorkflow`.
+message RetryLocaleWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  RetryLocaleWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryLocaleWorkflow`.
+message RetryLocaleWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Locale locale = 1;
+  RetryLocaleWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectLocaleWorkflow`.
+message InspectLocaleWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectLocaleWorkflow`.
+message InspectLocaleWorkflowResponse {
+  Locale locale = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListLocaleWorkflows`.
+message ListLocaleWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated LocaleStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListLocaleWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListLocaleWorkflows`.
+message ListLocaleWorkflowsResponse {
+  repeated Locale locales = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}

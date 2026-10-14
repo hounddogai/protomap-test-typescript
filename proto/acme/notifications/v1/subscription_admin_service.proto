@@ -1,0 +1,237 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.notifications.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/notifications/v1/notifications.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Notifications.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/notifications/v1;notificationsv1";
+option java_multiple_files = true;
+option java_outer_classname = "SubscriptionAdminServiceProto";
+option java_package = "com.acme.notifications.v1";
+
+// Operator actions on subscriptions that support staff run by hand.
+service SubscriptionAdminService {
+  // Archives a subscription.
+  rpc ArchiveSubscription(ArchiveSubscriptionRequest) returns (ArchiveSubscriptionResponse);
+
+  // Restores a subscription.
+  rpc RestoreSubscription(RestoreSubscriptionRequest) returns (RestoreSubscriptionResponse);
+
+  // Deletes a subscription.
+  rpc PurgeSubscription(PurgeSubscriptionRequest) returns (PurgeSubscriptionResponse);
+
+  // Reassigns a subscription.
+  rpc ReassignSubscription(ReassignSubscriptionRequest) returns (ReassignSubscriptionResponse);
+
+  // Locks a subscription.
+  rpc LockSubscription(LockSubscriptionRequest) returns (LockSubscriptionResponse);
+
+  // Transfers a subscription.
+  rpc TransferSubscription(TransferSubscriptionRequest) returns (TransferSubscriptionResponse);
+
+  // Returns a subscription.
+  rpc InspectSubscription(InspectSubscriptionRequest) returns (InspectSubscriptionResponse);
+}
+
+// The request of `ArchiveSubscription`.
+message ArchiveSubscriptionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  ArchiveSubscriptionRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ArchiveSubscription`.
+message ArchiveSubscriptionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Subscription subscription = 1;
+  ArchiveSubscriptionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RestoreSubscription`.
+message RestoreSubscriptionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  RestoreSubscriptionRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `RestoreSubscription`.
+message RestoreSubscriptionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Subscription subscription = 1;
+  RestoreSubscriptionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PurgeSubscription`.
+message PurgeSubscriptionRequest {
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  string reason = 3;
+  string etag = 4;
+  bool force = 5;
+}
+
+// The response of `PurgeSubscription`.
+message PurgeSubscriptionResponse {
+  acme.common.v1.OperationResult result = 1;
+  google.protobuf.Timestamp effective_at = 2;
+}
+
+// The request of `ReassignSubscription`.
+message ReassignSubscriptionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    acme.identity.v1.UserRef assignee = 1;
+    string queue = 2;
+    int32 capacity = 3;
+    string assignee_email = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  ReassignSubscriptionRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ReassignSubscription`.
+message ReassignSubscriptionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Subscription subscription = 1;
+  ReassignSubscriptionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LockSubscription`.
+message LockSubscriptionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  LockSubscriptionRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `LockSubscription`.
+message LockSubscriptionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Subscription subscription = 1;
+  LockSubscriptionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `TransferSubscription`.
+message TransferSubscriptionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  TransferSubscriptionRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `TransferSubscription`.
+message TransferSubscriptionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Subscription subscription = 1;
+  TransferSubscriptionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectSubscription`.
+message InspectSubscriptionRequest {
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectSubscription`.
+message InspectSubscriptionResponse {
+  Subscription subscription = 1;
+  acme.common.v1.OperationResult result = 2;
+}

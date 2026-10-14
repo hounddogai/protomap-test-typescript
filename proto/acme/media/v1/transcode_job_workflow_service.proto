@@ -1,0 +1,305 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.media.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/media/v1/media.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Media.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/media/v1;mediav1";
+option java_multiple_files = true;
+option java_outer_classname = "TranscodeJobWorkflowServiceProto";
+option java_package = "com.acme.media.v1";
+
+// Runs the long-lived workflow that takes a transcode job from start to finish.
+service TranscodeJobWorkflowService {
+  // Starts a transcode job.
+  rpc StartTranscodeJobWorkflow(StartTranscodeJobWorkflowRequest) returns (StartTranscodeJobWorkflowResponse);
+
+  // Advances a transcode job.
+  rpc AdvanceTranscodeJobWorkflow(AdvanceTranscodeJobWorkflowRequest) returns (AdvanceTranscodeJobWorkflowResponse);
+
+  // Cancels a transcode job.
+  rpc CancelTranscodeJobWorkflow(CancelTranscodeJobWorkflowRequest) returns (CancelTranscodeJobWorkflowResponse);
+
+  // Retrys a transcode job.
+  rpc RetryTranscodeJobWorkflow(RetryTranscodeJobWorkflowRequest) returns (RetryTranscodeJobWorkflowResponse);
+
+  // Pauses a transcode job.
+  rpc PauseTranscodeJobWorkflow(PauseTranscodeJobWorkflowRequest) returns (PauseTranscodeJobWorkflowResponse);
+
+  // Resumes a transcode job.
+  rpc ResumeTranscodeJobWorkflow(ResumeTranscodeJobWorkflowRequest) returns (ResumeTranscodeJobWorkflowResponse);
+
+  // Returns a transcode job.
+  rpc InspectTranscodeJobWorkflow(InspectTranscodeJobWorkflowRequest) returns (InspectTranscodeJobWorkflowResponse);
+
+  // Signals a transcode job.
+  rpc SignalTranscodeJobWorkflow(SignalTranscodeJobWorkflowRequest) returns (SignalTranscodeJobWorkflowResponse);
+}
+
+// The request of `StartTranscodeJobWorkflow`.
+message StartTranscodeJobWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  StartTranscodeJobWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartTranscodeJobWorkflow`.
+message StartTranscodeJobWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  StartTranscodeJobWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceTranscodeJobWorkflow`.
+message AdvanceTranscodeJobWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  AdvanceTranscodeJobWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceTranscodeJobWorkflow`.
+message AdvanceTranscodeJobWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  AdvanceTranscodeJobWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelTranscodeJobWorkflow`.
+message CancelTranscodeJobWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  CancelTranscodeJobWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelTranscodeJobWorkflow`.
+message CancelTranscodeJobWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  CancelTranscodeJobWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryTranscodeJobWorkflow`.
+message RetryTranscodeJobWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  RetryTranscodeJobWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryTranscodeJobWorkflow`.
+message RetryTranscodeJobWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  RetryTranscodeJobWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseTranscodeJobWorkflow`.
+message PauseTranscodeJobWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  PauseTranscodeJobWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseTranscodeJobWorkflow`.
+message PauseTranscodeJobWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  PauseTranscodeJobWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumeTranscodeJobWorkflow`.
+message ResumeTranscodeJobWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  ResumeTranscodeJobWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumeTranscodeJobWorkflow`.
+message ResumeTranscodeJobWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  ResumeTranscodeJobWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectTranscodeJobWorkflow`.
+message InspectTranscodeJobWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectTranscodeJobWorkflow`.
+message InspectTranscodeJobWorkflowResponse {
+  TranscodeJob transcode_job = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `SignalTranscodeJobWorkflow`.
+message SignalTranscodeJobWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  SignalTranscodeJobWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalTranscodeJobWorkflow`.
+message SignalTranscodeJobWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  SignalTranscodeJobWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

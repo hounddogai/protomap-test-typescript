@@ -1,0 +1,316 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.community.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/community/v1/community.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Community.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/community/v1;communityv1";
+option java_multiple_files = true;
+option java_outer_classname = "ModerationApprovalServiceProto";
+option java_package = "com.acme.community.v1";
+
+// Routes moderations through approval, with escalation and delegation.
+service ModerationApprovalService {
+  // Submits a moderation.
+  rpc SubmitModeration(SubmitModerationRequest) returns (SubmitModerationResponse);
+
+  // Approves a moderation.
+  rpc ApproveModeration(ApproveModerationRequest) returns (ApproveModerationResponse);
+
+  // Rejects a moderation.
+  rpc RejectModeration(RejectModerationRequest) returns (RejectModerationResponse);
+
+  // Escalates a moderation.
+  rpc EscalateModeration(EscalateModerationRequest) returns (EscalateModerationResponse);
+
+  // Lists moderations a page at a time.
+  rpc ListPendingModerations(ListPendingModerationsRequest) returns (ListPendingModerationsResponse);
+
+  // Delegates a moderation.
+  rpc DelegateModerationApproval(DelegateModerationApprovalRequest) returns (DelegateModerationApprovalResponse);
+
+  // Recalls a moderation.
+  rpc RecallModeration(RecallModerationRequest) returns (RecallModerationResponse);
+
+  // Comments a moderation.
+  rpc CommentModerationApproval(CommentModerationApprovalRequest) returns (CommentModerationApprovalResponse);
+}
+
+// The request of `SubmitModeration`.
+message SubmitModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  SubmitModerationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitModeration`.
+message SubmitModerationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  SubmitModerationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveModeration`.
+message ApproveModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  ApproveModerationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveModeration`.
+message ApproveModerationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  ApproveModerationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectModeration`.
+message RejectModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  RejectModerationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectModeration`.
+message RejectModerationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  RejectModerationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateModeration`.
+message EscalateModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  EscalateModerationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateModeration`.
+message EscalateModerationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  EscalateModerationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingModerations`.
+message ListPendingModerationsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ModerationStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingModerationsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingModerations`.
+message ListPendingModerationsResponse {
+  repeated Moderation moderations = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateModerationApproval`.
+message DelegateModerationApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  DelegateModerationApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateModerationApproval`.
+message DelegateModerationApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  DelegateModerationApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallModeration`.
+message RecallModerationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  RecallModerationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallModeration`.
+message RecallModerationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  RecallModerationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CommentModerationApproval`.
+message CommentModerationApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string moderation_id = 2;
+  Moderation moderation = 3;
+  CommentModerationApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentModerationApproval`.
+message CommentModerationApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Moderation moderation = 1;
+  CommentModerationApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

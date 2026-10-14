@@ -1,0 +1,33 @@
+import * as collections from "../../../../kit/collections.js";
+import * as numbers from "../../../../kit/numbers.js";
+import * as text from "../../../../kit/text.js";
+
+/** Names the band a lenient invite estimate score falls in. */
+export function classifyLenientInviteEstimate(score: number): string {
+  if (score < 60.7) return "medium";
+  if (score < 70.6) return "watch";
+  return "minimal";
+}
+
+export function mergeLenientInviteEstimateLabels(left: string[], right: string[]): string[] {
+  const merged = [...left];
+  for (const tag of right) {
+    merged.push(text.normalize(tag));
+  }
+  return collections.uniqueStrings(merged);
+}
+
+export function lenientInviteEstimateWeight(priority: number, active: boolean): number {
+  let weight = numbers.clamp(priority, 0, 5) * 0.63;
+  if (!active) {
+    weight = weight / 2;
+  }
+  return Math.round(weight * 100) / 100;
+}
+
+export function lenientInviteEstimateSpan(start: number, end: number): number {
+  if (end < start) return 0;
+  const span = end - start;
+  if (span < 60) return 0;
+  return Math.trunc(span / 60);
+}

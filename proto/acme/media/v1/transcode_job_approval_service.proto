@@ -1,0 +1,333 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.media.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/media/v1/media.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Media.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/media/v1;mediav1";
+option java_multiple_files = true;
+option java_outer_classname = "TranscodeJobApprovalServiceProto";
+option java_package = "com.acme.media.v1";
+
+// Routes transcode jobs through approval, with escalation and delegation.
+service TranscodeJobApprovalService {
+  // Submits a transcode job.
+  rpc SubmitTranscodeJob(SubmitTranscodeJobRequest) returns (SubmitTranscodeJobResponse);
+
+  // Approves a transcode job.
+  rpc ApproveTranscodeJob(ApproveTranscodeJobRequest) returns (ApproveTranscodeJobResponse);
+
+  // Rejects a transcode job.
+  rpc RejectTranscodeJob(RejectTranscodeJobRequest) returns (RejectTranscodeJobResponse);
+
+  // Escalates a transcode job.
+  rpc EscalateTranscodeJob(EscalateTranscodeJobRequest) returns (EscalateTranscodeJobResponse);
+
+  // Lists transcode jobs a page at a time.
+  rpc ListPendingTranscodeJobs(ListPendingTranscodeJobsRequest) returns (ListPendingTranscodeJobsResponse);
+
+  // Delegates a transcode job.
+  rpc DelegateTranscodeJobApproval(DelegateTranscodeJobApprovalRequest) returns (DelegateTranscodeJobApprovalResponse);
+
+  // Recalls a transcode job.
+  rpc RecallTranscodeJob(RecallTranscodeJobRequest) returns (RecallTranscodeJobResponse);
+
+  // Returns a transcode job.
+  rpc GetTranscodeJobApprovalStatus(GetTranscodeJobApprovalStatusRequest) returns (GetTranscodeJobApprovalStatusResponse);
+
+  // Comments a transcode job.
+  rpc CommentTranscodeJobApproval(CommentTranscodeJobApprovalRequest) returns (CommentTranscodeJobApprovalResponse);
+}
+
+// The request of `SubmitTranscodeJob`.
+message SubmitTranscodeJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  SubmitTranscodeJobRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitTranscodeJob`.
+message SubmitTranscodeJobResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  SubmitTranscodeJobResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveTranscodeJob`.
+message ApproveTranscodeJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  ApproveTranscodeJobRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveTranscodeJob`.
+message ApproveTranscodeJobResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  ApproveTranscodeJobResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectTranscodeJob`.
+message RejectTranscodeJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  RejectTranscodeJobRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectTranscodeJob`.
+message RejectTranscodeJobResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  RejectTranscodeJobResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateTranscodeJob`.
+message EscalateTranscodeJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  EscalateTranscodeJobRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateTranscodeJob`.
+message EscalateTranscodeJobResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  EscalateTranscodeJobResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingTranscodeJobs`.
+message ListPendingTranscodeJobsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated TranscodeJobStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingTranscodeJobsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingTranscodeJobs`.
+message ListPendingTranscodeJobsResponse {
+  repeated TranscodeJob transcode_jobs = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateTranscodeJobApproval`.
+message DelegateTranscodeJobApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  DelegateTranscodeJobApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateTranscodeJobApproval`.
+message DelegateTranscodeJobApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  DelegateTranscodeJobApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallTranscodeJob`.
+message RecallTranscodeJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  RecallTranscodeJobRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallTranscodeJob`.
+message RecallTranscodeJobResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  RecallTranscodeJobResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetTranscodeJobApprovalStatus`.
+message GetTranscodeJobApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetTranscodeJobApprovalStatus`.
+message GetTranscodeJobApprovalStatusResponse {
+  TranscodeJob transcode_job = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentTranscodeJobApproval`.
+message CommentTranscodeJobApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  CommentTranscodeJobApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentTranscodeJobApproval`.
+message CommentTranscodeJobApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  CommentTranscodeJobApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

@@ -1,0 +1,229 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.media.v1;
+
+import "acme/common/v1/audit.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/media/v1/media.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Media.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/media/v1;mediav1";
+option java_multiple_files = true;
+option java_outer_classname = "RenditionQueryServiceProto";
+option java_package = "com.acme.media.v1";
+
+// Answers read-only questions about renditions, for screens and reports.
+service RenditionQueryService {
+  // Returns a rendition.
+  rpc LookupRendition(LookupRenditionRequest) returns (LookupRenditionResponse);
+
+  // Lists renditions a page at a time.
+  rpc BrowseRenditions(BrowseRenditionsRequest) returns (BrowseRenditionsResponse);
+
+  // Lists renditions a page at a time.
+  rpc FindRenditions(FindRenditionsRequest) returns (FindRenditionsResponse);
+
+  // Counts renditions by status.
+  rpc CountRenditions(CountRenditionsRequest) returns (CountRenditionsResponse);
+
+  // Returns several renditions at once.
+  rpc ResolveRenditions(ResolveRenditionsRequest) returns (ResolveRenditionsResponse);
+
+  // Streams every matching rendition.
+  rpc ExportRenditions(ExportRenditionsRequest) returns (stream ExportRenditionsResponse);
+
+  // Summarizes a rendition.
+  rpc SummarizeRenditions(SummarizeRenditionsRequest) returns (SummarizeRenditionsResponse);
+
+  // Lists renditions a page at a time.
+  rpc SuggestRenditions(SuggestRenditionsRequest) returns (SuggestRenditionsResponse);
+}
+
+// The request of `LookupRendition`.
+message LookupRenditionRequest {
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `LookupRendition`.
+message LookupRenditionResponse {
+  Rendition rendition = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `BrowseRenditions`.
+message BrowseRenditionsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated RenditionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  BrowseRenditionsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `BrowseRenditions`.
+message BrowseRenditionsResponse {
+  repeated Rendition renditions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `FindRenditions`.
+message FindRenditionsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated RenditionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  FindRenditionsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `FindRenditions`.
+message FindRenditionsResponse {
+  repeated Rendition renditions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CountRenditions`.
+message CountRenditionsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated RenditionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  CountRenditionsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `CountRenditions`.
+message CountRenditionsResponse {
+  int64 count = 1;
+  map<string, int64> by_status = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResolveRenditions`.
+message ResolveRenditionsRequest {
+  acme.common.v1.RequestContext context = 1;
+  repeated string rendition_ids = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `ResolveRenditions`.
+message ResolveRenditionsResponse {
+  repeated Rendition renditions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExportRenditions`.
+message ExportRenditionsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated RenditionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  ExportRenditionsRequest.Filter filter = 2;
+  string format = 3;
+  google.protobuf.FieldMask fields = 4;
+  string destination_uri = 5;
+}
+
+// The response of `ExportRenditions`.
+message ExportRenditionsResponse {
+  Rendition rendition = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `SummarizeRenditions`.
+message SummarizeRenditionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string format = 1;
+    acme.common.v1.TimeWindow period = 2;
+    repeated string recipient_emails = 3;
+    string cron = 4;
+    map<string, string> filters = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  SummarizeRenditionsRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SummarizeRenditions`.
+message SummarizeRenditionsResponse {
+  string report_id = 1;
+  string download_uri = 2;
+  map<string, string> summary = 3;
+  acme.common.v1.TimeWindow period = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `SuggestRenditions`.
+message SuggestRenditionsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated RenditionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  SuggestRenditionsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `SuggestRenditions`.
+message SuggestRenditionsResponse {
+  repeated Rendition renditions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}

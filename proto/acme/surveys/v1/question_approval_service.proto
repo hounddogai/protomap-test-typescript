@@ -1,0 +1,333 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.surveys.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/surveys/v1/surveys.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Surveys.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/surveys/v1;surveysv1";
+option java_multiple_files = true;
+option java_outer_classname = "QuestionApprovalServiceProto";
+option java_package = "com.acme.surveys.v1";
+
+// Routes questions through approval, with escalation and delegation.
+service QuestionApprovalService {
+  // Submits a question.
+  rpc SubmitQuestion(SubmitQuestionRequest) returns (SubmitQuestionResponse);
+
+  // Approves a question.
+  rpc ApproveQuestion(ApproveQuestionRequest) returns (ApproveQuestionResponse);
+
+  // Rejects a question.
+  rpc RejectQuestion(RejectQuestionRequest) returns (RejectQuestionResponse);
+
+  // Escalates a question.
+  rpc EscalateQuestion(EscalateQuestionRequest) returns (EscalateQuestionResponse);
+
+  // Lists questions a page at a time.
+  rpc ListPendingQuestions(ListPendingQuestionsRequest) returns (ListPendingQuestionsResponse);
+
+  // Delegates a question.
+  rpc DelegateQuestionApproval(DelegateQuestionApprovalRequest) returns (DelegateQuestionApprovalResponse);
+
+  // Recalls a question.
+  rpc RecallQuestion(RecallQuestionRequest) returns (RecallQuestionResponse);
+
+  // Returns a question.
+  rpc GetQuestionApprovalStatus(GetQuestionApprovalStatusRequest) returns (GetQuestionApprovalStatusResponse);
+
+  // Comments a question.
+  rpc CommentQuestionApproval(CommentQuestionApprovalRequest) returns (CommentQuestionApprovalResponse);
+}
+
+// The request of `SubmitQuestion`.
+message SubmitQuestionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string question_id = 2;
+  Question question = 3;
+  SubmitQuestionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitQuestion`.
+message SubmitQuestionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Question question = 1;
+  SubmitQuestionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveQuestion`.
+message ApproveQuestionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string question_id = 2;
+  Question question = 3;
+  ApproveQuestionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveQuestion`.
+message ApproveQuestionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Question question = 1;
+  ApproveQuestionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectQuestion`.
+message RejectQuestionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string question_id = 2;
+  Question question = 3;
+  RejectQuestionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectQuestion`.
+message RejectQuestionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Question question = 1;
+  RejectQuestionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateQuestion`.
+message EscalateQuestionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string question_id = 2;
+  Question question = 3;
+  EscalateQuestionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateQuestion`.
+message EscalateQuestionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Question question = 1;
+  EscalateQuestionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingQuestions`.
+message ListPendingQuestionsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated QuestionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingQuestionsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingQuestions`.
+message ListPendingQuestionsResponse {
+  repeated Question questions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateQuestionApproval`.
+message DelegateQuestionApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string question_id = 2;
+  Question question = 3;
+  DelegateQuestionApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateQuestionApproval`.
+message DelegateQuestionApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Question question = 1;
+  DelegateQuestionApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallQuestion`.
+message RecallQuestionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string question_id = 2;
+  Question question = 3;
+  RecallQuestionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallQuestion`.
+message RecallQuestionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Question question = 1;
+  RecallQuestionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetQuestionApprovalStatus`.
+message GetQuestionApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string question_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetQuestionApprovalStatus`.
+message GetQuestionApprovalStatusResponse {
+  Question question = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentQuestionApproval`.
+message CommentQuestionApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string question_id = 2;
+  Question question = 3;
+  CommentQuestionApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentQuestionApproval`.
+message CommentQuestionApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Question question = 1;
+  CommentQuestionApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

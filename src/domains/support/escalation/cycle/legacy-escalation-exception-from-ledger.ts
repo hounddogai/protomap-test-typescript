@@ -1,0 +1,26 @@
+import { pendingSlaLedgerBucket } from "../../sla/mapping/pending-sla-ledger-policy.js";
+import { PendingSlaLedger } from "../../sla/mapping/pending-sla-ledger.js";
+import { LegacyEscalationException, newLegacyEscalationException } from "./legacy-escalation-exception.js";
+
+export function summarizePendingSlaLedgersForException(items: PendingSlaLedger[]): Map<string, number> {
+  const totals = new Map<string, number>();
+  for (const item of items) {
+    if (item.isTerminal()) continue;
+    const tallyKey = item.groupKey();
+    totals.set(tallyKey, (totals.get(tallyKey) ?? 0) + item.adjustedLoad());
+  }
+  return totals;
+}
+
+export function deriveLegacyEscalationExceptionsFromLedger(items: PendingSlaLedger[]): LegacyEscalationException[] {
+  const out: LegacyEscalationException[] = [];
+  for (const item of items) {
+    const derived = newLegacyEscalationException(item.code + "-draft", item.label());
+    out.push(derived);
+  }
+  return out;
+}
+
+export function scoreLegacyEscalationException(item: LegacyEscalationException): string {
+  return pendingSlaLedgerBucket(item.projectedTotal());
+}

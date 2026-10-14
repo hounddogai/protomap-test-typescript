@@ -1,0 +1,335 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.experiments.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/experiments/v1/experiments.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Experiments.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/experiments/v1;experimentsv1";
+option java_multiple_files = true;
+option java_outer_classname = "ExperimentCalculationServiceProto";
+option java_package = "com.acme.experiments.v1";
+
+// Computes the figures of an experiment, such as totals, taxes, and estimates.
+service ExperimentCalculationService {
+  // Calculates an experiment.
+  rpc CalculateExperiment(CalculateExperimentRequest) returns (CalculateExperimentResponse);
+
+  // Estimates an experiment.
+  rpc EstimateExperiment(EstimateExperimentRequest) returns (EstimateExperimentResponse);
+
+  // Quotes an experiment.
+  rpc QuoteExperiment(QuoteExperimentRequest) returns (QuoteExperimentResponse);
+
+  // Compares an experiment.
+  rpc CompareExperimentOptions(CompareExperimentOptionsRequest) returns (CompareExperimentOptionsResponse);
+
+  // Recalculates an experiment.
+  rpc RecalculateExperiments(RecalculateExperimentsRequest) returns (RecalculateExperimentsResponse);
+
+  // Simulates an experiment.
+  rpc SimulateExperiment(SimulateExperimentRequest) returns (SimulateExperimentResponse);
+
+  // Explains an experiment.
+  rpc ExplainExperimentCalculation(ExplainExperimentCalculationRequest) returns (ExplainExperimentCalculationResponse);
+
+  // Returns an experiment.
+  rpc GetExperimentRates(GetExperimentRatesRequest) returns (GetExperimentRatesResponse);
+}
+
+// The request of `CalculateExperiment`.
+message CalculateExperimentRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  CalculateExperimentRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateExperiment`.
+message CalculateExperimentResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateExperimentResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Experiment experiment = 1;
+  CalculateExperimentResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateExperiment`.
+message EstimateExperimentRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  EstimateExperimentRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateExperiment`.
+message EstimateExperimentResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateExperimentResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Experiment experiment = 1;
+  EstimateExperimentResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteExperiment`.
+message QuoteExperimentRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  QuoteExperimentRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteExperiment`.
+message QuoteExperimentResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteExperimentResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Experiment experiment = 1;
+  QuoteExperimentResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareExperimentOptions`.
+message CompareExperimentOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  CompareExperimentOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareExperimentOptions`.
+message CompareExperimentOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareExperimentOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Experiment experiment = 1;
+  CompareExperimentOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculateExperiments`.
+message RecalculateExperimentsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  RecalculateExperimentsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculateExperiments`.
+message RecalculateExperimentsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculateExperimentsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Experiment experiment = 1;
+  RecalculateExperimentsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateExperiment`.
+message SimulateExperimentRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  SimulateExperimentRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateExperiment`.
+message SimulateExperimentResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateExperimentResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Experiment experiment = 1;
+  SimulateExperimentResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainExperimentCalculation`.
+message ExplainExperimentCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  ExplainExperimentCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainExperimentCalculation`.
+message ExplainExperimentCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Experiment experiment = 1;
+  ExplainExperimentCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetExperimentRates`.
+message GetExperimentRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetExperimentRates`.
+message GetExperimentRatesResponse {
+  Experiment experiment = 1;
+  acme.common.v1.OperationResult result = 2;
+}

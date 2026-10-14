@@ -1,0 +1,258 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.localization.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/localization/v1/localization.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Localization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/localization/v1;localizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "TranslationJobWorkflowServiceProto";
+option java_package = "com.acme.localization.v1";
+
+// Runs the long-lived workflow that takes a translation job from start to finish.
+service TranslationJobWorkflowService {
+  // Starts a translation job.
+  rpc StartTranslationJobWorkflow(StartTranslationJobWorkflowRequest) returns (StartTranslationJobWorkflowResponse);
+
+  // Advances a translation job.
+  rpc AdvanceTranslationJobWorkflow(AdvanceTranslationJobWorkflowRequest) returns (AdvanceTranslationJobWorkflowResponse);
+
+  // Cancels a translation job.
+  rpc CancelTranslationJobWorkflow(CancelTranslationJobWorkflowRequest) returns (CancelTranslationJobWorkflowResponse);
+
+  // Retrys a translation job.
+  rpc RetryTranslationJobWorkflow(RetryTranslationJobWorkflowRequest) returns (RetryTranslationJobWorkflowResponse);
+
+  // Returns a translation job.
+  rpc InspectTranslationJobWorkflow(InspectTranslationJobWorkflowRequest) returns (InspectTranslationJobWorkflowResponse);
+
+  // Lists translation jobs a page at a time.
+  rpc ListTranslationJobWorkflows(ListTranslationJobWorkflowsRequest) returns (ListTranslationJobWorkflowsResponse);
+
+  // Signals a translation job.
+  rpc SignalTranslationJobWorkflow(SignalTranslationJobWorkflowRequest) returns (SignalTranslationJobWorkflowResponse);
+}
+
+// The request of `StartTranslationJobWorkflow`.
+message StartTranslationJobWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  StartTranslationJobWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartTranslationJobWorkflow`.
+message StartTranslationJobWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  StartTranslationJobWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceTranslationJobWorkflow`.
+message AdvanceTranslationJobWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  AdvanceTranslationJobWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceTranslationJobWorkflow`.
+message AdvanceTranslationJobWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  AdvanceTranslationJobWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelTranslationJobWorkflow`.
+message CancelTranslationJobWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  CancelTranslationJobWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelTranslationJobWorkflow`.
+message CancelTranslationJobWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  CancelTranslationJobWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryTranslationJobWorkflow`.
+message RetryTranslationJobWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  RetryTranslationJobWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryTranslationJobWorkflow`.
+message RetryTranslationJobWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  RetryTranslationJobWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectTranslationJobWorkflow`.
+message InspectTranslationJobWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectTranslationJobWorkflow`.
+message InspectTranslationJobWorkflowResponse {
+  TranslationJob translation_job = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListTranslationJobWorkflows`.
+message ListTranslationJobWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated TranslationJobStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListTranslationJobWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListTranslationJobWorkflows`.
+message ListTranslationJobWorkflowsResponse {
+  repeated TranslationJob translation_jobs = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalTranslationJobWorkflow`.
+message SignalTranslationJobWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  SignalTranslationJobWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalTranslationJobWorkflow`.
+message SignalTranslationJobWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  SignalTranslationJobWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

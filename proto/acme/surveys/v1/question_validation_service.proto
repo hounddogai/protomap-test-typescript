@@ -1,0 +1,305 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.surveys.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/surveys/v1/surveys.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Surveys.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/surveys/v1;surveysv1";
+option java_multiple_files = true;
+option java_outer_classname = "QuestionValidationServiceProto";
+option java_package = "com.acme.surveys.v1";
+
+// Checks questions against the rules before anything acts on them.
+service QuestionValidationService {
+  // Validates a question.
+  rpc ValidateQuestion(ValidateQuestionRequest) returns (ValidateQuestionResponse);
+
+  // Previews a question.
+  rpc PreviewQuestion(PreviewQuestionRequest) returns (PreviewQuestionResponse);
+
+  // Checks a question.
+  rpc CheckQuestionEligibility(CheckQuestionEligibilityRequest) returns (CheckQuestionEligibilityResponse);
+
+  // Normalizes a question.
+  rpc NormalizeQuestion(NormalizeQuestionRequest) returns (NormalizeQuestionResponse);
+
+  // Explains a question.
+  rpc ExplainQuestionDecision(ExplainQuestionDecisionRequest) returns (ExplainQuestionDecisionResponse);
+
+  // Scores a question.
+  rpc ScoreQuestion(ScoreQuestionRequest) returns (ScoreQuestionResponse);
+
+  // Lints a question.
+  rpc LintQuestions(LintQuestionsRequest) returns (LintQuestionsResponse);
+
+  // Returns a question.
+  rpc GetQuestionRules(GetQuestionRulesRequest) returns (GetQuestionRulesResponse);
+}
+
+// The request of `ValidateQuestion`.
+message ValidateQuestionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string question_id = 2;
+  Question question = 3;
+  ValidateQuestionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateQuestion`.
+message ValidateQuestionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Question question = 1;
+  ValidateQuestionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewQuestion`.
+message PreviewQuestionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string question_id = 2;
+  Question question = 3;
+  PreviewQuestionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewQuestion`.
+message PreviewQuestionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Question question = 1;
+  PreviewQuestionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckQuestionEligibility`.
+message CheckQuestionEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string question_id = 2;
+  Question question = 3;
+  CheckQuestionEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckQuestionEligibility`.
+message CheckQuestionEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Question question = 1;
+  CheckQuestionEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeQuestion`.
+message NormalizeQuestionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string question_id = 2;
+  Question question = 3;
+  NormalizeQuestionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeQuestion`.
+message NormalizeQuestionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Question question = 1;
+  NormalizeQuestionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainQuestionDecision`.
+message ExplainQuestionDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string question_id = 2;
+  Question question = 3;
+  ExplainQuestionDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainQuestionDecision`.
+message ExplainQuestionDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Question question = 1;
+  ExplainQuestionDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreQuestion`.
+message ScoreQuestionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string question_id = 2;
+  Question question = 3;
+  ScoreQuestionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreQuestion`.
+message ScoreQuestionResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreQuestionResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Question question = 1;
+  ScoreQuestionResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintQuestions`.
+message LintQuestionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string question_id = 2;
+  Question question = 3;
+  LintQuestionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintQuestions`.
+message LintQuestionsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Question question = 1;
+  LintQuestionsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetQuestionRules`.
+message GetQuestionRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string question_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetQuestionRules`.
+message GetQuestionRulesResponse {
+  Question question = 1;
+  acme.common.v1.OperationResult result = 2;
+}

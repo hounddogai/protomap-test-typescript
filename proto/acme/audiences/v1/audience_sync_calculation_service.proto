@@ -1,0 +1,318 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.audiences.v1;
+
+import "acme/audiences/v1/audiences.proto";
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Audiences.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/audiences/v1;audiencesv1";
+option java_multiple_files = true;
+option java_outer_classname = "AudienceSyncCalculationServiceProto";
+option java_package = "com.acme.audiences.v1";
+
+// Computes the figures of an audience sync, such as totals, taxes, and estimates.
+service AudienceSyncCalculationService {
+  // Calculates an audience sync.
+  rpc CalculateAudienceSync(CalculateAudienceSyncRequest) returns (CalculateAudienceSyncResponse);
+
+  // Estimates an audience sync.
+  rpc EstimateAudienceSync(EstimateAudienceSyncRequest) returns (EstimateAudienceSyncResponse);
+
+  // Quotes an audience sync.
+  rpc QuoteAudienceSync(QuoteAudienceSyncRequest) returns (QuoteAudienceSyncResponse);
+
+  // Compares an audience sync.
+  rpc CompareAudienceSyncOptions(CompareAudienceSyncOptionsRequest) returns (CompareAudienceSyncOptionsResponse);
+
+  // Recalculates an audience sync.
+  rpc RecalculateAudienceSyncs(RecalculateAudienceSyncsRequest) returns (RecalculateAudienceSyncsResponse);
+
+  // Simulates an audience sync.
+  rpc SimulateAudienceSync(SimulateAudienceSyncRequest) returns (SimulateAudienceSyncResponse);
+
+  // Explains an audience sync.
+  rpc ExplainAudienceSyncCalculation(ExplainAudienceSyncCalculationRequest) returns (ExplainAudienceSyncCalculationResponse);
+}
+
+// The request of `CalculateAudienceSync`.
+message CalculateAudienceSyncRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  CalculateAudienceSyncRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateAudienceSync`.
+message CalculateAudienceSyncResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateAudienceSyncResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  AudienceSync audience_sync = 1;
+  CalculateAudienceSyncResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateAudienceSync`.
+message EstimateAudienceSyncRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  EstimateAudienceSyncRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateAudienceSync`.
+message EstimateAudienceSyncResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateAudienceSyncResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  AudienceSync audience_sync = 1;
+  EstimateAudienceSyncResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteAudienceSync`.
+message QuoteAudienceSyncRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  QuoteAudienceSyncRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteAudienceSync`.
+message QuoteAudienceSyncResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteAudienceSyncResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  AudienceSync audience_sync = 1;
+  QuoteAudienceSyncResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareAudienceSyncOptions`.
+message CompareAudienceSyncOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  CompareAudienceSyncOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareAudienceSyncOptions`.
+message CompareAudienceSyncOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareAudienceSyncOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  AudienceSync audience_sync = 1;
+  CompareAudienceSyncOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculateAudienceSyncs`.
+message RecalculateAudienceSyncsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  RecalculateAudienceSyncsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculateAudienceSyncs`.
+message RecalculateAudienceSyncsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculateAudienceSyncsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  AudienceSync audience_sync = 1;
+  RecalculateAudienceSyncsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateAudienceSync`.
+message SimulateAudienceSyncRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  SimulateAudienceSyncRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateAudienceSync`.
+message SimulateAudienceSyncResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateAudienceSyncResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  AudienceSync audience_sync = 1;
+  SimulateAudienceSyncResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainAudienceSyncCalculation`.
+message ExplainAudienceSyncCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  ExplainAudienceSyncCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainAudienceSyncCalculation`.
+message ExplainAudienceSyncCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  AudienceSync audience_sync = 1;
+  ExplainAudienceSyncCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

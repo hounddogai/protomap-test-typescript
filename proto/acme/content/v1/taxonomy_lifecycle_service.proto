@@ -1,0 +1,294 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.content.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/content/v1/content.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Content.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/content/v1;contentv1";
+option java_multiple_files = true;
+option java_outer_classname = "TaxonomyLifecycleServiceProto";
+option java_package = "com.acme.content.v1";
+
+// Moves a taxonomy between the states of its lifecycle.
+service TaxonomyLifecycleService {
+  // Activates a taxonomy.
+  rpc ActivateTaxonomy(ActivateTaxonomyRequest) returns (ActivateTaxonomyResponse);
+
+  // Suspends a taxonomy.
+  rpc SuspendTaxonomy(SuspendTaxonomyRequest) returns (SuspendTaxonomyResponse);
+
+  // Reinstates a taxonomy.
+  rpc ReinstateTaxonomy(ReinstateTaxonomyRequest) returns (ReinstateTaxonomyResponse);
+
+  // Terminates a taxonomy.
+  rpc TerminateTaxonomy(TerminateTaxonomyRequest) returns (TerminateTaxonomyResponse);
+
+  // Renews a taxonomy.
+  rpc RenewTaxonomy(RenewTaxonomyRequest) returns (RenewTaxonomyResponse);
+
+  // Expires a taxonomy.
+  rpc ExpireTaxonomy(ExpireTaxonomyRequest) returns (ExpireTaxonomyResponse);
+
+  // Returns a taxonomy.
+  rpc GetTaxonomyLifecycle(GetTaxonomyLifecycleRequest) returns (GetTaxonomyLifecycleResponse);
+
+  // Schedules a taxonomy.
+  rpc ScheduleTaxonomyExpiry(ScheduleTaxonomyExpiryRequest) returns (ScheduleTaxonomyExpiryResponse);
+}
+
+// The request of `ActivateTaxonomy`.
+message ActivateTaxonomyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  ActivateTaxonomyRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ActivateTaxonomy`.
+message ActivateTaxonomyResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  ActivateTaxonomyResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SuspendTaxonomy`.
+message SuspendTaxonomyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  SuspendTaxonomyRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SuspendTaxonomy`.
+message SuspendTaxonomyResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  SuspendTaxonomyResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReinstateTaxonomy`.
+message ReinstateTaxonomyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  ReinstateTaxonomyRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ReinstateTaxonomy`.
+message ReinstateTaxonomyResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  ReinstateTaxonomyResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `TerminateTaxonomy`.
+message TerminateTaxonomyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  TerminateTaxonomyRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `TerminateTaxonomy`.
+message TerminateTaxonomyResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  TerminateTaxonomyResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RenewTaxonomy`.
+message RenewTaxonomyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  RenewTaxonomyRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `RenewTaxonomy`.
+message RenewTaxonomyResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  RenewTaxonomyResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExpireTaxonomy`.
+message ExpireTaxonomyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  ExpireTaxonomyRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ExpireTaxonomy`.
+message ExpireTaxonomyResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  ExpireTaxonomyResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetTaxonomyLifecycle`.
+message GetTaxonomyLifecycleRequest {
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetTaxonomyLifecycle`.
+message GetTaxonomyLifecycleResponse {
+  Taxonomy taxonomy = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ScheduleTaxonomyExpiry`.
+message ScheduleTaxonomyExpiryRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  Taxonomy taxonomy = 3;
+  ScheduleTaxonomyExpiryRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScheduleTaxonomyExpiry`.
+message ScheduleTaxonomyExpiryResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  ScheduleTaxonomyExpiryResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

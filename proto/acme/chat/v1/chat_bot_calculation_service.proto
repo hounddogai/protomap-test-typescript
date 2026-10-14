@@ -1,0 +1,335 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.chat.v1;
+
+import "acme/chat/v1/chat.proto";
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Chat.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/chat/v1;chatv1";
+option java_multiple_files = true;
+option java_outer_classname = "ChatBotCalculationServiceProto";
+option java_package = "com.acme.chat.v1";
+
+// Computes the figures of a chat bot, such as totals, taxes, and estimates.
+service ChatBotCalculationService {
+  // Calculates a chat bot.
+  rpc CalculateChatBot(CalculateChatBotRequest) returns (CalculateChatBotResponse);
+
+  // Estimates a chat bot.
+  rpc EstimateChatBot(EstimateChatBotRequest) returns (EstimateChatBotResponse);
+
+  // Quotes a chat bot.
+  rpc QuoteChatBot(QuoteChatBotRequest) returns (QuoteChatBotResponse);
+
+  // Compares a chat bot.
+  rpc CompareChatBotOptions(CompareChatBotOptionsRequest) returns (CompareChatBotOptionsResponse);
+
+  // Recalculates a chat bot.
+  rpc RecalculateChatBots(RecalculateChatBotsRequest) returns (RecalculateChatBotsResponse);
+
+  // Simulates a chat bot.
+  rpc SimulateChatBot(SimulateChatBotRequest) returns (SimulateChatBotResponse);
+
+  // Explains a chat bot.
+  rpc ExplainChatBotCalculation(ExplainChatBotCalculationRequest) returns (ExplainChatBotCalculationResponse);
+
+  // Returns a chat bot.
+  rpc GetChatBotRates(GetChatBotRatesRequest) returns (GetChatBotRatesResponse);
+}
+
+// The request of `CalculateChatBot`.
+message CalculateChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  CalculateChatBotRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateChatBot`.
+message CalculateChatBotResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateChatBotResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ChatBot chat_bot = 1;
+  CalculateChatBotResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateChatBot`.
+message EstimateChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  EstimateChatBotRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateChatBot`.
+message EstimateChatBotResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateChatBotResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ChatBot chat_bot = 1;
+  EstimateChatBotResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteChatBot`.
+message QuoteChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  QuoteChatBotRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteChatBot`.
+message QuoteChatBotResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteChatBotResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ChatBot chat_bot = 1;
+  QuoteChatBotResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareChatBotOptions`.
+message CompareChatBotOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  CompareChatBotOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareChatBotOptions`.
+message CompareChatBotOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareChatBotOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ChatBot chat_bot = 1;
+  CompareChatBotOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculateChatBots`.
+message RecalculateChatBotsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  RecalculateChatBotsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculateChatBots`.
+message RecalculateChatBotsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculateChatBotsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ChatBot chat_bot = 1;
+  RecalculateChatBotsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateChatBot`.
+message SimulateChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  SimulateChatBotRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateChatBot`.
+message SimulateChatBotResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateChatBotResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ChatBot chat_bot = 1;
+  SimulateChatBotResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainChatBotCalculation`.
+message ExplainChatBotCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  ExplainChatBotCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainChatBotCalculation`.
+message ExplainChatBotCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  ExplainChatBotCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetChatBotRates`.
+message GetChatBotRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetChatBotRates`.
+message GetChatBotRatesResponse {
+  ChatBot chat_bot = 1;
+  acme.common.v1.OperationResult result = 2;
+}

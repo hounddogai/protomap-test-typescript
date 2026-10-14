@@ -1,0 +1,25 @@
+import assert from "node:assert/strict";
+import { test } from "node:test";
+import { newRedemptionGroup } from "./redemption-group.js";
+
+test("RedemptionGroup starts in new", () => {
+  const item = newRedemptionGroup("code-67", "name-576");
+  assert.equal(item.status, "new", "status");
+  assert.ok(!item.isTerminal(), "terminal");
+});
+
+test("RedemptionGroup moves to running", () => {
+  const item = newRedemptionGroup("code-67", "name-576");
+  try {
+    item.moveTo("running");
+  } catch {
+    assert.fail("unexpected empty result");
+  }
+  assert.equal(item.status, "running", "status");
+});
+
+test("RedemptionGroup rejects moves from failed", () => {
+  const item = newRedemptionGroup("code-67", "name-576");
+  item.status = "failed";
+  assert.throws(() => item.moveTo("new"), Error, "move");
+});

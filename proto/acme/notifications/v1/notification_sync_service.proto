@@ -1,0 +1,284 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.notifications.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/notifications/v1/notifications.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Notifications.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/notifications/v1;notificationsv1";
+option java_multiple_files = true;
+option java_outer_classname = "NotificationSyncServiceProto";
+option java_package = "com.acme.notifications.v1";
+
+// Keeps notifications in step with the systems of record in other regions.
+service NotificationSyncService {
+  // Syncs a notification.
+  rpc SyncNotifications(SyncNotificationsRequest) returns (SyncNotificationsResponse);
+
+  // Pushs a notification.
+  rpc PushNotification(PushNotificationRequest) returns (PushNotificationResponse);
+
+  // Pulls a notification.
+  rpc PullNotifications(PullNotificationsRequest) returns (PullNotificationsResponse);
+
+  // Reconciles a notification.
+  rpc ReconcileNotifications(ReconcileNotificationsRequest) returns (ReconcileNotificationsResponse);
+
+  // Exchanges changes of notifications with a peer.
+  rpc StreamNotificationChanges(stream StreamNotificationChangesRequest) returns (stream StreamNotificationChangesResponse);
+
+  // Resolves a notification.
+  rpc ResolveNotificationConflict(ResolveNotificationConflictRequest) returns (ResolveNotificationConflictResponse);
+
+  // Returns a notification.
+  rpc GetNotificationSyncState(GetNotificationSyncStateRequest) returns (GetNotificationSyncStateResponse);
+
+  // Lists notifications a page at a time.
+  rpc ListNotificationConflicts(ListNotificationConflictsRequest) returns (ListNotificationConflictsResponse);
+}
+
+// The request of `SyncNotifications`.
+message SyncNotificationsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  Notification notification = 3;
+  SyncNotificationsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SyncNotifications`.
+message SyncNotificationsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Notification notification = 1;
+  SyncNotificationsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PushNotification`.
+message PushNotificationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  Notification notification = 3;
+  PushNotificationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PushNotification`.
+message PushNotificationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Notification notification = 1;
+  PushNotificationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PullNotifications`.
+message PullNotificationsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  Notification notification = 3;
+  PullNotificationsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PullNotifications`.
+message PullNotificationsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Notification notification = 1;
+  PullNotificationsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReconcileNotifications`.
+message ReconcileNotificationsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  Notification notification = 3;
+  ReconcileNotificationsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ReconcileNotifications`.
+message ReconcileNotificationsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Notification notification = 1;
+  ReconcileNotificationsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `StreamNotificationChanges`.
+message StreamNotificationChangesRequest {
+  // An acknowledgment of a change the peer sent.
+  message ChangeAck {
+    int64 sequence = 1;
+    string status = 2;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof frame {
+    Notification change = 2;
+    StreamNotificationChangesRequest.ChangeAck ack = 3;
+  }
+  string cursor = 4;
+}
+
+// The response of `StreamNotificationChanges`.
+message StreamNotificationChangesResponse {
+  Notification notification = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `ResolveNotificationConflict`.
+message ResolveNotificationConflictRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  Notification notification = 3;
+  ResolveNotificationConflictRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResolveNotificationConflict`.
+message ResolveNotificationConflictResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Notification notification = 1;
+  ResolveNotificationConflictResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetNotificationSyncState`.
+message GetNotificationSyncStateRequest {
+  acme.common.v1.RequestContext context = 1;
+  string notification_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetNotificationSyncState`.
+message GetNotificationSyncStateResponse {
+  Notification notification = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListNotificationConflicts`.
+message ListNotificationConflictsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated NotificationStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListNotificationConflictsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListNotificationConflicts`.
+message ListNotificationConflictsResponse {
+  repeated Notification notifications = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}

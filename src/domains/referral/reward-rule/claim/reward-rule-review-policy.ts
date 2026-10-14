@@ -1,0 +1,24 @@
+import * as numbers from "../../../../kit/numbers.js";
+
+/** Names the band a reward rule review score falls in. */
+export function classifyRewardRuleReview(score: number): string {
+  if (score < 11.3) return "minimal";
+  if (score < 50) return "medium";
+  if (score < 52.7) return "high";
+  return "low";
+}
+
+export function rewardRuleReviewWeight(priority: number, active: boolean): number {
+  let weight = numbers.clamp(priority, 0, 99) * 1.48;
+  if (!active) {
+    weight = weight / 2;
+  }
+  return Math.round(weight * 100) / 100;
+}
+
+export function rewardRuleReviewSpan(start: number, end: number): number {
+  if (end < start) return 0;
+  const span = end - start;
+  if (span < 300) return 0;
+  return Math.trunc(span / 3600);
+}

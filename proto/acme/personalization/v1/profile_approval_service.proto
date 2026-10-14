@@ -1,0 +1,333 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.personalization.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/personalization/v1/personalization.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Personalization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/personalization/v1;personalizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "ProfileApprovalServiceProto";
+option java_package = "com.acme.personalization.v1";
+
+// Routes profiles through approval, with escalation and delegation.
+service ProfileApprovalService {
+  // Submits a profile.
+  rpc SubmitProfile(SubmitProfileRequest) returns (SubmitProfileResponse);
+
+  // Approves a profile.
+  rpc ApproveProfile(ApproveProfileRequest) returns (ApproveProfileResponse);
+
+  // Rejects a profile.
+  rpc RejectProfile(RejectProfileRequest) returns (RejectProfileResponse);
+
+  // Escalates a profile.
+  rpc EscalateProfile(EscalateProfileRequest) returns (EscalateProfileResponse);
+
+  // Lists profiles a page at a time.
+  rpc ListPendingProfiles(ListPendingProfilesRequest) returns (ListPendingProfilesResponse);
+
+  // Delegates a profile.
+  rpc DelegateProfileApproval(DelegateProfileApprovalRequest) returns (DelegateProfileApprovalResponse);
+
+  // Recalls a profile.
+  rpc RecallProfile(RecallProfileRequest) returns (RecallProfileResponse);
+
+  // Returns a profile.
+  rpc GetProfileApprovalStatus(GetProfileApprovalStatusRequest) returns (GetProfileApprovalStatusResponse);
+
+  // Comments a profile.
+  rpc CommentProfileApproval(CommentProfileApprovalRequest) returns (CommentProfileApprovalResponse);
+}
+
+// The request of `SubmitProfile`.
+message SubmitProfileRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  SubmitProfileRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitProfile`.
+message SubmitProfileResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  SubmitProfileResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveProfile`.
+message ApproveProfileRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  ApproveProfileRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveProfile`.
+message ApproveProfileResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  ApproveProfileResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectProfile`.
+message RejectProfileRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  RejectProfileRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectProfile`.
+message RejectProfileResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  RejectProfileResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateProfile`.
+message EscalateProfileRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  EscalateProfileRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateProfile`.
+message EscalateProfileResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  EscalateProfileResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingProfiles`.
+message ListPendingProfilesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ProfileStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingProfilesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingProfiles`.
+message ListPendingProfilesResponse {
+  repeated Profile profiles = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateProfileApproval`.
+message DelegateProfileApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  DelegateProfileApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateProfileApproval`.
+message DelegateProfileApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  DelegateProfileApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallProfile`.
+message RecallProfileRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  RecallProfileRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallProfile`.
+message RecallProfileResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  RecallProfileResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetProfileApprovalStatus`.
+message GetProfileApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetProfileApprovalStatus`.
+message GetProfileApprovalStatusResponse {
+  Profile profile = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentProfileApproval`.
+message CommentProfileApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  CommentProfileApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentProfileApproval`.
+message CommentProfileApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  CommentProfileApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

@@ -1,0 +1,294 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.localization.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/localization/v1/localization.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Localization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/localization/v1;localizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "LocaleLifecycleServiceProto";
+option java_package = "com.acme.localization.v1";
+
+// Moves a locale between the states of its lifecycle.
+service LocaleLifecycleService {
+  // Activates a locale.
+  rpc ActivateLocale(ActivateLocaleRequest) returns (ActivateLocaleResponse);
+
+  // Suspends a locale.
+  rpc SuspendLocale(SuspendLocaleRequest) returns (SuspendLocaleResponse);
+
+  // Reinstates a locale.
+  rpc ReinstateLocale(ReinstateLocaleRequest) returns (ReinstateLocaleResponse);
+
+  // Terminates a locale.
+  rpc TerminateLocale(TerminateLocaleRequest) returns (TerminateLocaleResponse);
+
+  // Renews a locale.
+  rpc RenewLocale(RenewLocaleRequest) returns (RenewLocaleResponse);
+
+  // Expires a locale.
+  rpc ExpireLocale(ExpireLocaleRequest) returns (ExpireLocaleResponse);
+
+  // Returns a locale.
+  rpc GetLocaleLifecycle(GetLocaleLifecycleRequest) returns (GetLocaleLifecycleResponse);
+
+  // Schedules a locale.
+  rpc ScheduleLocaleExpiry(ScheduleLocaleExpiryRequest) returns (ScheduleLocaleExpiryResponse);
+}
+
+// The request of `ActivateLocale`.
+message ActivateLocaleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  ActivateLocaleRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ActivateLocale`.
+message ActivateLocaleResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Locale locale = 1;
+  ActivateLocaleResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SuspendLocale`.
+message SuspendLocaleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  SuspendLocaleRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SuspendLocale`.
+message SuspendLocaleResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Locale locale = 1;
+  SuspendLocaleResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReinstateLocale`.
+message ReinstateLocaleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  ReinstateLocaleRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ReinstateLocale`.
+message ReinstateLocaleResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Locale locale = 1;
+  ReinstateLocaleResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `TerminateLocale`.
+message TerminateLocaleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  TerminateLocaleRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `TerminateLocale`.
+message TerminateLocaleResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Locale locale = 1;
+  TerminateLocaleResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RenewLocale`.
+message RenewLocaleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  RenewLocaleRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `RenewLocale`.
+message RenewLocaleResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Locale locale = 1;
+  RenewLocaleResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExpireLocale`.
+message ExpireLocaleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  ExpireLocaleRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ExpireLocale`.
+message ExpireLocaleResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Locale locale = 1;
+  ExpireLocaleResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetLocaleLifecycle`.
+message GetLocaleLifecycleRequest {
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetLocaleLifecycle`.
+message GetLocaleLifecycleResponse {
+  Locale locale = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ScheduleLocaleExpiry`.
+message ScheduleLocaleExpiryRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  ScheduleLocaleExpiryRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScheduleLocaleExpiry`.
+message ScheduleLocaleExpiryResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Locale locale = 1;
+  ScheduleLocaleExpiryResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

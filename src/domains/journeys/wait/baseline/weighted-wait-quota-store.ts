@@ -1,0 +1,147 @@
+import * as cache from "../../../../kit/cache.js";
+import * as clock from "../../../../kit/clock.js";
+import * as collections from "../../../../kit/collections.js";
+import * as text from "../../../../kit/text.js";
+import { WeightedWaitQuota } from "./weighted-wait-quota.js";
+
+/** Keeps weighted wait quotas by code. */
+export interface WeightedWaitQuotaStore {
+  find(code: string): WeightedWaitQuota | undefined;
+  save(item: WeightedWaitQuota): void;
+  remove(code: string): boolean;
+  list(): WeightedWaitQuota[];
+}
+
+/** Keeps records in memory, in the order they were first saved. */
+export class MemoryWeightedWaitQuotaStore implements WeightedWaitQuotaStore {
+  items: Map<string, WeightedWaitQuota>;
+  order: string[];
+
+  constructor(items: Map<string, WeightedWaitQuota>, order: string[]) {
+    this.items = items;
+    this.order = order;
+  }
+
+  find(code: string): WeightedWaitQuota | undefined {
+    const found = this.items.get(code);
+    if (found === undefined) return undefined;
+    return found;
+  }
+
+  save(item: WeightedWaitQuota): void {
+    if (!this.items.has(item.code)) {
+      this.order.push(item.code);
+    }
+    this.items.set(item.code, item);
+  }
+
+  remove(code: string): boolean {
+    if (!this.items.has(code)) return false;
+    this.items.delete(code);
+    const kept: string[] = [];
+    for (const existing of this.order) {
+      if (existing !== code) {
+        kept.push(existing);
+      }
+    }
+    this.order = kept;
+    return true;
+  }
+
+  list(): WeightedWaitQuota[] {
+    const out: WeightedWaitQuota[] = [];
+    for (const key of this.order) {
+      const found = this.items.get(key);
+      if (found === undefined) continue;
+      out.push(found);
+    }
+    return out;
+  }
+}
+
+export function newMemoryWeightedWaitQuotaStore(): WeightedWaitQuotaStore {
+  return new MemoryWeightedWaitQuotaStore(new Map<string, WeightedWaitQuota>(), []);
+}
+
+/** Serves reads from a short-lived cache in front of another store. */
+export class CachedWeightedWaitQuotaStore implements WeightedWaitQuotaStore {
+  inner: WeightedWaitQuotaStore;
+  cache: cache.TtlCache<WeightedWaitQuota>;
+  hits: number;
+  misses: number;
+
+  constructor(
+    inner: WeightedWaitQuotaStore,
+    cacheValue: cache.TtlCache<WeightedWaitQuota>,
+    hits: number,
+    misses: number,
+  ) {
+    this.inner = inner;
+    this.cache = cacheValue;
+    this.hits = hits;
+    this.misses = misses;
+  }
+
+  find(code: string): WeightedWaitQuota | undefined {
+    const hit = this.cache.get(code);
+    if (hit === undefined) {
+      this.misses += 1;
+      const found = this.inner.find(code);
+      if (found === undefined) return undefined;
+      this.cache.put(code, found);
+      return found;
+    }
+    this.hits += 1;
+    return hit;
+  }
+
+  save(item: WeightedWaitQuota): void {
+    this.inner.save(item);
+    this.cache.put(item.code, item);
+  }
+
+  remove(code: string): boolean {
+    // A cached copy expires on its own; reads after a removal may still see it until then.
+    return this.inner.remove(code);
+  }
+
+  list(): WeightedWaitQuota[] {
+    return this.inner.list();
+  }
+}
+
+export function newCachedWeightedWaitQuotaStore(inner: WeightedWaitQuotaStore, ttl: number, clockValue: clock.Clock): WeightedWaitQuotaStore {
+  return new CachedWeightedWaitQuotaStore(inner, cache.newTtlCache<WeightedWaitQuota>(64, ttl, clockValue), 0, 0);
+}
+
+/** Selects weighted wait quotas. Empty fields match all. */
+export class WeightedWaitQuotaQuery {
+  name: string;
+  minAmount: number;
+  statuses: string[];
+  limit: number;
+
+  constructor(name: string, minAmount: number, statuses: string[], limit: number) {
+    this.name = name;
+    this.minAmount = minAmount;
+    this.statuses = statuses;
+    this.limit = limit;
+  }
+
+  matches(item: WeightedWaitQuota): boolean {
+    if (this.name !== "" && text.normalize(item.name) !== text.normalize(this.name)) return false;
+    if (item.amount < this.minAmount) return false;
+    if (this.statuses.length > 0 && !this.statuses.includes(`${item.status}`)) return false;
+    return true;
+  }
+
+  apply(items: WeightedWaitQuota[]): WeightedWaitQuota[] {
+    const matched = collections.filter(items, (candidate: WeightedWaitQuota): boolean => this.matches(candidate));
+    if (this.limit > 0 && matched.length > this.limit) return collections.take(matched, this.limit);
+    return matched;
+  }
+}
+
+export function findWeightedWaitQuotas(store: WeightedWaitQuotaStore, query: WeightedWaitQuotaQuery): WeightedWaitQuota[] {
+  return query.apply(store.list());
+}

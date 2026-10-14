@@ -1,0 +1,305 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.personalization.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/personalization/v1/personalization.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Personalization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/personalization/v1;personalizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "ProfileWorkflowServiceProto";
+option java_package = "com.acme.personalization.v1";
+
+// Runs the long-lived workflow that takes a profile from start to finish.
+service ProfileWorkflowService {
+  // Starts a profile.
+  rpc StartProfileWorkflow(StartProfileWorkflowRequest) returns (StartProfileWorkflowResponse);
+
+  // Advances a profile.
+  rpc AdvanceProfileWorkflow(AdvanceProfileWorkflowRequest) returns (AdvanceProfileWorkflowResponse);
+
+  // Cancels a profile.
+  rpc CancelProfileWorkflow(CancelProfileWorkflowRequest) returns (CancelProfileWorkflowResponse);
+
+  // Retrys a profile.
+  rpc RetryProfileWorkflow(RetryProfileWorkflowRequest) returns (RetryProfileWorkflowResponse);
+
+  // Pauses a profile.
+  rpc PauseProfileWorkflow(PauseProfileWorkflowRequest) returns (PauseProfileWorkflowResponse);
+
+  // Resumes a profile.
+  rpc ResumeProfileWorkflow(ResumeProfileWorkflowRequest) returns (ResumeProfileWorkflowResponse);
+
+  // Returns a profile.
+  rpc InspectProfileWorkflow(InspectProfileWorkflowRequest) returns (InspectProfileWorkflowResponse);
+
+  // Signals a profile.
+  rpc SignalProfileWorkflow(SignalProfileWorkflowRequest) returns (SignalProfileWorkflowResponse);
+}
+
+// The request of `StartProfileWorkflow`.
+message StartProfileWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  StartProfileWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartProfileWorkflow`.
+message StartProfileWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  StartProfileWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceProfileWorkflow`.
+message AdvanceProfileWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  AdvanceProfileWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceProfileWorkflow`.
+message AdvanceProfileWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  AdvanceProfileWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelProfileWorkflow`.
+message CancelProfileWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  CancelProfileWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelProfileWorkflow`.
+message CancelProfileWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  CancelProfileWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryProfileWorkflow`.
+message RetryProfileWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  RetryProfileWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryProfileWorkflow`.
+message RetryProfileWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  RetryProfileWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseProfileWorkflow`.
+message PauseProfileWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  PauseProfileWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseProfileWorkflow`.
+message PauseProfileWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  PauseProfileWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumeProfileWorkflow`.
+message ResumeProfileWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  ResumeProfileWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumeProfileWorkflow`.
+message ResumeProfileWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  ResumeProfileWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectProfileWorkflow`.
+message InspectProfileWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectProfileWorkflow`.
+message InspectProfileWorkflowResponse {
+  Profile profile = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `SignalProfileWorkflow`.
+message SignalProfileWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  SignalProfileWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalProfileWorkflow`.
+message SignalProfileWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  SignalProfileWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

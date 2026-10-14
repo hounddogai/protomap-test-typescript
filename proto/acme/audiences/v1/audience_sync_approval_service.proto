@@ -1,0 +1,333 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.audiences.v1;
+
+import "acme/audiences/v1/audiences.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Audiences.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/audiences/v1;audiencesv1";
+option java_multiple_files = true;
+option java_outer_classname = "AudienceSyncApprovalServiceProto";
+option java_package = "com.acme.audiences.v1";
+
+// Routes audience syncs through approval, with escalation and delegation.
+service AudienceSyncApprovalService {
+  // Submits an audience sync.
+  rpc SubmitAudienceSync(SubmitAudienceSyncRequest) returns (SubmitAudienceSyncResponse);
+
+  // Approves an audience sync.
+  rpc ApproveAudienceSync(ApproveAudienceSyncRequest) returns (ApproveAudienceSyncResponse);
+
+  // Rejects an audience sync.
+  rpc RejectAudienceSync(RejectAudienceSyncRequest) returns (RejectAudienceSyncResponse);
+
+  // Escalates an audience sync.
+  rpc EscalateAudienceSync(EscalateAudienceSyncRequest) returns (EscalateAudienceSyncResponse);
+
+  // Lists audience syncs a page at a time.
+  rpc ListPendingAudienceSyncs(ListPendingAudienceSyncsRequest) returns (ListPendingAudienceSyncsResponse);
+
+  // Delegates an audience sync.
+  rpc DelegateAudienceSyncApproval(DelegateAudienceSyncApprovalRequest) returns (DelegateAudienceSyncApprovalResponse);
+
+  // Recalls an audience sync.
+  rpc RecallAudienceSync(RecallAudienceSyncRequest) returns (RecallAudienceSyncResponse);
+
+  // Returns an audience sync.
+  rpc GetAudienceSyncApprovalStatus(GetAudienceSyncApprovalStatusRequest) returns (GetAudienceSyncApprovalStatusResponse);
+
+  // Comments an audience sync.
+  rpc CommentAudienceSyncApproval(CommentAudienceSyncApprovalRequest) returns (CommentAudienceSyncApprovalResponse);
+}
+
+// The request of `SubmitAudienceSync`.
+message SubmitAudienceSyncRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  SubmitAudienceSyncRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitAudienceSync`.
+message SubmitAudienceSyncResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  AudienceSync audience_sync = 1;
+  SubmitAudienceSyncResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveAudienceSync`.
+message ApproveAudienceSyncRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  ApproveAudienceSyncRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveAudienceSync`.
+message ApproveAudienceSyncResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  AudienceSync audience_sync = 1;
+  ApproveAudienceSyncResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectAudienceSync`.
+message RejectAudienceSyncRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  RejectAudienceSyncRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectAudienceSync`.
+message RejectAudienceSyncResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  AudienceSync audience_sync = 1;
+  RejectAudienceSyncResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateAudienceSync`.
+message EscalateAudienceSyncRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  EscalateAudienceSyncRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateAudienceSync`.
+message EscalateAudienceSyncResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  AudienceSync audience_sync = 1;
+  EscalateAudienceSyncResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingAudienceSyncs`.
+message ListPendingAudienceSyncsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated AudienceSyncStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingAudienceSyncsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingAudienceSyncs`.
+message ListPendingAudienceSyncsResponse {
+  repeated AudienceSync audience_syncs = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateAudienceSyncApproval`.
+message DelegateAudienceSyncApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  DelegateAudienceSyncApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateAudienceSyncApproval`.
+message DelegateAudienceSyncApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  AudienceSync audience_sync = 1;
+  DelegateAudienceSyncApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallAudienceSync`.
+message RecallAudienceSyncRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  RecallAudienceSyncRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallAudienceSync`.
+message RecallAudienceSyncResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  AudienceSync audience_sync = 1;
+  RecallAudienceSyncResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetAudienceSyncApprovalStatus`.
+message GetAudienceSyncApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetAudienceSyncApprovalStatus`.
+message GetAudienceSyncApprovalStatusResponse {
+  AudienceSync audience_sync = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentAudienceSyncApproval`.
+message CommentAudienceSyncApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string audience_sync_id = 2;
+  AudienceSync audience_sync = 3;
+  CommentAudienceSyncApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentAudienceSyncApproval`.
+message CommentAudienceSyncApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  AudienceSync audience_sync = 1;
+  CommentAudienceSyncApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

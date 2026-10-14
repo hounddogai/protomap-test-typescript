@@ -1,0 +1,335 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.forms.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/forms/v1/forms.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Forms.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/forms/v1;formsv1";
+option java_multiple_files = true;
+option java_outer_classname = "FormSubmissionCalculationServiceProto";
+option java_package = "com.acme.forms.v1";
+
+// Computes the figures of a form submission, such as totals, taxes, and estimates.
+service FormSubmissionCalculationService {
+  // Calculates a form submission.
+  rpc CalculateFormSubmission(CalculateFormSubmissionRequest) returns (CalculateFormSubmissionResponse);
+
+  // Estimates a form submission.
+  rpc EstimateFormSubmission(EstimateFormSubmissionRequest) returns (EstimateFormSubmissionResponse);
+
+  // Quotes a form submission.
+  rpc QuoteFormSubmission(QuoteFormSubmissionRequest) returns (QuoteFormSubmissionResponse);
+
+  // Compares a form submission.
+  rpc CompareFormSubmissionOptions(CompareFormSubmissionOptionsRequest) returns (CompareFormSubmissionOptionsResponse);
+
+  // Recalculates a form submission.
+  rpc RecalculateFormSubmissions(RecalculateFormSubmissionsRequest) returns (RecalculateFormSubmissionsResponse);
+
+  // Simulates a form submission.
+  rpc SimulateFormSubmission(SimulateFormSubmissionRequest) returns (SimulateFormSubmissionResponse);
+
+  // Explains a form submission.
+  rpc ExplainFormSubmissionCalculation(ExplainFormSubmissionCalculationRequest) returns (ExplainFormSubmissionCalculationResponse);
+
+  // Returns a form submission.
+  rpc GetFormSubmissionRates(GetFormSubmissionRatesRequest) returns (GetFormSubmissionRatesResponse);
+}
+
+// The request of `CalculateFormSubmission`.
+message CalculateFormSubmissionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  FormSubmission form_submission = 3;
+  CalculateFormSubmissionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateFormSubmission`.
+message CalculateFormSubmissionResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateFormSubmissionResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  FormSubmission form_submission = 1;
+  CalculateFormSubmissionResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateFormSubmission`.
+message EstimateFormSubmissionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  FormSubmission form_submission = 3;
+  EstimateFormSubmissionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateFormSubmission`.
+message EstimateFormSubmissionResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateFormSubmissionResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  FormSubmission form_submission = 1;
+  EstimateFormSubmissionResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteFormSubmission`.
+message QuoteFormSubmissionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  FormSubmission form_submission = 3;
+  QuoteFormSubmissionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteFormSubmission`.
+message QuoteFormSubmissionResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteFormSubmissionResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  FormSubmission form_submission = 1;
+  QuoteFormSubmissionResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareFormSubmissionOptions`.
+message CompareFormSubmissionOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  FormSubmission form_submission = 3;
+  CompareFormSubmissionOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareFormSubmissionOptions`.
+message CompareFormSubmissionOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareFormSubmissionOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  FormSubmission form_submission = 1;
+  CompareFormSubmissionOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculateFormSubmissions`.
+message RecalculateFormSubmissionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  FormSubmission form_submission = 3;
+  RecalculateFormSubmissionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculateFormSubmissions`.
+message RecalculateFormSubmissionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculateFormSubmissionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  FormSubmission form_submission = 1;
+  RecalculateFormSubmissionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateFormSubmission`.
+message SimulateFormSubmissionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  FormSubmission form_submission = 3;
+  SimulateFormSubmissionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateFormSubmission`.
+message SimulateFormSubmissionResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateFormSubmissionResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  FormSubmission form_submission = 1;
+  SimulateFormSubmissionResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainFormSubmissionCalculation`.
+message ExplainFormSubmissionCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  FormSubmission form_submission = 3;
+  ExplainFormSubmissionCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainFormSubmissionCalculation`.
+message ExplainFormSubmissionCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormSubmission form_submission = 1;
+  ExplainFormSubmissionCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetFormSubmissionRates`.
+message GetFormSubmissionRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string form_submission_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetFormSubmissionRates`.
+message GetFormSubmissionRatesResponse {
+  FormSubmission form_submission = 1;
+  acme.common.v1.OperationResult result = 2;
+}

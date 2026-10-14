@@ -1,0 +1,305 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.forms.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/forms/v1/forms.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Forms.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/forms/v1;formsv1";
+option java_multiple_files = true;
+option java_outer_classname = "FormValidationServiceProto";
+option java_package = "com.acme.forms.v1";
+
+// Checks forms against the rules before anything acts on them.
+service FormValidationService {
+  // Validates a form.
+  rpc ValidateForm(ValidateFormRequest) returns (ValidateFormResponse);
+
+  // Previews a form.
+  rpc PreviewForm(PreviewFormRequest) returns (PreviewFormResponse);
+
+  // Checks a form.
+  rpc CheckFormEligibility(CheckFormEligibilityRequest) returns (CheckFormEligibilityResponse);
+
+  // Normalizes a form.
+  rpc NormalizeForm(NormalizeFormRequest) returns (NormalizeFormResponse);
+
+  // Explains a form.
+  rpc ExplainFormDecision(ExplainFormDecisionRequest) returns (ExplainFormDecisionResponse);
+
+  // Scores a form.
+  rpc ScoreForm(ScoreFormRequest) returns (ScoreFormResponse);
+
+  // Lints a form.
+  rpc LintForms(LintFormsRequest) returns (LintFormsResponse);
+
+  // Returns a form.
+  rpc GetFormRules(GetFormRulesRequest) returns (GetFormRulesResponse);
+}
+
+// The request of `ValidateForm`.
+message ValidateFormRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_id = 2;
+  Form form = 3;
+  ValidateFormRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateForm`.
+message ValidateFormResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Form form = 1;
+  ValidateFormResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewForm`.
+message PreviewFormRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_id = 2;
+  Form form = 3;
+  PreviewFormRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewForm`.
+message PreviewFormResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Form form = 1;
+  PreviewFormResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckFormEligibility`.
+message CheckFormEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_id = 2;
+  Form form = 3;
+  CheckFormEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckFormEligibility`.
+message CheckFormEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Form form = 1;
+  CheckFormEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeForm`.
+message NormalizeFormRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_id = 2;
+  Form form = 3;
+  NormalizeFormRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeForm`.
+message NormalizeFormResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Form form = 1;
+  NormalizeFormResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainFormDecision`.
+message ExplainFormDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_id = 2;
+  Form form = 3;
+  ExplainFormDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainFormDecision`.
+message ExplainFormDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Form form = 1;
+  ExplainFormDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreForm`.
+message ScoreFormRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_id = 2;
+  Form form = 3;
+  ScoreFormRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreForm`.
+message ScoreFormResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreFormResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Form form = 1;
+  ScoreFormResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintForms`.
+message LintFormsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_id = 2;
+  Form form = 3;
+  LintFormsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintForms`.
+message LintFormsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Form form = 1;
+  LintFormsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetFormRules`.
+message GetFormRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string form_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetFormRules`.
+message GetFormRulesResponse {
+  Form form = 1;
+  acme.common.v1.OperationResult result = 2;
+}

@@ -1,0 +1,95 @@
+import * as text from "../../../../kit/text.js";
+import { FunnelEntry } from "./funnel-entry.js";
+
+/** A rule a funnel entry must pass. Check returns its problems, or none. */
+export interface FunnelEntryRule {
+  check(item: FunnelEntry): string[];
+}
+
+export class FunnelEntryAllowedCodeRule implements FunnelEntryRule {
+  allowed: string[];
+
+  constructor(allowed: string[]) {
+    this.allowed = allowed;
+  }
+
+  check(item: FunnelEntry): string[] {
+    if (this.allowed.length === 0) return [];
+    if (!this.allowed.includes(text.normalize(item.code))) return [`code ${item.code} is above maximum`];
+    return [];
+  }
+}
+
+export class FunnelEntryCodeLengthRule implements FunnelEntryRule {
+  maxLength: number;
+
+  constructor(maxLength: number) {
+    this.maxLength = maxLength;
+  }
+
+  check(item: FunnelEntry): string[] {
+    const size = item.code.length;
+    if (size > this.maxLength) return [`code is ${size} characters, more than ${this.maxLength}`];
+    return [];
+  }
+}
+
+export class FunnelEntryRequiredLocaleRule implements FunnelEntryRule {
+  message: string;
+
+  constructor(message: string) {
+    this.message = message;
+  }
+
+  check(item: FunnelEntry): string[] {
+    if (item.locale.trim() === "") return [this.message];
+    return [];
+  }
+}
+
+/** Runs every rule of a funnel entry. */
+export class FunnelEntryValidator {
+  rules: FunnelEntryRule[];
+
+  constructor(rules: FunnelEntryRule[]) {
+    this.rules = rules;
+  }
+
+  validate(item: FunnelEntry): string[] {
+    const problems: string[] = [];
+    for (const rule of this.rules) {
+      for (const problem of rule.check(item)) {
+        problems.push(problem);
+      }
+    }
+    return problems;
+  }
+
+  requireValid(item: FunnelEntry): void {
+    const problems = this.validate(item);
+    if (problems.length > 0) {
+      throw new Error(`${item.displayLabel()} is invalid: ${problems.join("; ")}`);
+    }
+  }
+
+  validateAll(items: FunnelEntry[]): Map<string, string[]> {
+    const report = new Map<string, string[]>();
+    for (const item of items) {
+      const problems = this.validate(item);
+      if (problems.length > 0) {
+        report.set(item.code, problems);
+      }
+    }
+    return report;
+  }
+}
+
+export function defaultFunnelEntryValidator(): FunnelEntryValidator {
+  return new FunnelEntryValidator(
+    [
+      new FunnelEntryAllowedCodeRule([]),
+      new FunnelEntryCodeLengthRule(120),
+      new FunnelEntryRequiredLocaleRule("funnel entry needs a value"),
+    ],
+  );
+}

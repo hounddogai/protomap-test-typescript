@@ -1,0 +1,258 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.messaging.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/messaging/v1/messaging.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Messaging.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/messaging/v1;messagingv1";
+option java_multiple_files = true;
+option java_outer_classname = "ChannelWorkflowServiceProto";
+option java_package = "com.acme.messaging.v1";
+
+// Runs the long-lived workflow that takes a channel from start to finish.
+service ChannelWorkflowService {
+  // Starts a channel.
+  rpc StartChannelWorkflow(StartChannelWorkflowRequest) returns (StartChannelWorkflowResponse);
+
+  // Advances a channel.
+  rpc AdvanceChannelWorkflow(AdvanceChannelWorkflowRequest) returns (AdvanceChannelWorkflowResponse);
+
+  // Cancels a channel.
+  rpc CancelChannelWorkflow(CancelChannelWorkflowRequest) returns (CancelChannelWorkflowResponse);
+
+  // Resumes a channel.
+  rpc ResumeChannelWorkflow(ResumeChannelWorkflowRequest) returns (ResumeChannelWorkflowResponse);
+
+  // Returns a channel.
+  rpc InspectChannelWorkflow(InspectChannelWorkflowRequest) returns (InspectChannelWorkflowResponse);
+
+  // Lists channels a page at a time.
+  rpc ListChannelWorkflows(ListChannelWorkflowsRequest) returns (ListChannelWorkflowsResponse);
+
+  // Signals a channel.
+  rpc SignalChannelWorkflow(SignalChannelWorkflowRequest) returns (SignalChannelWorkflowResponse);
+}
+
+// The request of `StartChannelWorkflow`.
+message StartChannelWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  StartChannelWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartChannelWorkflow`.
+message StartChannelWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  StartChannelWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceChannelWorkflow`.
+message AdvanceChannelWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  AdvanceChannelWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceChannelWorkflow`.
+message AdvanceChannelWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  AdvanceChannelWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelChannelWorkflow`.
+message CancelChannelWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  CancelChannelWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelChannelWorkflow`.
+message CancelChannelWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  CancelChannelWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumeChannelWorkflow`.
+message ResumeChannelWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  ResumeChannelWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumeChannelWorkflow`.
+message ResumeChannelWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  ResumeChannelWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectChannelWorkflow`.
+message InspectChannelWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectChannelWorkflow`.
+message InspectChannelWorkflowResponse {
+  Channel channel = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListChannelWorkflows`.
+message ListChannelWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ChannelStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListChannelWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListChannelWorkflows`.
+message ListChannelWorkflowsResponse {
+  repeated Channel channels = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalChannelWorkflow`.
+message SignalChannelWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  SignalChannelWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalChannelWorkflow`.
+message SignalChannelWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  SignalChannelWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

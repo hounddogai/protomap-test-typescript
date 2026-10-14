@@ -1,0 +1,335 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.prescriptions.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/prescriptions/v1/prescriptions.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Prescriptions.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/prescriptions/v1;prescriptionsv1";
+option java_multiple_files = true;
+option java_outer_classname = "PrescriptionCalculationServiceProto";
+option java_package = "com.acme.prescriptions.v1";
+
+// Computes the figures of a prescription, such as totals, taxes, and estimates.
+service PrescriptionCalculationService {
+  // Calculates a prescription.
+  rpc CalculatePrescription(CalculatePrescriptionRequest) returns (CalculatePrescriptionResponse);
+
+  // Estimates a prescription.
+  rpc EstimatePrescription(EstimatePrescriptionRequest) returns (EstimatePrescriptionResponse);
+
+  // Quotes a prescription.
+  rpc QuotePrescription(QuotePrescriptionRequest) returns (QuotePrescriptionResponse);
+
+  // Compares a prescription.
+  rpc ComparePrescriptionOptions(ComparePrescriptionOptionsRequest) returns (ComparePrescriptionOptionsResponse);
+
+  // Recalculates a prescription.
+  rpc RecalculatePrescriptions(RecalculatePrescriptionsRequest) returns (RecalculatePrescriptionsResponse);
+
+  // Simulates a prescription.
+  rpc SimulatePrescription(SimulatePrescriptionRequest) returns (SimulatePrescriptionResponse);
+
+  // Explains a prescription.
+  rpc ExplainPrescriptionCalculation(ExplainPrescriptionCalculationRequest) returns (ExplainPrescriptionCalculationResponse);
+
+  // Returns a prescription.
+  rpc GetPrescriptionRates(GetPrescriptionRatesRequest) returns (GetPrescriptionRatesResponse);
+}
+
+// The request of `CalculatePrescription`.
+message CalculatePrescriptionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string prescription_id = 2;
+  Prescription prescription = 3;
+  CalculatePrescriptionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculatePrescription`.
+message CalculatePrescriptionResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculatePrescriptionResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Prescription prescription = 1;
+  CalculatePrescriptionResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimatePrescription`.
+message EstimatePrescriptionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string prescription_id = 2;
+  Prescription prescription = 3;
+  EstimatePrescriptionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimatePrescription`.
+message EstimatePrescriptionResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimatePrescriptionResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Prescription prescription = 1;
+  EstimatePrescriptionResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuotePrescription`.
+message QuotePrescriptionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string prescription_id = 2;
+  Prescription prescription = 3;
+  QuotePrescriptionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuotePrescription`.
+message QuotePrescriptionResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuotePrescriptionResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Prescription prescription = 1;
+  QuotePrescriptionResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ComparePrescriptionOptions`.
+message ComparePrescriptionOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string prescription_id = 2;
+  Prescription prescription = 3;
+  ComparePrescriptionOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ComparePrescriptionOptions`.
+message ComparePrescriptionOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ComparePrescriptionOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Prescription prescription = 1;
+  ComparePrescriptionOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculatePrescriptions`.
+message RecalculatePrescriptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string prescription_id = 2;
+  Prescription prescription = 3;
+  RecalculatePrescriptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculatePrescriptions`.
+message RecalculatePrescriptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculatePrescriptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Prescription prescription = 1;
+  RecalculatePrescriptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulatePrescription`.
+message SimulatePrescriptionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string prescription_id = 2;
+  Prescription prescription = 3;
+  SimulatePrescriptionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulatePrescription`.
+message SimulatePrescriptionResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulatePrescriptionResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Prescription prescription = 1;
+  SimulatePrescriptionResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainPrescriptionCalculation`.
+message ExplainPrescriptionCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string prescription_id = 2;
+  Prescription prescription = 3;
+  ExplainPrescriptionCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainPrescriptionCalculation`.
+message ExplainPrescriptionCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Prescription prescription = 1;
+  ExplainPrescriptionCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetPrescriptionRates`.
+message GetPrescriptionRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string prescription_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetPrescriptionRates`.
+message GetPrescriptionRatesResponse {
+  Prescription prescription = 1;
+  acme.common.v1.OperationResult result = 2;
+}

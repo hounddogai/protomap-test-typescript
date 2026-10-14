@@ -1,0 +1,268 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.messaging.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/messaging/v1/messaging.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Messaging.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/messaging/v1;messagingv1";
+option java_multiple_files = true;
+option java_outer_classname = "ChannelValidationServiceProto";
+option java_package = "com.acme.messaging.v1";
+
+// Checks channels against the rules before anything acts on them.
+service ChannelValidationService {
+  // Validates a channel.
+  rpc ValidateChannel(ValidateChannelRequest) returns (ValidateChannelResponse);
+
+  // Previews a channel.
+  rpc PreviewChannel(PreviewChannelRequest) returns (PreviewChannelResponse);
+
+  // Checks a channel.
+  rpc CheckChannelEligibility(CheckChannelEligibilityRequest) returns (CheckChannelEligibilityResponse);
+
+  // Normalizes a channel.
+  rpc NormalizeChannel(NormalizeChannelRequest) returns (NormalizeChannelResponse);
+
+  // Explains a channel.
+  rpc ExplainChannelDecision(ExplainChannelDecisionRequest) returns (ExplainChannelDecisionResponse);
+
+  // Scores a channel.
+  rpc ScoreChannel(ScoreChannelRequest) returns (ScoreChannelResponse);
+
+  // Returns a channel.
+  rpc GetChannelRules(GetChannelRulesRequest) returns (GetChannelRulesResponse);
+}
+
+// The request of `ValidateChannel`.
+message ValidateChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  ValidateChannelRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateChannel`.
+message ValidateChannelResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  ValidateChannelResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewChannel`.
+message PreviewChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  PreviewChannelRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewChannel`.
+message PreviewChannelResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  PreviewChannelResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckChannelEligibility`.
+message CheckChannelEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  CheckChannelEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckChannelEligibility`.
+message CheckChannelEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  CheckChannelEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeChannel`.
+message NormalizeChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  NormalizeChannelRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeChannel`.
+message NormalizeChannelResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  NormalizeChannelResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainChannelDecision`.
+message ExplainChannelDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  ExplainChannelDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainChannelDecision`.
+message ExplainChannelDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  ExplainChannelDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreChannel`.
+message ScoreChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  ScoreChannelRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreChannel`.
+message ScoreChannelResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreChannelResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Channel channel = 1;
+  ScoreChannelResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetChannelRules`.
+message GetChannelRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetChannelRules`.
+message GetChannelRulesResponse {
+  Channel channel = 1;
+  acme.common.v1.OperationResult result = 2;
+}

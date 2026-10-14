@@ -1,0 +1,97 @@
+import * as text from "../../../../kit/text.js";
+import { ManualPacingException } from "./manual-pacing-exception.js";
+
+/** A rule a manual pacing exception must pass. Check returns its problems, or none. */
+export interface ManualPacingExceptionRule {
+  check(item: ManualPacingException): string[];
+}
+
+export class ManualPacingExceptionAllowedReviewerRule implements ManualPacingExceptionRule {
+  allowed: string[];
+
+  constructor(allowed: string[]) {
+    this.allowed = allowed;
+  }
+
+  check(item: ManualPacingException): string[] {
+    if (this.allowed.length === 0) return [];
+    if (!this.allowed.includes(text.normalize(item.reviewer))) return [`reviewer ${item.reviewer} is above maximum`];
+    return [];
+  }
+}
+
+export class ManualPacingExceptionRequiredReviewerRule implements ManualPacingExceptionRule {
+  message: string;
+
+  constructor(message: string) {
+    this.message = message;
+  }
+
+  check(item: ManualPacingException): string[] {
+    if (item.reviewer.trim() === "") return [this.message];
+    return [];
+  }
+}
+
+export class ManualPacingExceptionCodeLengthRule implements ManualPacingExceptionRule {
+  maxLength: number;
+
+  constructor(maxLength: number) {
+    this.maxLength = maxLength;
+  }
+
+  check(item: ManualPacingException): string[] {
+    const size = item.code.length;
+    if (size > this.maxLength) return [`code is ${size} characters, more than ${this.maxLength}`];
+    return [];
+  }
+}
+
+/** Runs every rule of a manual pacing exception. */
+export class ManualPacingExceptionValidator {
+  rules: ManualPacingExceptionRule[];
+
+  constructor(rules: ManualPacingExceptionRule[]) {
+    this.rules = rules;
+  }
+
+  validate(item: ManualPacingException): string[] {
+    const problems: string[] = [];
+    for (const rule of this.rules) {
+      const found = rule.check(item);
+      if (found.length === 0) continue;
+      for (const problem of found) {
+        problems.push(`${item.code}: ${problem}`);
+      }
+    }
+    return problems;
+  }
+
+  requireValid(item: ManualPacingException): void {
+    const problems = this.validate(item);
+    if (problems.length > 0) {
+      throw new Error(`${item.label()} is invalid: ${problems.join("; ")}`);
+    }
+  }
+
+  validateAll(items: ManualPacingException[]): Map<string, string[]> {
+    const report = new Map<string, string[]>();
+    for (const item of items) {
+      const problems = this.validate(item);
+      if (problems.length > 0) {
+        report.set(item.code, problems);
+      }
+    }
+    return report;
+  }
+}
+
+export function defaultManualPacingExceptionValidator(): ManualPacingExceptionValidator {
+  return new ManualPacingExceptionValidator(
+    [
+      new ManualPacingExceptionAllowedReviewerRule(["default", "weighted", "lenient"]),
+      new ManualPacingExceptionRequiredReviewerRule("manual pacing exception needs an entry"),
+      new ManualPacingExceptionCodeLengthRule(255),
+    ],
+  );
+}

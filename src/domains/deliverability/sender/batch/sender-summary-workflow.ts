@@ -1,0 +1,90 @@
+import * as clock from "../../../../kit/clock.js";
+import * as flags from "../../../../kit/flags.js";
+import { SenderSummaryEngine, defaultSenderSummaryEngine } from "./sender-summary-engine.js";
+import { SenderSummaryValidator, defaultSenderSummaryValidator } from "./sender-summary-rules.js";
+import { SenderSummaryStore } from "./sender-summary-store.js";
+
+/** Moves sender summaries through their life cycle and keeps a journal of what it did. */
+export class SenderSummaryManager {
+  store: SenderSummaryStore;
+  validator: SenderSummaryValidator;
+  clock: clock.Clock;
+  journal: string[];
+  engine: SenderSummaryEngine;
+
+  constructor(
+    store: SenderSummaryStore,
+    validator: SenderSummaryValidator,
+    clockValue: clock.Clock,
+    journal: string[],
+    engine: SenderSummaryEngine,
+  ) {
+    this.store = store;
+    this.validator = validator;
+    this.clock = clockValue;
+    this.journal = journal;
+    this.engine = engine;
+  }
+
+  private note(message: string): void {
+    this.journal.push(`${this.clock.now()} ${message}`);
+  }
+
+  submit(code: string): void {
+    const item = this.store.find(code);
+    if (item === undefined) {
+      throw new Error(`sender summary ${code} not found`);
+    }
+    this.validator.requireValid(item);
+    item.moveTo("in_review");
+    this.store.save(item);
+    this.note(`${code} is in review`);
+  }
+
+  close(code: string, reason: string): void {
+    const item = this.store.find(code);
+    if (item === undefined) {
+      throw new Error(`sender summary ${code} not found`);
+    }
+    if (item.isTerminal()) {
+      this.note(`${code} already closed`);
+      return;
+    }
+    item.moveTo("archived");
+    this.store.save(item);
+    this.note(`${code} is archived: ${reason}`);
+  }
+
+  score(code: string): number {
+    const item = this.store.find(code);
+    if (item === undefined) {
+      throw new Error(`sender summary ${code} not found`);
+    }
+    const result = this.engine.run(item);
+    this.note(`${code} evaluated at ${result}`);
+    return result;
+  }
+
+  reviewStale(cutoff: number): number {
+    let changed = 0;
+    for (const item of this.store.list()) {
+      if (item.isTerminal()) continue;
+      if (item.sendAt > cutoff) continue;
+      const problems = this.validator.validate(item);
+      if (problems.length === 0) continue;
+      this.note(`${item.code} needs attention: ${problems.join(", ")}`);
+      changed += 1;
+    }
+    return changed;
+  }
+}
+
+export function newSenderSummaryManager(store: SenderSummaryStore, clockValue: clock.Clock, flagsValue: flags.Registry): SenderSummaryManager {
+  return new SenderSummaryManager(
+    store,
+    defaultSenderSummaryValidator(),
+    clockValue,
+    [],
+    defaultSenderSummaryEngine(flagsValue),
+  );
+}

@@ -1,0 +1,214 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.localization.v1;
+
+import "acme/common/v1/audit.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/localization/v1/localization.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Localization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/localization/v1;localizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "LocaleQueryServiceProto";
+option java_package = "com.acme.localization.v1";
+
+// Answers read-only questions about locales, for screens and reports.
+service LocaleQueryService {
+  // Returns a locale.
+  rpc LookupLocale(LookupLocaleRequest) returns (LookupLocaleResponse);
+
+  // Lists locales a page at a time.
+  rpc BrowseLocales(BrowseLocalesRequest) returns (BrowseLocalesResponse);
+
+  // Lists locales a page at a time.
+  rpc FindLocales(FindLocalesRequest) returns (FindLocalesResponse);
+
+  // Counts locales by status.
+  rpc CountLocales(CountLocalesRequest) returns (CountLocalesResponse);
+
+  // Returns several locales at once.
+  rpc ResolveLocales(ResolveLocalesRequest) returns (ResolveLocalesResponse);
+
+  // Summarizes a locale.
+  rpc SummarizeLocales(SummarizeLocalesRequest) returns (SummarizeLocalesResponse);
+
+  // Lists locales a page at a time.
+  rpc SuggestLocales(SuggestLocalesRequest) returns (SuggestLocalesResponse);
+
+  // Returns a locale.
+  rpc PeekLocale(PeekLocaleRequest) returns (PeekLocaleResponse);
+}
+
+// The request of `LookupLocale`.
+message LookupLocaleRequest {
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `LookupLocale`.
+message LookupLocaleResponse {
+  Locale locale = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `BrowseLocales`.
+message BrowseLocalesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated LocaleStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  BrowseLocalesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `BrowseLocales`.
+message BrowseLocalesResponse {
+  repeated Locale locales = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `FindLocales`.
+message FindLocalesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated LocaleStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  FindLocalesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `FindLocales`.
+message FindLocalesResponse {
+  repeated Locale locales = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CountLocales`.
+message CountLocalesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated LocaleStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  CountLocalesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `CountLocales`.
+message CountLocalesResponse {
+  int64 count = 1;
+  map<string, int64> by_status = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResolveLocales`.
+message ResolveLocalesRequest {
+  acme.common.v1.RequestContext context = 1;
+  repeated string locale_ids = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `ResolveLocales`.
+message ResolveLocalesResponse {
+  repeated Locale locales = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SummarizeLocales`.
+message SummarizeLocalesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string format = 1;
+    acme.common.v1.TimeWindow period = 2;
+    repeated string recipient_emails = 3;
+    string cron = 4;
+    map<string, string> filters = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  SummarizeLocalesRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SummarizeLocales`.
+message SummarizeLocalesResponse {
+  string report_id = 1;
+  string download_uri = 2;
+  map<string, string> summary = 3;
+  acme.common.v1.TimeWindow period = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `SuggestLocales`.
+message SuggestLocalesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated LocaleStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  SuggestLocalesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `SuggestLocales`.
+message SuggestLocalesResponse {
+  repeated Locale locales = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PeekLocale`.
+message PeekLocaleRequest {
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `PeekLocale`.
+message PeekLocaleResponse {
+  Locale locale = 1;
+  acme.common.v1.OperationResult result = 2;
+}

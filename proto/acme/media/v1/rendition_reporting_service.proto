@@ -1,0 +1,212 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.media.v1;
+
+import "acme/common/v1/audit.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/media/v1/media.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Media.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/media/v1;mediav1";
+option java_multiple_files = true;
+option java_outer_classname = "RenditionReportingServiceProto";
+option java_package = "com.acme.media.v1";
+
+// Builds and schedules reports about renditions.
+service RenditionReportingService {
+  // Generates a rendition.
+  rpc GenerateRenditionReport(GenerateRenditionReportRequest) returns (GenerateRenditionReportResponse);
+
+  // Returns a rendition.
+  rpc FetchRenditionReport(FetchRenditionReportRequest) returns (FetchRenditionReportResponse);
+
+  // Schedules a rendition.
+  rpc ScheduleRenditionReport(ScheduleRenditionReportRequest) returns (ScheduleRenditionReportResponse);
+
+  // Lists renditions a page at a time.
+  rpc ListRenditionReports(ListRenditionReportsRequest) returns (ListRenditionReportsResponse);
+
+  // Shares a rendition.
+  rpc ShareRenditionReport(ShareRenditionReportRequest) returns (ShareRenditionReportResponse);
+
+  // Counts renditions by status.
+  rpc CountRenditionTotals(CountRenditionTotalsRequest) returns (CountRenditionTotalsResponse);
+
+  // Deletes a rendition.
+  rpc DeleteRenditionReport(DeleteRenditionReportRequest) returns (DeleteRenditionReportResponse);
+}
+
+// The request of `GenerateRenditionReport`.
+message GenerateRenditionReportRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string format = 1;
+    acme.common.v1.TimeWindow period = 2;
+    repeated string recipient_emails = 3;
+    string cron = 4;
+    map<string, string> filters = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  GenerateRenditionReportRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `GenerateRenditionReport`.
+message GenerateRenditionReportResponse {
+  string report_id = 1;
+  string download_uri = 2;
+  map<string, string> summary = 3;
+  acme.common.v1.TimeWindow period = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `FetchRenditionReport`.
+message FetchRenditionReportRequest {
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `FetchRenditionReport`.
+message FetchRenditionReportResponse {
+  Rendition rendition = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ScheduleRenditionReport`.
+message ScheduleRenditionReportRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string format = 1;
+    acme.common.v1.TimeWindow period = 2;
+    repeated string recipient_emails = 3;
+    string cron = 4;
+    map<string, string> filters = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  ScheduleRenditionReportRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ScheduleRenditionReport`.
+message ScheduleRenditionReportResponse {
+  string report_id = 1;
+  string download_uri = 2;
+  map<string, string> summary = 3;
+  acme.common.v1.TimeWindow period = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `ListRenditionReports`.
+message ListRenditionReportsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated RenditionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListRenditionReportsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListRenditionReports`.
+message ListRenditionReportsResponse {
+  repeated Rendition renditions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ShareRenditionReport`.
+message ShareRenditionReportRequest {
+  // What the operation needs besides the record.
+  message Details {
+    acme.common.v1.ContactInfo recipient = 1;
+    string template_id = 2;
+    map<string, string> variables = 3;
+    google.protobuf.Any payload = 4;
+    string channel = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  ShareRenditionReportRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ShareRenditionReport`.
+message ShareRenditionReportResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  ShareRenditionReportResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CountRenditionTotals`.
+message CountRenditionTotalsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated RenditionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  CountRenditionTotalsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `CountRenditionTotals`.
+message CountRenditionTotalsResponse {
+  int64 count = 1;
+  map<string, int64> by_status = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DeleteRenditionReport`.
+message DeleteRenditionReportRequest {
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  string reason = 3;
+  string etag = 4;
+  bool force = 5;
+}
+
+// The response of `DeleteRenditionReport`.
+message DeleteRenditionReportResponse {
+  acme.common.v1.OperationResult result = 1;
+  google.protobuf.Timestamp effective_at = 2;
+}

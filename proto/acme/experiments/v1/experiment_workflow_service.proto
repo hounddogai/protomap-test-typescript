@@ -1,0 +1,296 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.experiments.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/experiments/v1/experiments.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Experiments.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/experiments/v1;experimentsv1";
+option java_multiple_files = true;
+option java_outer_classname = "ExperimentWorkflowServiceProto";
+option java_package = "com.acme.experiments.v1";
+
+// Runs the long-lived workflow that takes an experiment from start to finish.
+service ExperimentWorkflowService {
+  // Starts an experiment.
+  rpc StartExperimentWorkflow(StartExperimentWorkflowRequest) returns (StartExperimentWorkflowResponse);
+
+  // Advances an experiment.
+  rpc AdvanceExperimentWorkflow(AdvanceExperimentWorkflowRequest) returns (AdvanceExperimentWorkflowResponse);
+
+  // Cancels an experiment.
+  rpc CancelExperimentWorkflow(CancelExperimentWorkflowRequest) returns (CancelExperimentWorkflowResponse);
+
+  // Pauses an experiment.
+  rpc PauseExperimentWorkflow(PauseExperimentWorkflowRequest) returns (PauseExperimentWorkflowResponse);
+
+  // Resumes an experiment.
+  rpc ResumeExperimentWorkflow(ResumeExperimentWorkflowRequest) returns (ResumeExperimentWorkflowResponse);
+
+  // Returns an experiment.
+  rpc InspectExperimentWorkflow(InspectExperimentWorkflowRequest) returns (InspectExperimentWorkflowResponse);
+
+  // Lists experiments a page at a time.
+  rpc ListExperimentWorkflows(ListExperimentWorkflowsRequest) returns (ListExperimentWorkflowsResponse);
+
+  // Signals an experiment.
+  rpc SignalExperimentWorkflow(SignalExperimentWorkflowRequest) returns (SignalExperimentWorkflowResponse);
+}
+
+// The request of `StartExperimentWorkflow`.
+message StartExperimentWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  StartExperimentWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartExperimentWorkflow`.
+message StartExperimentWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Experiment experiment = 1;
+  StartExperimentWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceExperimentWorkflow`.
+message AdvanceExperimentWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  AdvanceExperimentWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceExperimentWorkflow`.
+message AdvanceExperimentWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Experiment experiment = 1;
+  AdvanceExperimentWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelExperimentWorkflow`.
+message CancelExperimentWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  CancelExperimentWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelExperimentWorkflow`.
+message CancelExperimentWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Experiment experiment = 1;
+  CancelExperimentWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseExperimentWorkflow`.
+message PauseExperimentWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  PauseExperimentWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseExperimentWorkflow`.
+message PauseExperimentWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Experiment experiment = 1;
+  PauseExperimentWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumeExperimentWorkflow`.
+message ResumeExperimentWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  ResumeExperimentWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumeExperimentWorkflow`.
+message ResumeExperimentWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Experiment experiment = 1;
+  ResumeExperimentWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectExperimentWorkflow`.
+message InspectExperimentWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectExperimentWorkflow`.
+message InspectExperimentWorkflowResponse {
+  Experiment experiment = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListExperimentWorkflows`.
+message ListExperimentWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ExperimentStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListExperimentWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListExperimentWorkflows`.
+message ListExperimentWorkflowsResponse {
+  repeated Experiment experiments = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalExperimentWorkflow`.
+message SignalExperimentWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string experiment_id = 2;
+  Experiment experiment = 3;
+  SignalExperimentWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalExperimentWorkflow`.
+message SignalExperimentWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Experiment experiment = 1;
+  SignalExperimentWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

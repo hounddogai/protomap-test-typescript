@@ -1,0 +1,284 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.media.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/media/v1/media.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Media.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/media/v1;mediav1";
+option java_multiple_files = true;
+option java_outer_classname = "MediaAssetSyncServiceProto";
+option java_package = "com.acme.media.v1";
+
+// Keeps media assets in step with the systems of record in other regions.
+service MediaAssetSyncService {
+  // Syncs a media asset.
+  rpc SyncMediaAssets(SyncMediaAssetsRequest) returns (SyncMediaAssetsResponse);
+
+  // Pushs a media asset.
+  rpc PushMediaAsset(PushMediaAssetRequest) returns (PushMediaAssetResponse);
+
+  // Pulls a media asset.
+  rpc PullMediaAssets(PullMediaAssetsRequest) returns (PullMediaAssetsResponse);
+
+  // Reconciles a media asset.
+  rpc ReconcileMediaAssets(ReconcileMediaAssetsRequest) returns (ReconcileMediaAssetsResponse);
+
+  // Exchanges changes of media assets with a peer.
+  rpc StreamMediaAssetChanges(stream StreamMediaAssetChangesRequest) returns (stream StreamMediaAssetChangesResponse);
+
+  // Resolves a media asset.
+  rpc ResolveMediaAssetConflict(ResolveMediaAssetConflictRequest) returns (ResolveMediaAssetConflictResponse);
+
+  // Returns a media asset.
+  rpc GetMediaAssetSyncState(GetMediaAssetSyncStateRequest) returns (GetMediaAssetSyncStateResponse);
+
+  // Lists media assets a page at a time.
+  rpc ListMediaAssetConflicts(ListMediaAssetConflictsRequest) returns (ListMediaAssetConflictsResponse);
+}
+
+// The request of `SyncMediaAssets`.
+message SyncMediaAssetsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  MediaAsset media_asset = 3;
+  SyncMediaAssetsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SyncMediaAssets`.
+message SyncMediaAssetsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  MediaAsset media_asset = 1;
+  SyncMediaAssetsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PushMediaAsset`.
+message PushMediaAssetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  MediaAsset media_asset = 3;
+  PushMediaAssetRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PushMediaAsset`.
+message PushMediaAssetResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  MediaAsset media_asset = 1;
+  PushMediaAssetResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PullMediaAssets`.
+message PullMediaAssetsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  MediaAsset media_asset = 3;
+  PullMediaAssetsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PullMediaAssets`.
+message PullMediaAssetsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  MediaAsset media_asset = 1;
+  PullMediaAssetsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReconcileMediaAssets`.
+message ReconcileMediaAssetsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  MediaAsset media_asset = 3;
+  ReconcileMediaAssetsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ReconcileMediaAssets`.
+message ReconcileMediaAssetsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  MediaAsset media_asset = 1;
+  ReconcileMediaAssetsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `StreamMediaAssetChanges`.
+message StreamMediaAssetChangesRequest {
+  // An acknowledgment of a change the peer sent.
+  message ChangeAck {
+    int64 sequence = 1;
+    string status = 2;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof frame {
+    MediaAsset change = 2;
+    StreamMediaAssetChangesRequest.ChangeAck ack = 3;
+  }
+  string cursor = 4;
+}
+
+// The response of `StreamMediaAssetChanges`.
+message StreamMediaAssetChangesResponse {
+  MediaAsset media_asset = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `ResolveMediaAssetConflict`.
+message ResolveMediaAssetConflictRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  MediaAsset media_asset = 3;
+  ResolveMediaAssetConflictRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResolveMediaAssetConflict`.
+message ResolveMediaAssetConflictResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  MediaAsset media_asset = 1;
+  ResolveMediaAssetConflictResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetMediaAssetSyncState`.
+message GetMediaAssetSyncStateRequest {
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetMediaAssetSyncState`.
+message GetMediaAssetSyncStateResponse {
+  MediaAsset media_asset = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListMediaAssetConflicts`.
+message ListMediaAssetConflictsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated MediaAssetStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListMediaAssetConflictsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListMediaAssetConflicts`.
+message ListMediaAssetConflictsResponse {
+  repeated MediaAsset media_assets = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}

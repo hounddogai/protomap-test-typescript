@@ -1,0 +1,314 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.webbff.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/webbff/v1/webbff.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Webbff.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/webbff/v1;webbffv1";
+option java_multiple_files = true;
+option java_outer_classname = "PageCompositionGatewayServiceProto";
+option java_package = "com.acme.webbff.v1";
+
+// The edge API that apps call for page compositions.
+service PageCompositionGatewayService {
+  // Fetchs a page composition.
+  rpc FetchPageCompositionView(FetchPageCompositionViewRequest) returns (FetchPageCompositionViewResponse);
+
+  // Composes a page composition.
+  rpc ComposePageCompositionPage(ComposePageCompositionPageRequest) returns (ComposePageCompositionPageResponse);
+
+  // Refreshs a page composition.
+  rpc RefreshPageComposition(RefreshPageCompositionRequest) returns (RefreshPageCompositionResponse);
+
+  // Submits a page composition.
+  rpc SubmitPageCompositionForm(SubmitPageCompositionFormRequest) returns (SubmitPageCompositionFormResponse);
+
+  // Tracks a page composition.
+  rpc TrackPageComposition(TrackPageCompositionRequest) returns (TrackPageCompositionResponse);
+
+  // Streams the changes of page compositions as they happen.
+  rpc StreamPageCompositionUpdates(StreamPageCompositionUpdatesRequest) returns (stream StreamPageCompositionUpdatesResponse);
+
+  // Takes a stream of page compositions and answers once at the end.
+  rpc UploadPageCompositionAttachments(stream UploadPageCompositionAttachmentsRequest) returns (UploadPageCompositionAttachmentsResponse);
+
+  // Lists page compositions a page at a time.
+  rpc SearchPageCompositionCatalog(SearchPageCompositionCatalogRequest) returns (SearchPageCompositionCatalogResponse);
+
+  // Returns a page composition.
+  rpc GetPageCompositionSummary(GetPageCompositionSummaryRequest) returns (GetPageCompositionSummaryResponse);
+
+  // Starts a page composition.
+  rpc StartPageCompositionCheckout(StartPageCompositionCheckoutRequest) returns (StartPageCompositionCheckoutResponse);
+}
+
+// The request of `FetchPageCompositionView`.
+message FetchPageCompositionViewRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string device = 1;
+    string locale = 2;
+    acme.common.v1.GeoPoint location = 3;
+    map<string, string> client_hints = 4;
+    string session_id = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string page_composition_id = 2;
+  PageComposition page_composition = 3;
+  FetchPageCompositionViewRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `FetchPageCompositionView`.
+message FetchPageCompositionViewResponse {
+  PageComposition page_composition = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ComposePageCompositionPage`.
+message ComposePageCompositionPageRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string device = 1;
+    string locale = 2;
+    acme.common.v1.GeoPoint location = 3;
+    map<string, string> client_hints = 4;
+    string session_id = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string page_composition_id = 2;
+  PageComposition page_composition = 3;
+  ComposePageCompositionPageRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ComposePageCompositionPage`.
+message ComposePageCompositionPageResponse {
+  PageComposition page_composition = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `RefreshPageComposition`.
+message RefreshPageCompositionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string device = 1;
+    string locale = 2;
+    acme.common.v1.GeoPoint location = 3;
+    map<string, string> client_hints = 4;
+    string session_id = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string page_composition_id = 2;
+  PageComposition page_composition = 3;
+  RefreshPageCompositionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RefreshPageComposition`.
+message RefreshPageCompositionResponse {
+  PageComposition page_composition = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `SubmitPageCompositionForm`.
+message SubmitPageCompositionFormRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string device = 1;
+    string locale = 2;
+    acme.common.v1.GeoPoint location = 3;
+    map<string, string> client_hints = 4;
+    string session_id = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string page_composition_id = 2;
+  PageComposition page_composition = 3;
+  SubmitPageCompositionFormRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitPageCompositionForm`.
+message SubmitPageCompositionFormResponse {
+  PageComposition page_composition = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `TrackPageComposition`.
+message TrackPageCompositionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string device = 1;
+    string locale = 2;
+    acme.common.v1.GeoPoint location = 3;
+    map<string, string> client_hints = 4;
+    string session_id = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string page_composition_id = 2;
+  PageComposition page_composition = 3;
+  TrackPageCompositionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `TrackPageComposition`.
+message TrackPageCompositionResponse {
+  PageComposition page_composition = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `StreamPageCompositionUpdates`.
+message StreamPageCompositionUpdatesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated PageCompositionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  StreamPageCompositionUpdatesRequest.Filter filter = 2;
+  google.protobuf.Timestamp since = 3;
+  int32 max_events = 4;
+  acme.common.v1.ContactInfo subscriber = 5;
+}
+
+// The response of `StreamPageCompositionUpdates`.
+message StreamPageCompositionUpdatesResponse {
+  PageComposition page_composition = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `UploadPageCompositionAttachments`.
+message UploadPageCompositionAttachmentsRequest {
+  // What a stream of records starts with.
+  message StreamHeader {
+    string source = 1;
+    string format = 2;
+    int64 total_records = 3;
+    acme.common.v1.ContactInfo submitted_by = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof chunk {
+    UploadPageCompositionAttachmentsRequest.StreamHeader header = 2;
+    PageComposition record = 3;
+  }
+  int64 sequence = 4;
+}
+
+// The response of `UploadPageCompositionAttachments`.
+message UploadPageCompositionAttachmentsResponse {
+  // A record the import turned down.
+  message Rejection {
+    int64 sequence = 1;
+    string reason = 2;
+    string page_composition_id = 3;
+  }
+
+  int64 accepted = 1;
+  int64 rejected = 2;
+  repeated UploadPageCompositionAttachmentsResponse.Rejection rejections = 3;
+  acme.common.v1.OperationResult result = 4;
+}
+
+// The request of `SearchPageCompositionCatalog`.
+message SearchPageCompositionCatalogRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated PageCompositionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  SearchPageCompositionCatalogRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `SearchPageCompositionCatalog`.
+message SearchPageCompositionCatalogResponse {
+  repeated PageComposition page_compositions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetPageCompositionSummary`.
+message GetPageCompositionSummaryRequest {
+  acme.common.v1.RequestContext context = 1;
+  string page_composition_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetPageCompositionSummary`.
+message GetPageCompositionSummaryResponse {
+  PageComposition page_composition = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `StartPageCompositionCheckout`.
+message StartPageCompositionCheckoutRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string page_composition_id = 2;
+  PageComposition page_composition = 3;
+  StartPageCompositionCheckoutRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartPageCompositionCheckout`.
+message StartPageCompositionCheckoutResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  PageComposition page_composition = 1;
+  StartPageCompositionCheckoutResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

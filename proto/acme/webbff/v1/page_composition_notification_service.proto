@@ -1,0 +1,247 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.webbff.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/webbff/v1/webbff.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Webbff.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/webbff/v1;webbffv1";
+option java_multiple_files = true;
+option java_outer_classname = "PageCompositionNotificationServiceProto";
+option java_package = "com.acme.webbff.v1";
+
+// Tells the people who follow a page composition what changed.
+service PageCompositionNotificationService {
+  // Subscribes a page composition.
+  rpc SubscribePageCompositionUpdates(SubscribePageCompositionUpdatesRequest) returns (SubscribePageCompositionUpdatesResponse);
+
+  // Unsubscribes a page composition.
+  rpc UnsubscribePageCompositionUpdates(UnsubscribePageCompositionUpdatesRequest) returns (UnsubscribePageCompositionUpdatesResponse);
+
+  // Notifys a page composition.
+  rpc NotifyPageCompositionWatchers(NotifyPageCompositionWatchersRequest) returns (NotifyPageCompositionWatchersResponse);
+
+  // Lists page compositions a page at a time.
+  rpc ListPageCompositionSubscriptions(ListPageCompositionSubscriptionsRequest) returns (ListPageCompositionSubscriptionsResponse);
+
+  // Sends a page composition.
+  rpc SendPageCompositionTestNotice(SendPageCompositionTestNoticeRequest) returns (SendPageCompositionTestNoticeResponse);
+
+  // Returns a page composition.
+  rpc GetPageCompositionPreferences(GetPageCompositionPreferencesRequest) returns (GetPageCompositionPreferencesResponse);
+
+  // Streams the changes of page compositions as they happen.
+  rpc StreamPageCompositionNotices(StreamPageCompositionNoticesRequest) returns (stream StreamPageCompositionNoticesResponse);
+}
+
+// The request of `SubscribePageCompositionUpdates`.
+message SubscribePageCompositionUpdatesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    acme.common.v1.ContactInfo recipient = 1;
+    string template_id = 2;
+    map<string, string> variables = 3;
+    google.protobuf.Any payload = 4;
+    string channel = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string page_composition_id = 2;
+  SubscribePageCompositionUpdatesRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SubscribePageCompositionUpdates`.
+message SubscribePageCompositionUpdatesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  PageComposition page_composition = 1;
+  SubscribePageCompositionUpdatesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `UnsubscribePageCompositionUpdates`.
+message UnsubscribePageCompositionUpdatesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    acme.common.v1.ContactInfo recipient = 1;
+    string template_id = 2;
+    map<string, string> variables = 3;
+    google.protobuf.Any payload = 4;
+    string channel = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string page_composition_id = 2;
+  UnsubscribePageCompositionUpdatesRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `UnsubscribePageCompositionUpdates`.
+message UnsubscribePageCompositionUpdatesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  PageComposition page_composition = 1;
+  UnsubscribePageCompositionUpdatesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NotifyPageCompositionWatchers`.
+message NotifyPageCompositionWatchersRequest {
+  // What the operation needs besides the record.
+  message Details {
+    acme.common.v1.ContactInfo recipient = 1;
+    string template_id = 2;
+    map<string, string> variables = 3;
+    google.protobuf.Any payload = 4;
+    string channel = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string page_composition_id = 2;
+  NotifyPageCompositionWatchersRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `NotifyPageCompositionWatchers`.
+message NotifyPageCompositionWatchersResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  PageComposition page_composition = 1;
+  NotifyPageCompositionWatchersResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPageCompositionSubscriptions`.
+message ListPageCompositionSubscriptionsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated PageCompositionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPageCompositionSubscriptionsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPageCompositionSubscriptions`.
+message ListPageCompositionSubscriptionsResponse {
+  repeated PageComposition page_compositions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SendPageCompositionTestNotice`.
+message SendPageCompositionTestNoticeRequest {
+  // What the operation needs besides the record.
+  message Details {
+    acme.common.v1.ContactInfo recipient = 1;
+    string template_id = 2;
+    map<string, string> variables = 3;
+    google.protobuf.Any payload = 4;
+    string channel = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string page_composition_id = 2;
+  SendPageCompositionTestNoticeRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SendPageCompositionTestNotice`.
+message SendPageCompositionTestNoticeResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  PageComposition page_composition = 1;
+  SendPageCompositionTestNoticeResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetPageCompositionPreferences`.
+message GetPageCompositionPreferencesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string page_composition_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetPageCompositionPreferences`.
+message GetPageCompositionPreferencesResponse {
+  PageComposition page_composition = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `StreamPageCompositionNotices`.
+message StreamPageCompositionNoticesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated PageCompositionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  StreamPageCompositionNoticesRequest.Filter filter = 2;
+  google.protobuf.Timestamp since = 3;
+  int32 max_events = 4;
+  acme.common.v1.ContactInfo subscriber = 5;
+}
+
+// The response of `StreamPageCompositionNotices`.
+message StreamPageCompositionNoticesResponse {
+  PageComposition page_composition = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}

@@ -1,0 +1,296 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.community.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/community/v1/community.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Community.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/community/v1;communityv1";
+option java_multiple_files = true;
+option java_outer_classname = "PostWorkflowServiceProto";
+option java_package = "com.acme.community.v1";
+
+// Runs the long-lived workflow that takes a post from start to finish.
+service PostWorkflowService {
+  // Starts a post.
+  rpc StartPostWorkflow(StartPostWorkflowRequest) returns (StartPostWorkflowResponse);
+
+  // Advances a post.
+  rpc AdvancePostWorkflow(AdvancePostWorkflowRequest) returns (AdvancePostWorkflowResponse);
+
+  // Cancels a post.
+  rpc CancelPostWorkflow(CancelPostWorkflowRequest) returns (CancelPostWorkflowResponse);
+
+  // Retrys a post.
+  rpc RetryPostWorkflow(RetryPostWorkflowRequest) returns (RetryPostWorkflowResponse);
+
+  // Pauses a post.
+  rpc PausePostWorkflow(PausePostWorkflowRequest) returns (PausePostWorkflowResponse);
+
+  // Resumes a post.
+  rpc ResumePostWorkflow(ResumePostWorkflowRequest) returns (ResumePostWorkflowResponse);
+
+  // Returns a post.
+  rpc InspectPostWorkflow(InspectPostWorkflowRequest) returns (InspectPostWorkflowResponse);
+
+  // Lists posts a page at a time.
+  rpc ListPostWorkflows(ListPostWorkflowsRequest) returns (ListPostWorkflowsResponse);
+}
+
+// The request of `StartPostWorkflow`.
+message StartPostWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  Post post = 3;
+  StartPostWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartPostWorkflow`.
+message StartPostWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Post post = 1;
+  StartPostWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvancePostWorkflow`.
+message AdvancePostWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  Post post = 3;
+  AdvancePostWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvancePostWorkflow`.
+message AdvancePostWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Post post = 1;
+  AdvancePostWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelPostWorkflow`.
+message CancelPostWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  Post post = 3;
+  CancelPostWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelPostWorkflow`.
+message CancelPostWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Post post = 1;
+  CancelPostWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryPostWorkflow`.
+message RetryPostWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  Post post = 3;
+  RetryPostWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryPostWorkflow`.
+message RetryPostWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Post post = 1;
+  RetryPostWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PausePostWorkflow`.
+message PausePostWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  Post post = 3;
+  PausePostWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PausePostWorkflow`.
+message PausePostWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Post post = 1;
+  PausePostWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumePostWorkflow`.
+message ResumePostWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  Post post = 3;
+  ResumePostWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumePostWorkflow`.
+message ResumePostWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Post post = 1;
+  ResumePostWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectPostWorkflow`.
+message InspectPostWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectPostWorkflow`.
+message InspectPostWorkflowResponse {
+  Post post = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListPostWorkflows`.
+message ListPostWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated PostStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPostWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPostWorkflows`.
+message ListPostWorkflowsResponse {
+  repeated Post posts = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}

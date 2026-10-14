@@ -1,0 +1,40 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.community.v1;
+
+option csharp_namespace = "Acme.Community.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/community/v1;communityv1";
+option java_multiple_files = true;
+option java_outer_classname = "RefsProto";
+option java_package = "com.acme.community.v1";
+
+// A reference to a forum of the community domain.
+message ForumRef {
+  string forum_id = 1;
+  string display_name = 2;
+  string path = 3;
+}
+
+// A reference to a post of the community domain.
+message PostRef {
+  string post_id = 1;
+  string display_name = 2;
+  string number = 3;
+}
+
+// A reference to a badge of the community domain.
+message BadgeRef {
+  string badge_id = 1;
+  string display_name = 2;
+  int64 version = 3;
+}
+
+// A reference to a moderation of the community domain.
+message ModerationRef {
+  string moderation_id = 1;
+  string display_name = 2;
+  int32 priority = 3;
+}

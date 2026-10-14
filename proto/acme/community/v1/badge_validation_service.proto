@@ -1,0 +1,305 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.community.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/community/v1/community.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Community.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/community/v1;communityv1";
+option java_multiple_files = true;
+option java_outer_classname = "BadgeValidationServiceProto";
+option java_package = "com.acme.community.v1";
+
+// Checks badges against the rules before anything acts on them.
+service BadgeValidationService {
+  // Validates a badge.
+  rpc ValidateBadge(ValidateBadgeRequest) returns (ValidateBadgeResponse);
+
+  // Previews a badge.
+  rpc PreviewBadge(PreviewBadgeRequest) returns (PreviewBadgeResponse);
+
+  // Checks a badge.
+  rpc CheckBadgeEligibility(CheckBadgeEligibilityRequest) returns (CheckBadgeEligibilityResponse);
+
+  // Normalizes a badge.
+  rpc NormalizeBadge(NormalizeBadgeRequest) returns (NormalizeBadgeResponse);
+
+  // Explains a badge.
+  rpc ExplainBadgeDecision(ExplainBadgeDecisionRequest) returns (ExplainBadgeDecisionResponse);
+
+  // Scores a badge.
+  rpc ScoreBadge(ScoreBadgeRequest) returns (ScoreBadgeResponse);
+
+  // Lints a badge.
+  rpc LintBadges(LintBadgesRequest) returns (LintBadgesResponse);
+
+  // Returns a badge.
+  rpc GetBadgeRules(GetBadgeRulesRequest) returns (GetBadgeRulesResponse);
+}
+
+// The request of `ValidateBadge`.
+message ValidateBadgeRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  ValidateBadgeRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateBadge`.
+message ValidateBadgeResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Badge badge = 1;
+  ValidateBadgeResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewBadge`.
+message PreviewBadgeRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  PreviewBadgeRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewBadge`.
+message PreviewBadgeResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Badge badge = 1;
+  PreviewBadgeResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckBadgeEligibility`.
+message CheckBadgeEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  CheckBadgeEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckBadgeEligibility`.
+message CheckBadgeEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Badge badge = 1;
+  CheckBadgeEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeBadge`.
+message NormalizeBadgeRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  NormalizeBadgeRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeBadge`.
+message NormalizeBadgeResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Badge badge = 1;
+  NormalizeBadgeResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainBadgeDecision`.
+message ExplainBadgeDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  ExplainBadgeDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainBadgeDecision`.
+message ExplainBadgeDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Badge badge = 1;
+  ExplainBadgeDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreBadge`.
+message ScoreBadgeRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  ScoreBadgeRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreBadge`.
+message ScoreBadgeResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreBadgeResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Badge badge = 1;
+  ScoreBadgeResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintBadges`.
+message LintBadgesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  LintBadgesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintBadges`.
+message LintBadgesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Badge badge = 1;
+  LintBadgesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetBadgeRules`.
+message GetBadgeRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetBadgeRules`.
+message GetBadgeRulesResponse {
+  Badge badge = 1;
+  acme.common.v1.OperationResult result = 2;
+}

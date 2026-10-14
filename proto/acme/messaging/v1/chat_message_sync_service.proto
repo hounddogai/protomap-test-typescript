@@ -1,0 +1,267 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.messaging.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/messaging/v1/messaging.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Messaging.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/messaging/v1;messagingv1";
+option java_multiple_files = true;
+option java_outer_classname = "ChatMessageSyncServiceProto";
+option java_package = "com.acme.messaging.v1";
+
+// Keeps chat messages in step with the systems of record in other regions.
+service ChatMessageSyncService {
+  // Syncs a chat message.
+  rpc SyncChatMessages(SyncChatMessagesRequest) returns (SyncChatMessagesResponse);
+
+  // Pushs a chat message.
+  rpc PushChatMessage(PushChatMessageRequest) returns (PushChatMessageResponse);
+
+  // Pulls a chat message.
+  rpc PullChatMessages(PullChatMessagesRequest) returns (PullChatMessagesResponse);
+
+  // Reconciles a chat message.
+  rpc ReconcileChatMessages(ReconcileChatMessagesRequest) returns (ReconcileChatMessagesResponse);
+
+  // Exchanges changes of chat messages with a peer.
+  rpc StreamChatMessageChanges(stream StreamChatMessageChangesRequest) returns (stream StreamChatMessageChangesResponse);
+
+  // Resolves a chat message.
+  rpc ResolveChatMessageConflict(ResolveChatMessageConflictRequest) returns (ResolveChatMessageConflictResponse);
+
+  // Lists chat messages a page at a time.
+  rpc ListChatMessageConflicts(ListChatMessageConflictsRequest) returns (ListChatMessageConflictsResponse);
+}
+
+// The request of `SyncChatMessages`.
+message SyncChatMessagesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_message_id = 2;
+  ChatMessage chat_message = 3;
+  SyncChatMessagesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SyncChatMessages`.
+message SyncChatMessagesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatMessage chat_message = 1;
+  SyncChatMessagesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PushChatMessage`.
+message PushChatMessageRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_message_id = 2;
+  ChatMessage chat_message = 3;
+  PushChatMessageRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PushChatMessage`.
+message PushChatMessageResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatMessage chat_message = 1;
+  PushChatMessageResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PullChatMessages`.
+message PullChatMessagesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_message_id = 2;
+  ChatMessage chat_message = 3;
+  PullChatMessagesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PullChatMessages`.
+message PullChatMessagesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatMessage chat_message = 1;
+  PullChatMessagesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReconcileChatMessages`.
+message ReconcileChatMessagesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_message_id = 2;
+  ChatMessage chat_message = 3;
+  ReconcileChatMessagesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ReconcileChatMessages`.
+message ReconcileChatMessagesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatMessage chat_message = 1;
+  ReconcileChatMessagesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `StreamChatMessageChanges`.
+message StreamChatMessageChangesRequest {
+  // An acknowledgment of a change the peer sent.
+  message ChangeAck {
+    int64 sequence = 1;
+    string status = 2;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof frame {
+    ChatMessage change = 2;
+    StreamChatMessageChangesRequest.ChangeAck ack = 3;
+  }
+  string cursor = 4;
+}
+
+// The response of `StreamChatMessageChanges`.
+message StreamChatMessageChangesResponse {
+  ChatMessage chat_message = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `ResolveChatMessageConflict`.
+message ResolveChatMessageConflictRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_message_id = 2;
+  ChatMessage chat_message = 3;
+  ResolveChatMessageConflictRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResolveChatMessageConflict`.
+message ResolveChatMessageConflictResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatMessage chat_message = 1;
+  ResolveChatMessageConflictResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListChatMessageConflicts`.
+message ListChatMessageConflictsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ChatMessageStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListChatMessageConflictsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListChatMessageConflicts`.
+message ListChatMessageConflictsResponse {
+  repeated ChatMessage chat_messages = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}

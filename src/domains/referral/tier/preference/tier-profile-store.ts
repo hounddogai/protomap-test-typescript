@@ -1,0 +1,142 @@
+import * as cache from "../../../../kit/cache.js";
+import * as clock from "../../../../kit/clock.js";
+import * as collections from "../../../../kit/collections.js";
+import * as text from "../../../../kit/text.js";
+import { TierProfile } from "./tier-profile.js";
+
+/** Keeps tier profiles by code. */
+export interface TierProfileStore {
+  find(code: string): TierProfile | undefined;
+  save(item: TierProfile): void;
+  remove(code: string): boolean;
+  list(): TierProfile[];
+}
+
+/** Keeps records in memory, in the order they were first saved. */
+export class MemoryTierProfileStore implements TierProfileStore {
+  items: Map<string, TierProfile>;
+  order: string[];
+
+  constructor(items: Map<string, TierProfile>, order: string[]) {
+    this.items = items;
+    this.order = order;
+  }
+
+  find(code: string): TierProfile | undefined {
+    const found = this.items.get(code);
+    if (found === undefined) return undefined;
+    return found;
+  }
+
+  save(item: TierProfile): void {
+    if (!this.items.has(item.code)) {
+      this.order.push(item.code);
+    }
+    this.items.set(item.code, item);
+  }
+
+  remove(code: string): boolean {
+    if (!this.items.has(code)) return false;
+    this.items.delete(code);
+    const kept: string[] = [];
+    for (const existing of this.order) {
+      if (existing !== code) {
+        kept.push(existing);
+      }
+    }
+    this.order = kept;
+    return true;
+  }
+
+  list(): TierProfile[] {
+    const out: TierProfile[] = [];
+    for (const key of this.order) {
+      const found = this.items.get(key);
+      if (found === undefined) continue;
+      out.push(found);
+    }
+    return out;
+  }
+}
+
+export function newMemoryTierProfileStore(): TierProfileStore {
+  return new MemoryTierProfileStore(new Map<string, TierProfile>(), []);
+}
+
+/** Serves reads from a short-lived cache in front of another store. */
+export class CachedTierProfileStore implements TierProfileStore {
+  inner: TierProfileStore;
+  cache: cache.TtlCache<TierProfile>;
+  hits: number;
+  misses: number;
+
+  constructor(inner: TierProfileStore, cacheValue: cache.TtlCache<TierProfile>, hits: number, misses: number) {
+    this.inner = inner;
+    this.cache = cacheValue;
+    this.hits = hits;
+    this.misses = misses;
+  }
+
+  find(code: string): TierProfile | undefined {
+    const hit = this.cache.get(code);
+    if (hit === undefined) {
+      this.misses += 1;
+      const found = this.inner.find(code);
+      if (found === undefined) return undefined;
+      this.cache.put(code, found);
+      return found;
+    }
+    this.hits += 1;
+    return hit;
+  }
+
+  save(item: TierProfile): void {
+    this.inner.save(item);
+    this.cache.put(item.code, item);
+  }
+
+  remove(code: string): boolean {
+    // A cached copy expires on its own; reads after a removal may still see it until then.
+    return this.inner.remove(code);
+  }
+
+  list(): TierProfile[] {
+    return this.inner.list();
+  }
+}
+
+export function newCachedTierProfileStore(inner: TierProfileStore, ttl: number, clockValue: clock.Clock): TierProfileStore {
+  return new CachedTierProfileStore(inner, cache.newTtlCache<TierProfile>(256, ttl, clockValue), 0, 0);
+}
+
+/** Selects tier profiles. Empty fields match all. */
+export class TierProfileQuery {
+  segment: string;
+  minFloorValue: number;
+  statuses: string[];
+  limit: number;
+
+  constructor(segment: string, minFloorValue: number, statuses: string[], limit: number) {
+    this.segment = segment;
+    this.minFloorValue = minFloorValue;
+    this.statuses = statuses;
+    this.limit = limit;
+  }
+
+  matches(item: TierProfile): boolean {
+    if (this.segment !== "" && text.normalize(item.segment) !== text.normalize(this.segment)) return false;
+    if (item.floorValue < this.minFloorValue) return false;
+    if (this.statuses.length > 0 && !this.statuses.includes(`${item.status}`)) return false;
+    return true;
+  }
+
+  apply(items: TierProfile[]): TierProfile[] {
+    const matched = collections.filter(items, (candidate: TierProfile): boolean => this.matches(candidate));
+    if (this.limit > 0 && matched.length > this.limit) return collections.take(matched, this.limit);
+    return matched;
+  }
+}
+
+export function findTierProfiles(store: TierProfileStore, query: TierProfileQuery): TierProfile[] {
+  return query.apply(store.list());
+}

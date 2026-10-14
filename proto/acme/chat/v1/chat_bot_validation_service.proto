@@ -1,0 +1,305 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.chat.v1;
+
+import "acme/chat/v1/chat.proto";
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Chat.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/chat/v1;chatv1";
+option java_multiple_files = true;
+option java_outer_classname = "ChatBotValidationServiceProto";
+option java_package = "com.acme.chat.v1";
+
+// Checks chat bots against the rules before anything acts on them.
+service ChatBotValidationService {
+  // Validates a chat bot.
+  rpc ValidateChatBot(ValidateChatBotRequest) returns (ValidateChatBotResponse);
+
+  // Previews a chat bot.
+  rpc PreviewChatBot(PreviewChatBotRequest) returns (PreviewChatBotResponse);
+
+  // Checks a chat bot.
+  rpc CheckChatBotEligibility(CheckChatBotEligibilityRequest) returns (CheckChatBotEligibilityResponse);
+
+  // Normalizes a chat bot.
+  rpc NormalizeChatBot(NormalizeChatBotRequest) returns (NormalizeChatBotResponse);
+
+  // Explains a chat bot.
+  rpc ExplainChatBotDecision(ExplainChatBotDecisionRequest) returns (ExplainChatBotDecisionResponse);
+
+  // Scores a chat bot.
+  rpc ScoreChatBot(ScoreChatBotRequest) returns (ScoreChatBotResponse);
+
+  // Lints a chat bot.
+  rpc LintChatBots(LintChatBotsRequest) returns (LintChatBotsResponse);
+
+  // Returns a chat bot.
+  rpc GetChatBotRules(GetChatBotRulesRequest) returns (GetChatBotRulesResponse);
+}
+
+// The request of `ValidateChatBot`.
+message ValidateChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  ValidateChatBotRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateChatBot`.
+message ValidateChatBotResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  ValidateChatBotResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewChatBot`.
+message PreviewChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  PreviewChatBotRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewChatBot`.
+message PreviewChatBotResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  PreviewChatBotResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckChatBotEligibility`.
+message CheckChatBotEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  CheckChatBotEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckChatBotEligibility`.
+message CheckChatBotEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  CheckChatBotEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeChatBot`.
+message NormalizeChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  NormalizeChatBotRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeChatBot`.
+message NormalizeChatBotResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  NormalizeChatBotResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainChatBotDecision`.
+message ExplainChatBotDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  ExplainChatBotDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainChatBotDecision`.
+message ExplainChatBotDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  ExplainChatBotDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreChatBot`.
+message ScoreChatBotRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  ScoreChatBotRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreChatBot`.
+message ScoreChatBotResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreChatBotResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ChatBot chat_bot = 1;
+  ScoreChatBotResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintChatBots`.
+message LintChatBotsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  ChatBot chat_bot = 3;
+  LintChatBotsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintChatBots`.
+message LintChatBotsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatBot chat_bot = 1;
+  LintChatBotsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetChatBotRules`.
+message GetChatBotRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string chat_bot_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetChatBotRules`.
+message GetChatBotRulesResponse {
+  ChatBot chat_bot = 1;
+  acme.common.v1.OperationResult result = 2;
+}

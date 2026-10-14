@@ -1,0 +1,335 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.corporateevents.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/corporateevents/v1/corporateevents.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Corporateevents.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/corporateevents/v1;corporateeventsv1";
+option java_multiple_files = true;
+option java_outer_classname = "CorporateEventCalculationServiceProto";
+option java_package = "com.acme.corporateevents.v1";
+
+// Computes the figures of a corporate event, such as totals, taxes, and estimates.
+service CorporateEventCalculationService {
+  // Calculates a corporate event.
+  rpc CalculateCorporateEvent(CalculateCorporateEventRequest) returns (CalculateCorporateEventResponse);
+
+  // Estimates a corporate event.
+  rpc EstimateCorporateEvent(EstimateCorporateEventRequest) returns (EstimateCorporateEventResponse);
+
+  // Quotes a corporate event.
+  rpc QuoteCorporateEvent(QuoteCorporateEventRequest) returns (QuoteCorporateEventResponse);
+
+  // Compares a corporate event.
+  rpc CompareCorporateEventOptions(CompareCorporateEventOptionsRequest) returns (CompareCorporateEventOptionsResponse);
+
+  // Recalculates a corporate event.
+  rpc RecalculateCorporateEvents(RecalculateCorporateEventsRequest) returns (RecalculateCorporateEventsResponse);
+
+  // Simulates a corporate event.
+  rpc SimulateCorporateEvent(SimulateCorporateEventRequest) returns (SimulateCorporateEventResponse);
+
+  // Explains a corporate event.
+  rpc ExplainCorporateEventCalculation(ExplainCorporateEventCalculationRequest) returns (ExplainCorporateEventCalculationResponse);
+
+  // Returns a corporate event.
+  rpc GetCorporateEventRates(GetCorporateEventRatesRequest) returns (GetCorporateEventRatesResponse);
+}
+
+// The request of `CalculateCorporateEvent`.
+message CalculateCorporateEventRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string corporate_event_id = 2;
+  CorporateEvent corporate_event = 3;
+  CalculateCorporateEventRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateCorporateEvent`.
+message CalculateCorporateEventResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateCorporateEventResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  CorporateEvent corporate_event = 1;
+  CalculateCorporateEventResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateCorporateEvent`.
+message EstimateCorporateEventRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string corporate_event_id = 2;
+  CorporateEvent corporate_event = 3;
+  EstimateCorporateEventRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateCorporateEvent`.
+message EstimateCorporateEventResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateCorporateEventResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  CorporateEvent corporate_event = 1;
+  EstimateCorporateEventResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteCorporateEvent`.
+message QuoteCorporateEventRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string corporate_event_id = 2;
+  CorporateEvent corporate_event = 3;
+  QuoteCorporateEventRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteCorporateEvent`.
+message QuoteCorporateEventResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteCorporateEventResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  CorporateEvent corporate_event = 1;
+  QuoteCorporateEventResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareCorporateEventOptions`.
+message CompareCorporateEventOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string corporate_event_id = 2;
+  CorporateEvent corporate_event = 3;
+  CompareCorporateEventOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareCorporateEventOptions`.
+message CompareCorporateEventOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareCorporateEventOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  CorporateEvent corporate_event = 1;
+  CompareCorporateEventOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculateCorporateEvents`.
+message RecalculateCorporateEventsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string corporate_event_id = 2;
+  CorporateEvent corporate_event = 3;
+  RecalculateCorporateEventsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculateCorporateEvents`.
+message RecalculateCorporateEventsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculateCorporateEventsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  CorporateEvent corporate_event = 1;
+  RecalculateCorporateEventsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateCorporateEvent`.
+message SimulateCorporateEventRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string corporate_event_id = 2;
+  CorporateEvent corporate_event = 3;
+  SimulateCorporateEventRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateCorporateEvent`.
+message SimulateCorporateEventResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateCorporateEventResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  CorporateEvent corporate_event = 1;
+  SimulateCorporateEventResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainCorporateEventCalculation`.
+message ExplainCorporateEventCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string corporate_event_id = 2;
+  CorporateEvent corporate_event = 3;
+  ExplainCorporateEventCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainCorporateEventCalculation`.
+message ExplainCorporateEventCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CorporateEvent corporate_event = 1;
+  ExplainCorporateEventCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetCorporateEventRates`.
+message GetCorporateEventRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string corporate_event_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetCorporateEventRates`.
+message GetCorporateEventRatesResponse {
+  CorporateEvent corporate_event = 1;
+  acme.common.v1.OperationResult result = 2;
+}

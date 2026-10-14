@@ -1,0 +1,232 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.notifications.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/notifications/v1/notifications.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Notifications.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/notifications/v1;notificationsv1";
+option java_multiple_files = true;
+option java_outer_classname = "DeliveryAttemptHistoryServiceProto";
+option java_package = "com.acme.notifications.v1";
+
+// Keeps every version of a delivery attempt and restores earlier ones.
+service DeliveryAttemptHistoryService {
+  // Records a delivery attempt.
+  rpc RecordDeliveryAttemptVersion(RecordDeliveryAttemptVersionRequest) returns (RecordDeliveryAttemptVersionResponse);
+
+  // Lists delivery attempts a page at a time.
+  rpc ListDeliveryAttemptVersions(ListDeliveryAttemptVersionsRequest) returns (ListDeliveryAttemptVersionsResponse);
+
+  // Returns a delivery attempt.
+  rpc GetDeliveryAttemptVersion(GetDeliveryAttemptVersionRequest) returns (GetDeliveryAttemptVersionResponse);
+
+  // Compares a delivery attempt.
+  rpc CompareDeliveryAttemptVersions(CompareDeliveryAttemptVersionsRequest) returns (CompareDeliveryAttemptVersionsResponse);
+
+  // Reverts a delivery attempt.
+  rpc RevertDeliveryAttempt(RevertDeliveryAttemptRequest) returns (RevertDeliveryAttemptResponse);
+
+  // Annotates a delivery attempt.
+  rpc AnnotateDeliveryAttemptVersion(AnnotateDeliveryAttemptVersionRequest) returns (AnnotateDeliveryAttemptVersionResponse);
+
+  // Deletes a delivery attempt.
+  rpc PruneDeliveryAttemptVersions(PruneDeliveryAttemptVersionsRequest) returns (PruneDeliveryAttemptVersionsResponse);
+}
+
+// The request of `RecordDeliveryAttemptVersion`.
+message RecordDeliveryAttemptVersionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    int64 version = 1;
+    int64 other_version = 2;
+    bytes snapshot = 3;
+    string author_email = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  RecordDeliveryAttemptVersionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecordDeliveryAttemptVersion`.
+message RecordDeliveryAttemptVersionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  RecordDeliveryAttemptVersionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListDeliveryAttemptVersions`.
+message ListDeliveryAttemptVersionsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated DeliveryAttemptStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListDeliveryAttemptVersionsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListDeliveryAttemptVersions`.
+message ListDeliveryAttemptVersionsResponse {
+  repeated DeliveryAttempt delivery_attempts = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetDeliveryAttemptVersion`.
+message GetDeliveryAttemptVersionRequest {
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetDeliveryAttemptVersion`.
+message GetDeliveryAttemptVersionResponse {
+  DeliveryAttempt delivery_attempt = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CompareDeliveryAttemptVersions`.
+message CompareDeliveryAttemptVersionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    int64 version = 1;
+    int64 other_version = 2;
+    bytes snapshot = 3;
+    string author_email = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  CompareDeliveryAttemptVersionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareDeliveryAttemptVersions`.
+message CompareDeliveryAttemptVersionsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  CompareDeliveryAttemptVersionsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RevertDeliveryAttempt`.
+message RevertDeliveryAttemptRequest {
+  // What the operation needs besides the record.
+  message Details {
+    int64 version = 1;
+    int64 other_version = 2;
+    bytes snapshot = 3;
+    string author_email = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  RevertDeliveryAttemptRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RevertDeliveryAttempt`.
+message RevertDeliveryAttemptResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  RevertDeliveryAttemptResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AnnotateDeliveryAttemptVersion`.
+message AnnotateDeliveryAttemptVersionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    int64 version = 1;
+    int64 other_version = 2;
+    bytes snapshot = 3;
+    string author_email = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  AnnotateDeliveryAttemptVersionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AnnotateDeliveryAttemptVersion`.
+message AnnotateDeliveryAttemptVersionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  AnnotateDeliveryAttemptVersionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PruneDeliveryAttemptVersions`.
+message PruneDeliveryAttemptVersionsRequest {
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  string reason = 3;
+  string etag = 4;
+  bool force = 5;
+}
+
+// The response of `PruneDeliveryAttemptVersions`.
+message PruneDeliveryAttemptVersionsResponse {
+  acme.common.v1.OperationResult result = 1;
+  google.protobuf.Timestamp effective_at = 2;
+}

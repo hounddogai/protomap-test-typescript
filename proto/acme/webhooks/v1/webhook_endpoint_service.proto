@@ -1,0 +1,248 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.webhooks.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/webhooks/v1/webhooks.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Webhooks.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/webhooks/v1;webhooksv1";
+option java_multiple_files = true;
+option java_outer_classname = "WebhookEndpointServiceProto";
+option java_package = "com.acme.webhooks.v1";
+
+// Manages webhook endpoints: creates, reads, changes, and lists them.
+service WebhookEndpointService {
+  // Creates a webhook endpoint.
+  rpc CreateWebhookEndpoint(CreateWebhookEndpointRequest) returns (CreateWebhookEndpointResponse);
+
+  // Returns a webhook endpoint.
+  rpc GetWebhookEndpoint(GetWebhookEndpointRequest) returns (GetWebhookEndpointResponse);
+
+  // Changes a webhook endpoint.
+  rpc UpdateWebhookEndpoint(UpdateWebhookEndpointRequest) returns (UpdateWebhookEndpointResponse);
+
+  // Deletes a webhook endpoint.
+  rpc DeleteWebhookEndpoint(DeleteWebhookEndpointRequest) returns (DeleteWebhookEndpointResponse);
+
+  // Lists webhook endpoints a page at a time.
+  rpc ListWebhookEndpoints(ListWebhookEndpointsRequest) returns (ListWebhookEndpointsResponse);
+
+  // Returns several webhook endpoints at once.
+  rpc BatchGetWebhookEndpoints(BatchGetWebhookEndpointsRequest) returns (BatchGetWebhookEndpointsResponse);
+
+  // Lists webhook endpoints a page at a time.
+  rpc SearchWebhookEndpoints(SearchWebhookEndpointsRequest) returns (SearchWebhookEndpointsResponse);
+
+  // Streams the changes of webhook endpoints as they happen.
+  rpc WatchWebhookEndpoints(WatchWebhookEndpointsRequest) returns (stream WatchWebhookEndpointsResponse);
+
+  // Takes a stream of webhook endpoints and answers once at the end.
+  rpc BatchCreateWebhookEndpoints(stream BatchCreateWebhookEndpointsRequest) returns (BatchCreateWebhookEndpointsResponse);
+
+  // Creates a webhook endpoint.
+  rpc CloneWebhookEndpoint(CloneWebhookEndpointRequest) returns (CloneWebhookEndpointResponse);
+}
+
+// The request of `CreateWebhookEndpoint`.
+message CreateWebhookEndpointRequest {
+  acme.common.v1.RequestContext context = 1;
+  WebhookEndpoint webhook_endpoint = 2;
+  string request_id = 3;
+  bool validate_only = 4;
+}
+
+// The response of `CreateWebhookEndpoint`.
+message CreateWebhookEndpointResponse {
+  WebhookEndpoint webhook_endpoint = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `GetWebhookEndpoint`.
+message GetWebhookEndpointRequest {
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetWebhookEndpoint`.
+message GetWebhookEndpointResponse {
+  WebhookEndpoint webhook_endpoint = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `UpdateWebhookEndpoint`.
+message UpdateWebhookEndpointRequest {
+  acme.common.v1.RequestContext context = 1;
+  WebhookEndpoint webhook_endpoint = 2;
+  google.protobuf.FieldMask update_mask = 3;
+  bool allow_missing = 4;
+}
+
+// The response of `UpdateWebhookEndpoint`.
+message UpdateWebhookEndpointResponse {
+  WebhookEndpoint webhook_endpoint = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `DeleteWebhookEndpoint`.
+message DeleteWebhookEndpointRequest {
+  acme.common.v1.RequestContext context = 1;
+  string webhook_endpoint_id = 2;
+  string reason = 3;
+  string etag = 4;
+  bool force = 5;
+}
+
+// The response of `DeleteWebhookEndpoint`.
+message DeleteWebhookEndpointResponse {
+  acme.common.v1.OperationResult result = 1;
+  google.protobuf.Timestamp effective_at = 2;
+}
+
+// The request of `ListWebhookEndpoints`.
+message ListWebhookEndpointsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated WebhookEndpointStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListWebhookEndpointsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListWebhookEndpoints`.
+message ListWebhookEndpointsResponse {
+  repeated WebhookEndpoint webhook_endpoints = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `BatchGetWebhookEndpoints`.
+message BatchGetWebhookEndpointsRequest {
+  acme.common.v1.RequestContext context = 1;
+  repeated string webhook_endpoint_ids = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `BatchGetWebhookEndpoints`.
+message BatchGetWebhookEndpointsResponse {
+  repeated WebhookEndpoint webhook_endpoints = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SearchWebhookEndpoints`.
+message SearchWebhookEndpointsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated WebhookEndpointStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  SearchWebhookEndpointsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `SearchWebhookEndpoints`.
+message SearchWebhookEndpointsResponse {
+  repeated WebhookEndpoint webhook_endpoints = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `WatchWebhookEndpoints`.
+message WatchWebhookEndpointsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated WebhookEndpointStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  WatchWebhookEndpointsRequest.Filter filter = 2;
+  google.protobuf.Timestamp since = 3;
+  int32 max_events = 4;
+  acme.common.v1.ContactInfo subscriber = 5;
+}
+
+// The response of `WatchWebhookEndpoints`.
+message WatchWebhookEndpointsResponse {
+  WebhookEndpoint webhook_endpoint = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `BatchCreateWebhookEndpoints`.
+message BatchCreateWebhookEndpointsRequest {
+  // What a stream of records starts with.
+  message StreamHeader {
+    string source = 1;
+    string format = 2;
+    int64 total_records = 3;
+    acme.common.v1.ContactInfo submitted_by = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof chunk {
+    BatchCreateWebhookEndpointsRequest.StreamHeader header = 2;
+    WebhookEndpoint record = 3;
+  }
+  int64 sequence = 4;
+}
+
+// The response of `BatchCreateWebhookEndpoints`.
+message BatchCreateWebhookEndpointsResponse {
+  // A record the import turned down.
+  message Rejection {
+    int64 sequence = 1;
+    string reason = 2;
+    string webhook_endpoint_id = 3;
+  }
+
+  int64 accepted = 1;
+  int64 rejected = 2;
+  repeated BatchCreateWebhookEndpointsResponse.Rejection rejections = 3;
+  acme.common.v1.OperationResult result = 4;
+}
+
+// The request of `CloneWebhookEndpoint`.
+message CloneWebhookEndpointRequest {
+  acme.common.v1.RequestContext context = 1;
+  WebhookEndpoint webhook_endpoint = 2;
+  string request_id = 3;
+  bool validate_only = 4;
+}
+
+// The response of `CloneWebhookEndpoint`.
+message CloneWebhookEndpointResponse {
+  WebhookEndpoint webhook_endpoint = 1;
+  acme.common.v1.OperationResult result = 2;
+}

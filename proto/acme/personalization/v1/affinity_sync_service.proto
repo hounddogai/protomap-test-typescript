@@ -1,0 +1,246 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.personalization.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/personalization/v1/personalization.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Personalization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/personalization/v1;personalizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "AffinitySyncServiceProto";
+option java_package = "com.acme.personalization.v1";
+
+// Keeps affinities in step with the systems of record in other regions.
+service AffinitySyncService {
+  // Syncs an affinity.
+  rpc SyncAffinities(SyncAffinitiesRequest) returns (SyncAffinitiesResponse);
+
+  // Pushs an affinity.
+  rpc PushAffinity(PushAffinityRequest) returns (PushAffinityResponse);
+
+  // Pulls an affinity.
+  rpc PullAffinities(PullAffinitiesRequest) returns (PullAffinitiesResponse);
+
+  // Reconciles an affinity.
+  rpc ReconcileAffinities(ReconcileAffinitiesRequest) returns (ReconcileAffinitiesResponse);
+
+  // Exchanges changes of affinities with a peer.
+  rpc StreamAffinityChanges(stream StreamAffinityChangesRequest) returns (stream StreamAffinityChangesResponse);
+
+  // Returns an affinity.
+  rpc GetAffinitySyncState(GetAffinitySyncStateRequest) returns (GetAffinitySyncStateResponse);
+
+  // Lists affinities a page at a time.
+  rpc ListAffinityConflicts(ListAffinityConflictsRequest) returns (ListAffinityConflictsResponse);
+}
+
+// The request of `SyncAffinities`.
+message SyncAffinitiesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  SyncAffinitiesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SyncAffinities`.
+message SyncAffinitiesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  SyncAffinitiesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PushAffinity`.
+message PushAffinityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  PushAffinityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PushAffinity`.
+message PushAffinityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  PushAffinityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PullAffinities`.
+message PullAffinitiesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  PullAffinitiesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PullAffinities`.
+message PullAffinitiesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  PullAffinitiesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReconcileAffinities`.
+message ReconcileAffinitiesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  ReconcileAffinitiesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ReconcileAffinities`.
+message ReconcileAffinitiesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  ReconcileAffinitiesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `StreamAffinityChanges`.
+message StreamAffinityChangesRequest {
+  // An acknowledgment of a change the peer sent.
+  message ChangeAck {
+    int64 sequence = 1;
+    string status = 2;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof frame {
+    Affinity change = 2;
+    StreamAffinityChangesRequest.ChangeAck ack = 3;
+  }
+  string cursor = 4;
+}
+
+// The response of `StreamAffinityChanges`.
+message StreamAffinityChangesResponse {
+  Affinity affinity = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `GetAffinitySyncState`.
+message GetAffinitySyncStateRequest {
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetAffinitySyncState`.
+message GetAffinitySyncStateResponse {
+  Affinity affinity = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListAffinityConflicts`.
+message ListAffinityConflictsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated AffinityStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListAffinityConflictsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListAffinityConflicts`.
+message ListAffinityConflictsResponse {
+  repeated Affinity affinities = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
