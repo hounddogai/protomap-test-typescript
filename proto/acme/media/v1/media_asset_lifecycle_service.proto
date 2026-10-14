@@ -1,0 +1,241 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.media.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/media/v1/media.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Media.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/media/v1;mediav1";
+option java_multiple_files = true;
+option java_outer_classname = "MediaAssetLifecycleServiceProto";
+option java_package = "com.acme.media.v1";
+
+// Moves a media asset between the states of its lifecycle.
+service MediaAssetLifecycleService {
+  // Activates a media asset.
+  rpc ActivateMediaAsset(ActivateMediaAssetRequest) returns (ActivateMediaAssetResponse);
+
+  // Suspends a media asset.
+  rpc SuspendMediaAsset(SuspendMediaAssetRequest) returns (SuspendMediaAssetResponse);
+
+  // Reinstates a media asset.
+  rpc ReinstateMediaAsset(ReinstateMediaAssetRequest) returns (ReinstateMediaAssetResponse);
+
+  // Terminates a media asset.
+  rpc TerminateMediaAsset(TerminateMediaAssetRequest) returns (TerminateMediaAssetResponse);
+
+  // Renews a media asset.
+  rpc RenewMediaAsset(RenewMediaAssetRequest) returns (RenewMediaAssetResponse);
+
+  // Schedules a media asset.
+  rpc ScheduleMediaAssetExpiry(ScheduleMediaAssetExpiryRequest) returns (ScheduleMediaAssetExpiryResponse);
+}
+
+// The request of `ActivateMediaAsset`.
+message ActivateMediaAssetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  ActivateMediaAssetRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ActivateMediaAsset`.
+message ActivateMediaAssetResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  MediaAsset media_asset = 1;
+  ActivateMediaAssetResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SuspendMediaAsset`.
+message SuspendMediaAssetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  SuspendMediaAssetRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SuspendMediaAsset`.
+message SuspendMediaAssetResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  MediaAsset media_asset = 1;
+  SuspendMediaAssetResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReinstateMediaAsset`.
+message ReinstateMediaAssetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  ReinstateMediaAssetRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ReinstateMediaAsset`.
+message ReinstateMediaAssetResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  MediaAsset media_asset = 1;
+  ReinstateMediaAssetResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `TerminateMediaAsset`.
+message TerminateMediaAssetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  TerminateMediaAssetRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `TerminateMediaAsset`.
+message TerminateMediaAssetResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  MediaAsset media_asset = 1;
+  TerminateMediaAssetResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RenewMediaAsset`.
+message RenewMediaAssetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  RenewMediaAssetRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `RenewMediaAsset`.
+message RenewMediaAssetResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  MediaAsset media_asset = 1;
+  RenewMediaAssetResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScheduleMediaAssetExpiry`.
+message ScheduleMediaAssetExpiryRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  MediaAsset media_asset = 3;
+  ScheduleMediaAssetExpiryRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScheduleMediaAssetExpiry`.
+message ScheduleMediaAssetExpiryResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  MediaAsset media_asset = 1;
+  ScheduleMediaAssetExpiryResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

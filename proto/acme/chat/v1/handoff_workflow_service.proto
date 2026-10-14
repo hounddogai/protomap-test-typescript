@@ -1,0 +1,334 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.chat.v1;
+
+import "acme/chat/v1/chat.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Chat.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/chat/v1;chatv1";
+option java_multiple_files = true;
+option java_outer_classname = "HandoffWorkflowServiceProto";
+option java_package = "com.acme.chat.v1";
+
+// Runs the long-lived workflow that takes a handoff from start to finish.
+service HandoffWorkflowService {
+  // Starts a handoff.
+  rpc StartHandoffWorkflow(StartHandoffWorkflowRequest) returns (StartHandoffWorkflowResponse);
+
+  // Advances a handoff.
+  rpc AdvanceHandoffWorkflow(AdvanceHandoffWorkflowRequest) returns (AdvanceHandoffWorkflowResponse);
+
+  // Cancels a handoff.
+  rpc CancelHandoffWorkflow(CancelHandoffWorkflowRequest) returns (CancelHandoffWorkflowResponse);
+
+  // Retrys a handoff.
+  rpc RetryHandoffWorkflow(RetryHandoffWorkflowRequest) returns (RetryHandoffWorkflowResponse);
+
+  // Pauses a handoff.
+  rpc PauseHandoffWorkflow(PauseHandoffWorkflowRequest) returns (PauseHandoffWorkflowResponse);
+
+  // Resumes a handoff.
+  rpc ResumeHandoffWorkflow(ResumeHandoffWorkflowRequest) returns (ResumeHandoffWorkflowResponse);
+
+  // Returns a handoff.
+  rpc InspectHandoffWorkflow(InspectHandoffWorkflowRequest) returns (InspectHandoffWorkflowResponse);
+
+  // Lists handoffs a page at a time.
+  rpc ListHandoffWorkflows(ListHandoffWorkflowsRequest) returns (ListHandoffWorkflowsResponse);
+
+  // Signals a handoff.
+  rpc SignalHandoffWorkflow(SignalHandoffWorkflowRequest) returns (SignalHandoffWorkflowResponse);
+}
+
+// The request of `StartHandoffWorkflow`.
+message StartHandoffWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  StartHandoffWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartHandoffWorkflow`.
+message StartHandoffWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  StartHandoffWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceHandoffWorkflow`.
+message AdvanceHandoffWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  AdvanceHandoffWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceHandoffWorkflow`.
+message AdvanceHandoffWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  AdvanceHandoffWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelHandoffWorkflow`.
+message CancelHandoffWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  CancelHandoffWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelHandoffWorkflow`.
+message CancelHandoffWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  CancelHandoffWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryHandoffWorkflow`.
+message RetryHandoffWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  RetryHandoffWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryHandoffWorkflow`.
+message RetryHandoffWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  RetryHandoffWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseHandoffWorkflow`.
+message PauseHandoffWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  PauseHandoffWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseHandoffWorkflow`.
+message PauseHandoffWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  PauseHandoffWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumeHandoffWorkflow`.
+message ResumeHandoffWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  ResumeHandoffWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumeHandoffWorkflow`.
+message ResumeHandoffWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  ResumeHandoffWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectHandoffWorkflow`.
+message InspectHandoffWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectHandoffWorkflow`.
+message InspectHandoffWorkflowResponse {
+  Handoff handoff = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListHandoffWorkflows`.
+message ListHandoffWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated HandoffStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListHandoffWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListHandoffWorkflows`.
+message ListHandoffWorkflowsResponse {
+  repeated Handoff handoffs = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalHandoffWorkflow`.
+message SignalHandoffWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string handoff_id = 2;
+  Handoff handoff = 3;
+  SignalHandoffWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalHandoffWorkflow`.
+message SignalHandoffWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Handoff handoff = 1;
+  SignalHandoffWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

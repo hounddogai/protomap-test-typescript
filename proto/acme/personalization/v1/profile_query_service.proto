@@ -1,0 +1,245 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.personalization.v1;
+
+import "acme/common/v1/audit.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/personalization/v1/personalization.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Personalization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/personalization/v1;personalizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "ProfileQueryServiceProto";
+option java_package = "com.acme.personalization.v1";
+
+// Answers read-only questions about profiles, for screens and reports.
+service ProfileQueryService {
+  // Returns a profile.
+  rpc LookupProfile(LookupProfileRequest) returns (LookupProfileResponse);
+
+  // Lists profiles a page at a time.
+  rpc BrowseProfiles(BrowseProfilesRequest) returns (BrowseProfilesResponse);
+
+  // Lists profiles a page at a time.
+  rpc FindProfiles(FindProfilesRequest) returns (FindProfilesResponse);
+
+  // Counts profiles by status.
+  rpc CountProfiles(CountProfilesRequest) returns (CountProfilesResponse);
+
+  // Returns several profiles at once.
+  rpc ResolveProfiles(ResolveProfilesRequest) returns (ResolveProfilesResponse);
+
+  // Streams every matching profile.
+  rpc ExportProfiles(ExportProfilesRequest) returns (stream ExportProfilesResponse);
+
+  // Summarizes a profile.
+  rpc SummarizeProfiles(SummarizeProfilesRequest) returns (SummarizeProfilesResponse);
+
+  // Lists profiles a page at a time.
+  rpc SuggestProfiles(SuggestProfilesRequest) returns (SuggestProfilesResponse);
+
+  // Returns a profile.
+  rpc PeekProfile(PeekProfileRequest) returns (PeekProfileResponse);
+}
+
+// The request of `LookupProfile`.
+message LookupProfileRequest {
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `LookupProfile`.
+message LookupProfileResponse {
+  Profile profile = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `BrowseProfiles`.
+message BrowseProfilesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ProfileStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  BrowseProfilesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `BrowseProfiles`.
+message BrowseProfilesResponse {
+  repeated Profile profiles = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `FindProfiles`.
+message FindProfilesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ProfileStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  FindProfilesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `FindProfiles`.
+message FindProfilesResponse {
+  repeated Profile profiles = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CountProfiles`.
+message CountProfilesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ProfileStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  CountProfilesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `CountProfiles`.
+message CountProfilesResponse {
+  int64 count = 1;
+  map<string, int64> by_status = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResolveProfiles`.
+message ResolveProfilesRequest {
+  acme.common.v1.RequestContext context = 1;
+  repeated string profile_ids = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `ResolveProfiles`.
+message ResolveProfilesResponse {
+  repeated Profile profiles = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExportProfiles`.
+message ExportProfilesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ProfileStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  ExportProfilesRequest.Filter filter = 2;
+  string format = 3;
+  google.protobuf.FieldMask fields = 4;
+  string destination_uri = 5;
+}
+
+// The response of `ExportProfiles`.
+message ExportProfilesResponse {
+  Profile profile = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `SummarizeProfiles`.
+message SummarizeProfilesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string format = 1;
+    acme.common.v1.TimeWindow period = 2;
+    repeated string recipient_emails = 3;
+    string cron = 4;
+    map<string, string> filters = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  SummarizeProfilesRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SummarizeProfiles`.
+message SummarizeProfilesResponse {
+  string report_id = 1;
+  string download_uri = 2;
+  map<string, string> summary = 3;
+  acme.common.v1.TimeWindow period = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `SuggestProfiles`.
+message SuggestProfilesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ProfileStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  SuggestProfilesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `SuggestProfiles`.
+message SuggestProfilesResponse {
+  repeated Profile profiles = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PeekProfile`.
+message PeekProfileRequest {
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `PeekProfile`.
+message PeekProfileResponse {
+  Profile profile = 1;
+  acme.common.v1.OperationResult result = 2;
+}

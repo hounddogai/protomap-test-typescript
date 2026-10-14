@@ -1,0 +1,228 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.webbff.v1;
+
+import "acme/common/v1/audit.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/webbff/v1/webbff.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Webbff.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/webbff/v1;webbffv1";
+option java_multiple_files = true;
+option java_outer_classname = "WidgetLayoutQueryServiceProto";
+option java_package = "com.acme.webbff.v1";
+
+// Answers read-only questions about widget layouts, for screens and reports.
+service WidgetLayoutQueryService {
+  // Returns a widget layout.
+  rpc LookupWidgetLayout(LookupWidgetLayoutRequest) returns (LookupWidgetLayoutResponse);
+
+  // Lists widget layouts a page at a time.
+  rpc BrowseWidgetLayouts(BrowseWidgetLayoutsRequest) returns (BrowseWidgetLayoutsResponse);
+
+  // Lists widget layouts a page at a time.
+  rpc FindWidgetLayouts(FindWidgetLayoutsRequest) returns (FindWidgetLayoutsResponse);
+
+  // Counts widget layouts by status.
+  rpc CountWidgetLayouts(CountWidgetLayoutsRequest) returns (CountWidgetLayoutsResponse);
+
+  // Streams every matching widget layout.
+  rpc ExportWidgetLayouts(ExportWidgetLayoutsRequest) returns (stream ExportWidgetLayoutsResponse);
+
+  // Summarizes a widget layout.
+  rpc SummarizeWidgetLayouts(SummarizeWidgetLayoutsRequest) returns (SummarizeWidgetLayoutsResponse);
+
+  // Lists widget layouts a page at a time.
+  rpc SuggestWidgetLayouts(SuggestWidgetLayoutsRequest) returns (SuggestWidgetLayoutsResponse);
+
+  // Returns a widget layout.
+  rpc PeekWidgetLayout(PeekWidgetLayoutRequest) returns (PeekWidgetLayoutResponse);
+}
+
+// The request of `LookupWidgetLayout`.
+message LookupWidgetLayoutRequest {
+  acme.common.v1.RequestContext context = 1;
+  string widget_layout_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `LookupWidgetLayout`.
+message LookupWidgetLayoutResponse {
+  WidgetLayout widget_layout = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `BrowseWidgetLayouts`.
+message BrowseWidgetLayoutsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated WidgetLayoutStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  BrowseWidgetLayoutsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `BrowseWidgetLayouts`.
+message BrowseWidgetLayoutsResponse {
+  repeated WidgetLayout widget_layouts = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `FindWidgetLayouts`.
+message FindWidgetLayoutsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated WidgetLayoutStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  FindWidgetLayoutsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `FindWidgetLayouts`.
+message FindWidgetLayoutsResponse {
+  repeated WidgetLayout widget_layouts = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CountWidgetLayouts`.
+message CountWidgetLayoutsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated WidgetLayoutStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  CountWidgetLayoutsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `CountWidgetLayouts`.
+message CountWidgetLayoutsResponse {
+  int64 count = 1;
+  map<string, int64> by_status = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExportWidgetLayouts`.
+message ExportWidgetLayoutsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated WidgetLayoutStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  ExportWidgetLayoutsRequest.Filter filter = 2;
+  string format = 3;
+  google.protobuf.FieldMask fields = 4;
+  string destination_uri = 5;
+}
+
+// The response of `ExportWidgetLayouts`.
+message ExportWidgetLayoutsResponse {
+  WidgetLayout widget_layout = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `SummarizeWidgetLayouts`.
+message SummarizeWidgetLayoutsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string format = 1;
+    acme.common.v1.TimeWindow period = 2;
+    repeated string recipient_emails = 3;
+    string cron = 4;
+    map<string, string> filters = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string widget_layout_id = 2;
+  SummarizeWidgetLayoutsRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SummarizeWidgetLayouts`.
+message SummarizeWidgetLayoutsResponse {
+  string report_id = 1;
+  string download_uri = 2;
+  map<string, string> summary = 3;
+  acme.common.v1.TimeWindow period = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `SuggestWidgetLayouts`.
+message SuggestWidgetLayoutsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated WidgetLayoutStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  SuggestWidgetLayoutsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `SuggestWidgetLayouts`.
+message SuggestWidgetLayoutsResponse {
+  repeated WidgetLayout widget_layouts = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PeekWidgetLayout`.
+message PeekWidgetLayoutRequest {
+  acme.common.v1.RequestContext context = 1;
+  string widget_layout_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `PeekWidgetLayout`.
+message PeekWidgetLayoutResponse {
+  WidgetLayout widget_layout = 1;
+  acme.common.v1.OperationResult result = 2;
+}

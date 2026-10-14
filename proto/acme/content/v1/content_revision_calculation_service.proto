@@ -1,0 +1,292 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.content.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/content/v1/content.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Content.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/content/v1;contentv1";
+option java_multiple_files = true;
+option java_outer_classname = "ContentRevisionCalculationServiceProto";
+option java_package = "com.acme.content.v1";
+
+// Computes the figures of a content revision, such as totals, taxes, and estimates.
+service ContentRevisionCalculationService {
+  // Calculates a content revision.
+  rpc CalculateContentRevision(CalculateContentRevisionRequest) returns (CalculateContentRevisionResponse);
+
+  // Estimates a content revision.
+  rpc EstimateContentRevision(EstimateContentRevisionRequest) returns (EstimateContentRevisionResponse);
+
+  // Compares a content revision.
+  rpc CompareContentRevisionOptions(CompareContentRevisionOptionsRequest) returns (CompareContentRevisionOptionsResponse);
+
+  // Recalculates a content revision.
+  rpc RecalculateContentRevisions(RecalculateContentRevisionsRequest) returns (RecalculateContentRevisionsResponse);
+
+  // Simulates a content revision.
+  rpc SimulateContentRevision(SimulateContentRevisionRequest) returns (SimulateContentRevisionResponse);
+
+  // Explains a content revision.
+  rpc ExplainContentRevisionCalculation(ExplainContentRevisionCalculationRequest) returns (ExplainContentRevisionCalculationResponse);
+
+  // Returns a content revision.
+  rpc GetContentRevisionRates(GetContentRevisionRatesRequest) returns (GetContentRevisionRatesResponse);
+}
+
+// The request of `CalculateContentRevision`.
+message CalculateContentRevisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  CalculateContentRevisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateContentRevision`.
+message CalculateContentRevisionResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateContentRevisionResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ContentRevision content_revision = 1;
+  CalculateContentRevisionResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateContentRevision`.
+message EstimateContentRevisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  EstimateContentRevisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateContentRevision`.
+message EstimateContentRevisionResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateContentRevisionResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ContentRevision content_revision = 1;
+  EstimateContentRevisionResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareContentRevisionOptions`.
+message CompareContentRevisionOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  CompareContentRevisionOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareContentRevisionOptions`.
+message CompareContentRevisionOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareContentRevisionOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ContentRevision content_revision = 1;
+  CompareContentRevisionOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculateContentRevisions`.
+message RecalculateContentRevisionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  RecalculateContentRevisionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculateContentRevisions`.
+message RecalculateContentRevisionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculateContentRevisionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ContentRevision content_revision = 1;
+  RecalculateContentRevisionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateContentRevision`.
+message SimulateContentRevisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  SimulateContentRevisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateContentRevision`.
+message SimulateContentRevisionResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateContentRevisionResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ContentRevision content_revision = 1;
+  SimulateContentRevisionResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainContentRevisionCalculation`.
+message ExplainContentRevisionCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  ExplainContentRevisionCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainContentRevisionCalculation`.
+message ExplainContentRevisionCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentRevision content_revision = 1;
+  ExplainContentRevisionCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetContentRevisionRates`.
+message GetContentRevisionRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetContentRevisionRates`.
+message GetContentRevisionRatesResponse {
+  ContentRevision content_revision = 1;
+  acme.common.v1.OperationResult result = 2;
+}

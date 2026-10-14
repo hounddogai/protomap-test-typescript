@@ -1,0 +1,220 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.personalization.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/personalization/v1/personalization.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Personalization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/personalization/v1;personalizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "AffinityWorkflowServiceProto";
+option java_package = "com.acme.personalization.v1";
+
+// Runs the long-lived workflow that takes an affinity from start to finish.
+service AffinityWorkflowService {
+  // Starts an affinity.
+  rpc StartAffinityWorkflow(StartAffinityWorkflowRequest) returns (StartAffinityWorkflowResponse);
+
+  // Advances an affinity.
+  rpc AdvanceAffinityWorkflow(AdvanceAffinityWorkflowRequest) returns (AdvanceAffinityWorkflowResponse);
+
+  // Resumes an affinity.
+  rpc ResumeAffinityWorkflow(ResumeAffinityWorkflowRequest) returns (ResumeAffinityWorkflowResponse);
+
+  // Returns an affinity.
+  rpc InspectAffinityWorkflow(InspectAffinityWorkflowRequest) returns (InspectAffinityWorkflowResponse);
+
+  // Lists affinities a page at a time.
+  rpc ListAffinityWorkflows(ListAffinityWorkflowsRequest) returns (ListAffinityWorkflowsResponse);
+
+  // Signals an affinity.
+  rpc SignalAffinityWorkflow(SignalAffinityWorkflowRequest) returns (SignalAffinityWorkflowResponse);
+}
+
+// The request of `StartAffinityWorkflow`.
+message StartAffinityWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  StartAffinityWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartAffinityWorkflow`.
+message StartAffinityWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  StartAffinityWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceAffinityWorkflow`.
+message AdvanceAffinityWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  AdvanceAffinityWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceAffinityWorkflow`.
+message AdvanceAffinityWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  AdvanceAffinityWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumeAffinityWorkflow`.
+message ResumeAffinityWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  ResumeAffinityWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumeAffinityWorkflow`.
+message ResumeAffinityWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  ResumeAffinityWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectAffinityWorkflow`.
+message InspectAffinityWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectAffinityWorkflow`.
+message InspectAffinityWorkflowResponse {
+  Affinity affinity = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListAffinityWorkflows`.
+message ListAffinityWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated AffinityStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListAffinityWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListAffinityWorkflows`.
+message ListAffinityWorkflowsResponse {
+  repeated Affinity affinities = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalAffinityWorkflow`.
+message SignalAffinityWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string affinity_id = 2;
+  Affinity affinity = 3;
+  SignalAffinityWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalAffinityWorkflow`.
+message SignalAffinityWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Affinity affinity = 1;
+  SignalAffinityWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

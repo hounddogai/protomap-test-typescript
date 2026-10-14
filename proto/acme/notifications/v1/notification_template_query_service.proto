@@ -1,0 +1,245 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.notifications.v1;
+
+import "acme/common/v1/audit.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/notifications/v1/notifications.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Notifications.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/notifications/v1;notificationsv1";
+option java_multiple_files = true;
+option java_outer_classname = "NotificationTemplateQueryServiceProto";
+option java_package = "com.acme.notifications.v1";
+
+// Answers read-only questions about notification templates, for screens and reports.
+service NotificationTemplateQueryService {
+  // Returns a notification template.
+  rpc LookupNotificationTemplate(LookupNotificationTemplateRequest) returns (LookupNotificationTemplateResponse);
+
+  // Lists notification templates a page at a time.
+  rpc BrowseNotificationTemplates(BrowseNotificationTemplatesRequest) returns (BrowseNotificationTemplatesResponse);
+
+  // Lists notification templates a page at a time.
+  rpc FindNotificationTemplates(FindNotificationTemplatesRequest) returns (FindNotificationTemplatesResponse);
+
+  // Counts notification templates by status.
+  rpc CountNotificationTemplates(CountNotificationTemplatesRequest) returns (CountNotificationTemplatesResponse);
+
+  // Returns several notification templates at once.
+  rpc ResolveNotificationTemplates(ResolveNotificationTemplatesRequest) returns (ResolveNotificationTemplatesResponse);
+
+  // Streams every matching notification template.
+  rpc ExportNotificationTemplates(ExportNotificationTemplatesRequest) returns (stream ExportNotificationTemplatesResponse);
+
+  // Summarizes a notification template.
+  rpc SummarizeNotificationTemplates(SummarizeNotificationTemplatesRequest) returns (SummarizeNotificationTemplatesResponse);
+
+  // Lists notification templates a page at a time.
+  rpc SuggestNotificationTemplates(SuggestNotificationTemplatesRequest) returns (SuggestNotificationTemplatesResponse);
+
+  // Returns a notification template.
+  rpc PeekNotificationTemplate(PeekNotificationTemplateRequest) returns (PeekNotificationTemplateResponse);
+}
+
+// The request of `LookupNotificationTemplate`.
+message LookupNotificationTemplateRequest {
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `LookupNotificationTemplate`.
+message LookupNotificationTemplateResponse {
+  NotificationTemplate notification_template = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `BrowseNotificationTemplates`.
+message BrowseNotificationTemplatesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated NotificationTemplateStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  BrowseNotificationTemplatesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `BrowseNotificationTemplates`.
+message BrowseNotificationTemplatesResponse {
+  repeated NotificationTemplate notification_templates = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `FindNotificationTemplates`.
+message FindNotificationTemplatesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated NotificationTemplateStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  FindNotificationTemplatesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `FindNotificationTemplates`.
+message FindNotificationTemplatesResponse {
+  repeated NotificationTemplate notification_templates = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CountNotificationTemplates`.
+message CountNotificationTemplatesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated NotificationTemplateStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  CountNotificationTemplatesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `CountNotificationTemplates`.
+message CountNotificationTemplatesResponse {
+  int64 count = 1;
+  map<string, int64> by_status = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResolveNotificationTemplates`.
+message ResolveNotificationTemplatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  repeated string notification_template_ids = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `ResolveNotificationTemplates`.
+message ResolveNotificationTemplatesResponse {
+  repeated NotificationTemplate notification_templates = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExportNotificationTemplates`.
+message ExportNotificationTemplatesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated NotificationTemplateStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  ExportNotificationTemplatesRequest.Filter filter = 2;
+  string format = 3;
+  google.protobuf.FieldMask fields = 4;
+  string destination_uri = 5;
+}
+
+// The response of `ExportNotificationTemplates`.
+message ExportNotificationTemplatesResponse {
+  NotificationTemplate notification_template = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `SummarizeNotificationTemplates`.
+message SummarizeNotificationTemplatesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string format = 1;
+    acme.common.v1.TimeWindow period = 2;
+    repeated string recipient_emails = 3;
+    string cron = 4;
+    map<string, string> filters = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  SummarizeNotificationTemplatesRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SummarizeNotificationTemplates`.
+message SummarizeNotificationTemplatesResponse {
+  string report_id = 1;
+  string download_uri = 2;
+  map<string, string> summary = 3;
+  acme.common.v1.TimeWindow period = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `SuggestNotificationTemplates`.
+message SuggestNotificationTemplatesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated NotificationTemplateStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  SuggestNotificationTemplatesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `SuggestNotificationTemplates`.
+message SuggestNotificationTemplatesResponse {
+  repeated NotificationTemplate notification_templates = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PeekNotificationTemplate`.
+message PeekNotificationTemplateRequest {
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `PeekNotificationTemplate`.
+message PeekNotificationTemplateResponse {
+  NotificationTemplate notification_template = 1;
+  acme.common.v1.OperationResult result = 2;
+}

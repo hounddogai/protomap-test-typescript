@@ -1,0 +1,219 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.experiments.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/experiments/v1/experiments.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Experiments.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/experiments/v1;experimentsv1";
+option java_multiple_files = true;
+option java_outer_classname = "VariantApprovalServiceProto";
+option java_package = "com.acme.experiments.v1";
+
+// Routes variants through approval, with escalation and delegation.
+service VariantApprovalService {
+  // Submits a variant.
+  rpc SubmitVariant(SubmitVariantRequest) returns (SubmitVariantResponse);
+
+  // Approves a variant.
+  rpc ApproveVariant(ApproveVariantRequest) returns (ApproveVariantResponse);
+
+  // Lists variants a page at a time.
+  rpc ListPendingVariants(ListPendingVariantsRequest) returns (ListPendingVariantsResponse);
+
+  // Delegates a variant.
+  rpc DelegateVariantApproval(DelegateVariantApprovalRequest) returns (DelegateVariantApprovalResponse);
+
+  // Returns a variant.
+  rpc GetVariantApprovalStatus(GetVariantApprovalStatusRequest) returns (GetVariantApprovalStatusResponse);
+
+  // Comments a variant.
+  rpc CommentVariantApproval(CommentVariantApprovalRequest) returns (CommentVariantApprovalResponse);
+}
+
+// The request of `SubmitVariant`.
+message SubmitVariantRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string variant_id = 2;
+  Variant variant = 3;
+  SubmitVariantRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitVariant`.
+message SubmitVariantResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Variant variant = 1;
+  SubmitVariantResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveVariant`.
+message ApproveVariantRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string variant_id = 2;
+  Variant variant = 3;
+  ApproveVariantRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveVariant`.
+message ApproveVariantResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Variant variant = 1;
+  ApproveVariantResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingVariants`.
+message ListPendingVariantsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated VariantStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingVariantsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingVariants`.
+message ListPendingVariantsResponse {
+  repeated Variant variants = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateVariantApproval`.
+message DelegateVariantApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string variant_id = 2;
+  Variant variant = 3;
+  DelegateVariantApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateVariantApproval`.
+message DelegateVariantApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Variant variant = 1;
+  DelegateVariantApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetVariantApprovalStatus`.
+message GetVariantApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string variant_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetVariantApprovalStatus`.
+message GetVariantApprovalStatusResponse {
+  Variant variant = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentVariantApproval`.
+message CommentVariantApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string variant_id = 2;
+  Variant variant = 3;
+  CommentVariantApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentVariantApproval`.
+message CommentVariantApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Variant variant = 1;
+  CommentVariantApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

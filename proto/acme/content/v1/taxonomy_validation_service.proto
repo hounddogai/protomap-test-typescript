@@ -1,0 +1,268 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.content.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/content/v1/content.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Content.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/content/v1;contentv1";
+option java_multiple_files = true;
+option java_outer_classname = "TaxonomyValidationServiceProto";
+option java_package = "com.acme.content.v1";
+
+// Checks taxonomies against the rules before anything acts on them.
+service TaxonomyValidationService {
+  // Validates a taxonomy.
+  rpc ValidateTaxonomy(ValidateTaxonomyRequest) returns (ValidateTaxonomyResponse);
+
+  // Previews a taxonomy.
+  rpc PreviewTaxonomy(PreviewTaxonomyRequest) returns (PreviewTaxonomyResponse);
+
+  // Checks a taxonomy.
+  rpc CheckTaxonomyEligibility(CheckTaxonomyEligibilityRequest) returns (CheckTaxonomyEligibilityResponse);
+
+  // Explains a taxonomy.
+  rpc ExplainTaxonomyDecision(ExplainTaxonomyDecisionRequest) returns (ExplainTaxonomyDecisionResponse);
+
+  // Scores a taxonomy.
+  rpc ScoreTaxonomy(ScoreTaxonomyRequest) returns (ScoreTaxonomyResponse);
+
+  // Lints a taxonomy.
+  rpc LintTaxonomies(LintTaxonomiesRequest) returns (LintTaxonomiesResponse);
+
+  // Returns a taxonomy.
+  rpc GetTaxonomyRules(GetTaxonomyRulesRequest) returns (GetTaxonomyRulesResponse);
+}
+
+// The request of `ValidateTaxonomy`.
+message ValidateTaxonomyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  Taxonomy taxonomy = 3;
+  ValidateTaxonomyRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateTaxonomy`.
+message ValidateTaxonomyResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  ValidateTaxonomyResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewTaxonomy`.
+message PreviewTaxonomyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  Taxonomy taxonomy = 3;
+  PreviewTaxonomyRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewTaxonomy`.
+message PreviewTaxonomyResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  PreviewTaxonomyResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckTaxonomyEligibility`.
+message CheckTaxonomyEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  Taxonomy taxonomy = 3;
+  CheckTaxonomyEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckTaxonomyEligibility`.
+message CheckTaxonomyEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  CheckTaxonomyEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainTaxonomyDecision`.
+message ExplainTaxonomyDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  Taxonomy taxonomy = 3;
+  ExplainTaxonomyDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainTaxonomyDecision`.
+message ExplainTaxonomyDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  ExplainTaxonomyDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreTaxonomy`.
+message ScoreTaxonomyRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  Taxonomy taxonomy = 3;
+  ScoreTaxonomyRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreTaxonomy`.
+message ScoreTaxonomyResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreTaxonomyResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Taxonomy taxonomy = 1;
+  ScoreTaxonomyResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintTaxonomies`.
+message LintTaxonomiesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  Taxonomy taxonomy = 3;
+  LintTaxonomiesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintTaxonomies`.
+message LintTaxonomiesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Taxonomy taxonomy = 1;
+  LintTaxonomiesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetTaxonomyRules`.
+message GetTaxonomyRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string taxonomy_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetTaxonomyRules`.
+message GetTaxonomyRulesResponse {
+  Taxonomy taxonomy = 1;
+  acme.common.v1.OperationResult result = 2;
+}

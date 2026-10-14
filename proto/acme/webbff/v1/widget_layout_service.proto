@@ -1,0 +1,177 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.webbff.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/webbff/v1/webbff.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Webbff.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/webbff/v1;webbffv1";
+option java_multiple_files = true;
+option java_outer_classname = "WidgetLayoutServiceProto";
+option java_package = "com.acme.webbff.v1";
+
+// Manages widget layouts: creates, reads, changes, and lists them.
+service WidgetLayoutService {
+  // Creates a widget layout.
+  rpc CreateWidgetLayout(CreateWidgetLayoutRequest) returns (CreateWidgetLayoutResponse);
+
+  // Returns a widget layout.
+  rpc GetWidgetLayout(GetWidgetLayoutRequest) returns (GetWidgetLayoutResponse);
+
+  // Changes a widget layout.
+  rpc UpdateWidgetLayout(UpdateWidgetLayoutRequest) returns (UpdateWidgetLayoutResponse);
+
+  // Lists widget layouts a page at a time.
+  rpc ListWidgetLayouts(ListWidgetLayoutsRequest) returns (ListWidgetLayoutsResponse);
+
+  // Lists widget layouts a page at a time.
+  rpc SearchWidgetLayouts(SearchWidgetLayoutsRequest) returns (SearchWidgetLayoutsResponse);
+
+  // Streams the changes of widget layouts as they happen.
+  rpc WatchWidgetLayouts(WatchWidgetLayoutsRequest) returns (stream WatchWidgetLayoutsResponse);
+
+  // Creates a widget layout.
+  rpc CloneWidgetLayout(CloneWidgetLayoutRequest) returns (CloneWidgetLayoutResponse);
+}
+
+// The request of `CreateWidgetLayout`.
+message CreateWidgetLayoutRequest {
+  acme.common.v1.RequestContext context = 1;
+  WidgetLayout widget_layout = 2;
+  string request_id = 3;
+  bool validate_only = 4;
+}
+
+// The response of `CreateWidgetLayout`.
+message CreateWidgetLayoutResponse {
+  WidgetLayout widget_layout = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `GetWidgetLayout`.
+message GetWidgetLayoutRequest {
+  acme.common.v1.RequestContext context = 1;
+  string widget_layout_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetWidgetLayout`.
+message GetWidgetLayoutResponse {
+  WidgetLayout widget_layout = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `UpdateWidgetLayout`.
+message UpdateWidgetLayoutRequest {
+  acme.common.v1.RequestContext context = 1;
+  WidgetLayout widget_layout = 2;
+  google.protobuf.FieldMask update_mask = 3;
+  bool allow_missing = 4;
+}
+
+// The response of `UpdateWidgetLayout`.
+message UpdateWidgetLayoutResponse {
+  WidgetLayout widget_layout = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListWidgetLayouts`.
+message ListWidgetLayoutsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated WidgetLayoutStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListWidgetLayoutsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListWidgetLayouts`.
+message ListWidgetLayoutsResponse {
+  repeated WidgetLayout widget_layouts = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SearchWidgetLayouts`.
+message SearchWidgetLayoutsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated WidgetLayoutStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  SearchWidgetLayoutsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `SearchWidgetLayouts`.
+message SearchWidgetLayoutsResponse {
+  repeated WidgetLayout widget_layouts = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `WatchWidgetLayouts`.
+message WatchWidgetLayoutsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated WidgetLayoutStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  WatchWidgetLayoutsRequest.Filter filter = 2;
+  google.protobuf.Timestamp since = 3;
+  int32 max_events = 4;
+  acme.common.v1.ContactInfo subscriber = 5;
+}
+
+// The response of `WatchWidgetLayouts`.
+message WatchWidgetLayoutsResponse {
+  WidgetLayout widget_layout = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `CloneWidgetLayout`.
+message CloneWidgetLayoutRequest {
+  acme.common.v1.RequestContext context = 1;
+  WidgetLayout widget_layout = 2;
+  string request_id = 3;
+  bool validate_only = 4;
+}
+
+// The response of `CloneWidgetLayout`.
+message CloneWidgetLayoutResponse {
+  WidgetLayout widget_layout = 1;
+  acme.common.v1.OperationResult result = 2;
+}

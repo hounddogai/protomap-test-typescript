@@ -1,0 +1,251 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.messaging.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/messaging/v1/messaging.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Messaging.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/messaging/v1;messagingv1";
+option java_multiple_files = true;
+option java_outer_classname = "ChatMessageValidationServiceProto";
+option java_package = "com.acme.messaging.v1";
+
+// Checks chat messages against the rules before anything acts on them.
+service ChatMessageValidationService {
+  // Validates a chat message.
+  rpc ValidateChatMessage(ValidateChatMessageRequest) returns (ValidateChatMessageResponse);
+
+  // Previews a chat message.
+  rpc PreviewChatMessage(PreviewChatMessageRequest) returns (PreviewChatMessageResponse);
+
+  // Checks a chat message.
+  rpc CheckChatMessageEligibility(CheckChatMessageEligibilityRequest) returns (CheckChatMessageEligibilityResponse);
+
+  // Explains a chat message.
+  rpc ExplainChatMessageDecision(ExplainChatMessageDecisionRequest) returns (ExplainChatMessageDecisionResponse);
+
+  // Scores a chat message.
+  rpc ScoreChatMessage(ScoreChatMessageRequest) returns (ScoreChatMessageResponse);
+
+  // Lints a chat message.
+  rpc LintChatMessages(LintChatMessagesRequest) returns (LintChatMessagesResponse);
+}
+
+// The request of `ValidateChatMessage`.
+message ValidateChatMessageRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_message_id = 2;
+  ChatMessage chat_message = 3;
+  ValidateChatMessageRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateChatMessage`.
+message ValidateChatMessageResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatMessage chat_message = 1;
+  ValidateChatMessageResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewChatMessage`.
+message PreviewChatMessageRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_message_id = 2;
+  ChatMessage chat_message = 3;
+  PreviewChatMessageRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewChatMessage`.
+message PreviewChatMessageResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatMessage chat_message = 1;
+  PreviewChatMessageResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckChatMessageEligibility`.
+message CheckChatMessageEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_message_id = 2;
+  ChatMessage chat_message = 3;
+  CheckChatMessageEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckChatMessageEligibility`.
+message CheckChatMessageEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatMessage chat_message = 1;
+  CheckChatMessageEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainChatMessageDecision`.
+message ExplainChatMessageDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_message_id = 2;
+  ChatMessage chat_message = 3;
+  ExplainChatMessageDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainChatMessageDecision`.
+message ExplainChatMessageDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatMessage chat_message = 1;
+  ExplainChatMessageDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreChatMessage`.
+message ScoreChatMessageRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_message_id = 2;
+  ChatMessage chat_message = 3;
+  ScoreChatMessageRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreChatMessage`.
+message ScoreChatMessageResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreChatMessageResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  ChatMessage chat_message = 1;
+  ScoreChatMessageResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintChatMessages`.
+message LintChatMessagesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_message_id = 2;
+  ChatMessage chat_message = 3;
+  LintChatMessagesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintChatMessages`.
+message LintChatMessagesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatMessage chat_message = 1;
+  LintChatMessagesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

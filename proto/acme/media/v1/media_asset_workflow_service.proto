@@ -1,0 +1,334 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.media.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/media/v1/media.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Media.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/media/v1;mediav1";
+option java_multiple_files = true;
+option java_outer_classname = "MediaAssetWorkflowServiceProto";
+option java_package = "com.acme.media.v1";
+
+// Runs the long-lived workflow that takes a media asset from start to finish.
+service MediaAssetWorkflowService {
+  // Starts a media asset.
+  rpc StartMediaAssetWorkflow(StartMediaAssetWorkflowRequest) returns (StartMediaAssetWorkflowResponse);
+
+  // Advances a media asset.
+  rpc AdvanceMediaAssetWorkflow(AdvanceMediaAssetWorkflowRequest) returns (AdvanceMediaAssetWorkflowResponse);
+
+  // Cancels a media asset.
+  rpc CancelMediaAssetWorkflow(CancelMediaAssetWorkflowRequest) returns (CancelMediaAssetWorkflowResponse);
+
+  // Retrys a media asset.
+  rpc RetryMediaAssetWorkflow(RetryMediaAssetWorkflowRequest) returns (RetryMediaAssetWorkflowResponse);
+
+  // Pauses a media asset.
+  rpc PauseMediaAssetWorkflow(PauseMediaAssetWorkflowRequest) returns (PauseMediaAssetWorkflowResponse);
+
+  // Resumes a media asset.
+  rpc ResumeMediaAssetWorkflow(ResumeMediaAssetWorkflowRequest) returns (ResumeMediaAssetWorkflowResponse);
+
+  // Returns a media asset.
+  rpc InspectMediaAssetWorkflow(InspectMediaAssetWorkflowRequest) returns (InspectMediaAssetWorkflowResponse);
+
+  // Lists media assets a page at a time.
+  rpc ListMediaAssetWorkflows(ListMediaAssetWorkflowsRequest) returns (ListMediaAssetWorkflowsResponse);
+
+  // Signals a media asset.
+  rpc SignalMediaAssetWorkflow(SignalMediaAssetWorkflowRequest) returns (SignalMediaAssetWorkflowResponse);
+}
+
+// The request of `StartMediaAssetWorkflow`.
+message StartMediaAssetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  MediaAsset media_asset = 3;
+  StartMediaAssetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartMediaAssetWorkflow`.
+message StartMediaAssetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  MediaAsset media_asset = 1;
+  StartMediaAssetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceMediaAssetWorkflow`.
+message AdvanceMediaAssetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  MediaAsset media_asset = 3;
+  AdvanceMediaAssetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceMediaAssetWorkflow`.
+message AdvanceMediaAssetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  MediaAsset media_asset = 1;
+  AdvanceMediaAssetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelMediaAssetWorkflow`.
+message CancelMediaAssetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  MediaAsset media_asset = 3;
+  CancelMediaAssetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelMediaAssetWorkflow`.
+message CancelMediaAssetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  MediaAsset media_asset = 1;
+  CancelMediaAssetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryMediaAssetWorkflow`.
+message RetryMediaAssetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  MediaAsset media_asset = 3;
+  RetryMediaAssetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryMediaAssetWorkflow`.
+message RetryMediaAssetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  MediaAsset media_asset = 1;
+  RetryMediaAssetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseMediaAssetWorkflow`.
+message PauseMediaAssetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  MediaAsset media_asset = 3;
+  PauseMediaAssetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseMediaAssetWorkflow`.
+message PauseMediaAssetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  MediaAsset media_asset = 1;
+  PauseMediaAssetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumeMediaAssetWorkflow`.
+message ResumeMediaAssetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  MediaAsset media_asset = 3;
+  ResumeMediaAssetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumeMediaAssetWorkflow`.
+message ResumeMediaAssetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  MediaAsset media_asset = 1;
+  ResumeMediaAssetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectMediaAssetWorkflow`.
+message InspectMediaAssetWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectMediaAssetWorkflow`.
+message InspectMediaAssetWorkflowResponse {
+  MediaAsset media_asset = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListMediaAssetWorkflows`.
+message ListMediaAssetWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated MediaAssetStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListMediaAssetWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListMediaAssetWorkflows`.
+message ListMediaAssetWorkflowsResponse {
+  repeated MediaAsset media_assets = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalMediaAssetWorkflow`.
+message SignalMediaAssetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string media_asset_id = 2;
+  MediaAsset media_asset = 3;
+  SignalMediaAssetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalMediaAssetWorkflow`.
+message SignalMediaAssetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  MediaAsset media_asset = 1;
+  SignalMediaAssetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

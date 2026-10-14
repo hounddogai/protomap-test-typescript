@@ -1,0 +1,305 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.personalization.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/personalization/v1/personalization.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Personalization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/personalization/v1;personalizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "ProfileValidationServiceProto";
+option java_package = "com.acme.personalization.v1";
+
+// Checks profiles against the rules before anything acts on them.
+service ProfileValidationService {
+  // Validates a profile.
+  rpc ValidateProfile(ValidateProfileRequest) returns (ValidateProfileResponse);
+
+  // Previews a profile.
+  rpc PreviewProfile(PreviewProfileRequest) returns (PreviewProfileResponse);
+
+  // Checks a profile.
+  rpc CheckProfileEligibility(CheckProfileEligibilityRequest) returns (CheckProfileEligibilityResponse);
+
+  // Normalizes a profile.
+  rpc NormalizeProfile(NormalizeProfileRequest) returns (NormalizeProfileResponse);
+
+  // Explains a profile.
+  rpc ExplainProfileDecision(ExplainProfileDecisionRequest) returns (ExplainProfileDecisionResponse);
+
+  // Scores a profile.
+  rpc ScoreProfile(ScoreProfileRequest) returns (ScoreProfileResponse);
+
+  // Lints a profile.
+  rpc LintProfiles(LintProfilesRequest) returns (LintProfilesResponse);
+
+  // Returns a profile.
+  rpc GetProfileRules(GetProfileRulesRequest) returns (GetProfileRulesResponse);
+}
+
+// The request of `ValidateProfile`.
+message ValidateProfileRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  ValidateProfileRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateProfile`.
+message ValidateProfileResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  ValidateProfileResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewProfile`.
+message PreviewProfileRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  PreviewProfileRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewProfile`.
+message PreviewProfileResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  PreviewProfileResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckProfileEligibility`.
+message CheckProfileEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  CheckProfileEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckProfileEligibility`.
+message CheckProfileEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  CheckProfileEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeProfile`.
+message NormalizeProfileRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  NormalizeProfileRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeProfile`.
+message NormalizeProfileResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  NormalizeProfileResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainProfileDecision`.
+message ExplainProfileDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  ExplainProfileDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainProfileDecision`.
+message ExplainProfileDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  ExplainProfileDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreProfile`.
+message ScoreProfileRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  ScoreProfileRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreProfile`.
+message ScoreProfileResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreProfileResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Profile profile = 1;
+  ScoreProfileResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintProfiles`.
+message LintProfilesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  Profile profile = 3;
+  LintProfilesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintProfiles`.
+message LintProfilesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Profile profile = 1;
+  LintProfilesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetProfileRules`.
+message GetProfileRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string profile_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetProfileRules`.
+message GetProfileRulesResponse {
+  Profile profile = 1;
+  acme.common.v1.OperationResult result = 2;
+}

@@ -1,0 +1,316 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.campaigns.v1;
+
+import "acme/campaigns/v1/campaigns.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Campaigns.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/campaigns/v1;campaignsv1";
+option java_multiple_files = true;
+option java_outer_classname = "CampaignAssetApprovalServiceProto";
+option java_package = "com.acme.campaigns.v1";
+
+// Routes campaign assets through approval, with escalation and delegation.
+service CampaignAssetApprovalService {
+  // Submits a campaign asset.
+  rpc SubmitCampaignAsset(SubmitCampaignAssetRequest) returns (SubmitCampaignAssetResponse);
+
+  // Approves a campaign asset.
+  rpc ApproveCampaignAsset(ApproveCampaignAssetRequest) returns (ApproveCampaignAssetResponse);
+
+  // Rejects a campaign asset.
+  rpc RejectCampaignAsset(RejectCampaignAssetRequest) returns (RejectCampaignAssetResponse);
+
+  // Escalates a campaign asset.
+  rpc EscalateCampaignAsset(EscalateCampaignAssetRequest) returns (EscalateCampaignAssetResponse);
+
+  // Lists campaign assets a page at a time.
+  rpc ListPendingCampaignAssets(ListPendingCampaignAssetsRequest) returns (ListPendingCampaignAssetsResponse);
+
+  // Delegates a campaign asset.
+  rpc DelegateCampaignAssetApproval(DelegateCampaignAssetApprovalRequest) returns (DelegateCampaignAssetApprovalResponse);
+
+  // Recalls a campaign asset.
+  rpc RecallCampaignAsset(RecallCampaignAssetRequest) returns (RecallCampaignAssetResponse);
+
+  // Comments a campaign asset.
+  rpc CommentCampaignAssetApproval(CommentCampaignAssetApprovalRequest) returns (CommentCampaignAssetApprovalResponse);
+}
+
+// The request of `SubmitCampaignAsset`.
+message SubmitCampaignAssetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_asset_id = 2;
+  CampaignAsset campaign_asset = 3;
+  SubmitCampaignAssetRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitCampaignAsset`.
+message SubmitCampaignAssetResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignAsset campaign_asset = 1;
+  SubmitCampaignAssetResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveCampaignAsset`.
+message ApproveCampaignAssetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_asset_id = 2;
+  CampaignAsset campaign_asset = 3;
+  ApproveCampaignAssetRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveCampaignAsset`.
+message ApproveCampaignAssetResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignAsset campaign_asset = 1;
+  ApproveCampaignAssetResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectCampaignAsset`.
+message RejectCampaignAssetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_asset_id = 2;
+  CampaignAsset campaign_asset = 3;
+  RejectCampaignAssetRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectCampaignAsset`.
+message RejectCampaignAssetResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignAsset campaign_asset = 1;
+  RejectCampaignAssetResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateCampaignAsset`.
+message EscalateCampaignAssetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_asset_id = 2;
+  CampaignAsset campaign_asset = 3;
+  EscalateCampaignAssetRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateCampaignAsset`.
+message EscalateCampaignAssetResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignAsset campaign_asset = 1;
+  EscalateCampaignAssetResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingCampaignAssets`.
+message ListPendingCampaignAssetsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated CampaignAssetStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingCampaignAssetsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingCampaignAssets`.
+message ListPendingCampaignAssetsResponse {
+  repeated CampaignAsset campaign_assets = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateCampaignAssetApproval`.
+message DelegateCampaignAssetApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_asset_id = 2;
+  CampaignAsset campaign_asset = 3;
+  DelegateCampaignAssetApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateCampaignAssetApproval`.
+message DelegateCampaignAssetApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignAsset campaign_asset = 1;
+  DelegateCampaignAssetApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallCampaignAsset`.
+message RecallCampaignAssetRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_asset_id = 2;
+  CampaignAsset campaign_asset = 3;
+  RecallCampaignAssetRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallCampaignAsset`.
+message RecallCampaignAssetResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignAsset campaign_asset = 1;
+  RecallCampaignAssetResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CommentCampaignAssetApproval`.
+message CommentCampaignAssetApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_asset_id = 2;
+  CampaignAsset campaign_asset = 3;
+  CommentCampaignAssetApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentCampaignAssetApproval`.
+message CommentCampaignAssetApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignAsset campaign_asset = 1;
+  CommentCampaignAssetApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

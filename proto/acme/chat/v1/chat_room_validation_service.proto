@@ -1,0 +1,260 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.chat.v1;
+
+import "acme/chat/v1/chat.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Chat.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/chat/v1;chatv1";
+option java_multiple_files = true;
+option java_outer_classname = "ChatRoomValidationServiceProto";
+option java_package = "com.acme.chat.v1";
+
+// Checks chat rooms against the rules before anything acts on them.
+service ChatRoomValidationService {
+  // Validates a chat room.
+  rpc ValidateChatRoom(ValidateChatRoomRequest) returns (ValidateChatRoomResponse);
+
+  // Previews a chat room.
+  rpc PreviewChatRoom(PreviewChatRoomRequest) returns (PreviewChatRoomResponse);
+
+  // Checks a chat room.
+  rpc CheckChatRoomEligibility(CheckChatRoomEligibilityRequest) returns (CheckChatRoomEligibilityResponse);
+
+  // Normalizes a chat room.
+  rpc NormalizeChatRoom(NormalizeChatRoomRequest) returns (NormalizeChatRoomResponse);
+
+  // Explains a chat room.
+  rpc ExplainChatRoomDecision(ExplainChatRoomDecisionRequest) returns (ExplainChatRoomDecisionResponse);
+
+  // Lints a chat room.
+  rpc LintChatRooms(LintChatRoomsRequest) returns (LintChatRoomsResponse);
+
+  // Returns a chat room.
+  rpc GetChatRoomRules(GetChatRoomRulesRequest) returns (GetChatRoomRulesResponse);
+}
+
+// The request of `ValidateChatRoom`.
+message ValidateChatRoomRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  ValidateChatRoomRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateChatRoom`.
+message ValidateChatRoomResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatRoom chat_room = 1;
+  ValidateChatRoomResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewChatRoom`.
+message PreviewChatRoomRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  PreviewChatRoomRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewChatRoom`.
+message PreviewChatRoomResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatRoom chat_room = 1;
+  PreviewChatRoomResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckChatRoomEligibility`.
+message CheckChatRoomEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  CheckChatRoomEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckChatRoomEligibility`.
+message CheckChatRoomEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatRoom chat_room = 1;
+  CheckChatRoomEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeChatRoom`.
+message NormalizeChatRoomRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  NormalizeChatRoomRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeChatRoom`.
+message NormalizeChatRoomResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatRoom chat_room = 1;
+  NormalizeChatRoomResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainChatRoomDecision`.
+message ExplainChatRoomDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  ExplainChatRoomDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainChatRoomDecision`.
+message ExplainChatRoomDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatRoom chat_room = 1;
+  ExplainChatRoomDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintChatRooms`.
+message LintChatRoomsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  ChatRoom chat_room = 3;
+  LintChatRoomsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintChatRooms`.
+message LintChatRoomsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatRoom chat_room = 1;
+  LintChatRoomsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetChatRoomRules`.
+message GetChatRoomRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string chat_room_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetChatRoomRules`.
+message GetChatRoomRulesResponse {
+  ChatRoom chat_room = 1;
+  acme.common.v1.OperationResult result = 2;
+}

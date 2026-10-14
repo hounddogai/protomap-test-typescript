@@ -1,0 +1,215 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.notifications.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/notifications/v1/notifications.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Notifications.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/notifications/v1;notificationsv1";
+option java_multiple_files = true;
+option java_outer_classname = "NotificationTemplateHistoryServiceProto";
+option java_package = "com.acme.notifications.v1";
+
+// Keeps every version of a notification template and restores earlier ones.
+service NotificationTemplateHistoryService {
+  // Records a notification template.
+  rpc RecordNotificationTemplateVersion(RecordNotificationTemplateVersionRequest) returns (RecordNotificationTemplateVersionResponse);
+
+  // Lists notification templates a page at a time.
+  rpc ListNotificationTemplateVersions(ListNotificationTemplateVersionsRequest) returns (ListNotificationTemplateVersionsResponse);
+
+  // Compares a notification template.
+  rpc CompareNotificationTemplateVersions(CompareNotificationTemplateVersionsRequest) returns (CompareNotificationTemplateVersionsResponse);
+
+  // Reverts a notification template.
+  rpc RevertNotificationTemplate(RevertNotificationTemplateRequest) returns (RevertNotificationTemplateResponse);
+
+  // Annotates a notification template.
+  rpc AnnotateNotificationTemplateVersion(AnnotateNotificationTemplateVersionRequest) returns (AnnotateNotificationTemplateVersionResponse);
+
+  // Deletes a notification template.
+  rpc PruneNotificationTemplateVersions(PruneNotificationTemplateVersionsRequest) returns (PruneNotificationTemplateVersionsResponse);
+}
+
+// The request of `RecordNotificationTemplateVersion`.
+message RecordNotificationTemplateVersionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    int64 version = 1;
+    int64 other_version = 2;
+    bytes snapshot = 3;
+    string author_email = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  NotificationTemplate notification_template = 3;
+  RecordNotificationTemplateVersionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecordNotificationTemplateVersion`.
+message RecordNotificationTemplateVersionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  NotificationTemplate notification_template = 1;
+  RecordNotificationTemplateVersionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListNotificationTemplateVersions`.
+message ListNotificationTemplateVersionsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated NotificationTemplateStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListNotificationTemplateVersionsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListNotificationTemplateVersions`.
+message ListNotificationTemplateVersionsResponse {
+  repeated NotificationTemplate notification_templates = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareNotificationTemplateVersions`.
+message CompareNotificationTemplateVersionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    int64 version = 1;
+    int64 other_version = 2;
+    bytes snapshot = 3;
+    string author_email = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  NotificationTemplate notification_template = 3;
+  CompareNotificationTemplateVersionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareNotificationTemplateVersions`.
+message CompareNotificationTemplateVersionsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  NotificationTemplate notification_template = 1;
+  CompareNotificationTemplateVersionsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RevertNotificationTemplate`.
+message RevertNotificationTemplateRequest {
+  // What the operation needs besides the record.
+  message Details {
+    int64 version = 1;
+    int64 other_version = 2;
+    bytes snapshot = 3;
+    string author_email = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  NotificationTemplate notification_template = 3;
+  RevertNotificationTemplateRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RevertNotificationTemplate`.
+message RevertNotificationTemplateResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  NotificationTemplate notification_template = 1;
+  RevertNotificationTemplateResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AnnotateNotificationTemplateVersion`.
+message AnnotateNotificationTemplateVersionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    int64 version = 1;
+    int64 other_version = 2;
+    bytes snapshot = 3;
+    string author_email = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  NotificationTemplate notification_template = 3;
+  AnnotateNotificationTemplateVersionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AnnotateNotificationTemplateVersion`.
+message AnnotateNotificationTemplateVersionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  NotificationTemplate notification_template = 1;
+  AnnotateNotificationTemplateVersionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PruneNotificationTemplateVersions`.
+message PruneNotificationTemplateVersionsRequest {
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  string reason = 3;
+  string etag = 4;
+  bool force = 5;
+}
+
+// The response of `PruneNotificationTemplateVersions`.
+message PruneNotificationTemplateVersionsResponse {
+  acme.common.v1.OperationResult result = 1;
+  google.protobuf.Timestamp effective_at = 2;
+}

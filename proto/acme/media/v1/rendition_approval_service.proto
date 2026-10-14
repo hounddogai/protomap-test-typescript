@@ -1,0 +1,333 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.media.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/media/v1/media.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Media.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/media/v1;mediav1";
+option java_multiple_files = true;
+option java_outer_classname = "RenditionApprovalServiceProto";
+option java_package = "com.acme.media.v1";
+
+// Routes renditions through approval, with escalation and delegation.
+service RenditionApprovalService {
+  // Submits a rendition.
+  rpc SubmitRendition(SubmitRenditionRequest) returns (SubmitRenditionResponse);
+
+  // Approves a rendition.
+  rpc ApproveRendition(ApproveRenditionRequest) returns (ApproveRenditionResponse);
+
+  // Rejects a rendition.
+  rpc RejectRendition(RejectRenditionRequest) returns (RejectRenditionResponse);
+
+  // Escalates a rendition.
+  rpc EscalateRendition(EscalateRenditionRequest) returns (EscalateRenditionResponse);
+
+  // Lists renditions a page at a time.
+  rpc ListPendingRenditions(ListPendingRenditionsRequest) returns (ListPendingRenditionsResponse);
+
+  // Delegates a rendition.
+  rpc DelegateRenditionApproval(DelegateRenditionApprovalRequest) returns (DelegateRenditionApprovalResponse);
+
+  // Recalls a rendition.
+  rpc RecallRendition(RecallRenditionRequest) returns (RecallRenditionResponse);
+
+  // Returns a rendition.
+  rpc GetRenditionApprovalStatus(GetRenditionApprovalStatusRequest) returns (GetRenditionApprovalStatusResponse);
+
+  // Comments a rendition.
+  rpc CommentRenditionApproval(CommentRenditionApprovalRequest) returns (CommentRenditionApprovalResponse);
+}
+
+// The request of `SubmitRendition`.
+message SubmitRenditionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  Rendition rendition = 3;
+  SubmitRenditionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitRendition`.
+message SubmitRenditionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  SubmitRenditionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveRendition`.
+message ApproveRenditionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  Rendition rendition = 3;
+  ApproveRenditionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveRendition`.
+message ApproveRenditionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  ApproveRenditionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectRendition`.
+message RejectRenditionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  Rendition rendition = 3;
+  RejectRenditionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectRendition`.
+message RejectRenditionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  RejectRenditionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateRendition`.
+message EscalateRenditionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  Rendition rendition = 3;
+  EscalateRenditionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateRendition`.
+message EscalateRenditionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  EscalateRenditionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingRenditions`.
+message ListPendingRenditionsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated RenditionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingRenditionsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingRenditions`.
+message ListPendingRenditionsResponse {
+  repeated Rendition renditions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateRenditionApproval`.
+message DelegateRenditionApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  Rendition rendition = 3;
+  DelegateRenditionApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateRenditionApproval`.
+message DelegateRenditionApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  DelegateRenditionApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallRendition`.
+message RecallRenditionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  Rendition rendition = 3;
+  RecallRenditionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallRendition`.
+message RecallRenditionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  RecallRenditionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetRenditionApprovalStatus`.
+message GetRenditionApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetRenditionApprovalStatus`.
+message GetRenditionApprovalStatusResponse {
+  Rendition rendition = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentRenditionApproval`.
+message CommentRenditionApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  Rendition rendition = 3;
+  CommentRenditionApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentRenditionApproval`.
+message CommentRenditionApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  CommentRenditionApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

@@ -1,0 +1,294 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.messaging.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/messaging/v1/messaging.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Messaging.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/messaging/v1;messagingv1";
+option java_multiple_files = true;
+option java_outer_classname = "ChannelLifecycleServiceProto";
+option java_package = "com.acme.messaging.v1";
+
+// Moves a channel between the states of its lifecycle.
+service ChannelLifecycleService {
+  // Activates a channel.
+  rpc ActivateChannel(ActivateChannelRequest) returns (ActivateChannelResponse);
+
+  // Suspends a channel.
+  rpc SuspendChannel(SuspendChannelRequest) returns (SuspendChannelResponse);
+
+  // Reinstates a channel.
+  rpc ReinstateChannel(ReinstateChannelRequest) returns (ReinstateChannelResponse);
+
+  // Terminates a channel.
+  rpc TerminateChannel(TerminateChannelRequest) returns (TerminateChannelResponse);
+
+  // Renews a channel.
+  rpc RenewChannel(RenewChannelRequest) returns (RenewChannelResponse);
+
+  // Expires a channel.
+  rpc ExpireChannel(ExpireChannelRequest) returns (ExpireChannelResponse);
+
+  // Returns a channel.
+  rpc GetChannelLifecycle(GetChannelLifecycleRequest) returns (GetChannelLifecycleResponse);
+
+  // Schedules a channel.
+  rpc ScheduleChannelExpiry(ScheduleChannelExpiryRequest) returns (ScheduleChannelExpiryResponse);
+}
+
+// The request of `ActivateChannel`.
+message ActivateChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  ActivateChannelRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ActivateChannel`.
+message ActivateChannelResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  ActivateChannelResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SuspendChannel`.
+message SuspendChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  SuspendChannelRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SuspendChannel`.
+message SuspendChannelResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  SuspendChannelResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReinstateChannel`.
+message ReinstateChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  ReinstateChannelRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ReinstateChannel`.
+message ReinstateChannelResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  ReinstateChannelResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `TerminateChannel`.
+message TerminateChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  TerminateChannelRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `TerminateChannel`.
+message TerminateChannelResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  TerminateChannelResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RenewChannel`.
+message RenewChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  RenewChannelRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `RenewChannel`.
+message RenewChannelResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  RenewChannelResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExpireChannel`.
+message ExpireChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  ExpireChannelRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ExpireChannel`.
+message ExpireChannelResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  ExpireChannelResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetChannelLifecycle`.
+message GetChannelLifecycleRequest {
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetChannelLifecycle`.
+message GetChannelLifecycleResponse {
+  Channel channel = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ScheduleChannelExpiry`.
+message ScheduleChannelExpiryRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  ScheduleChannelExpiryRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScheduleChannelExpiry`.
+message ScheduleChannelExpiryResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  ScheduleChannelExpiryResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

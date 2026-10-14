@@ -1,0 +1,292 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.community.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/community/v1/community.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Community.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/community/v1;communityv1";
+option java_multiple_files = true;
+option java_outer_classname = "BadgeCalculationServiceProto";
+option java_package = "com.acme.community.v1";
+
+// Computes the figures of a badge, such as totals, taxes, and estimates.
+service BadgeCalculationService {
+  // Calculates a badge.
+  rpc CalculateBadge(CalculateBadgeRequest) returns (CalculateBadgeResponse);
+
+  // Estimates a badge.
+  rpc EstimateBadge(EstimateBadgeRequest) returns (EstimateBadgeResponse);
+
+  // Quotes a badge.
+  rpc QuoteBadge(QuoteBadgeRequest) returns (QuoteBadgeResponse);
+
+  // Recalculates a badge.
+  rpc RecalculateBadges(RecalculateBadgesRequest) returns (RecalculateBadgesResponse);
+
+  // Simulates a badge.
+  rpc SimulateBadge(SimulateBadgeRequest) returns (SimulateBadgeResponse);
+
+  // Explains a badge.
+  rpc ExplainBadgeCalculation(ExplainBadgeCalculationRequest) returns (ExplainBadgeCalculationResponse);
+
+  // Returns a badge.
+  rpc GetBadgeRates(GetBadgeRatesRequest) returns (GetBadgeRatesResponse);
+}
+
+// The request of `CalculateBadge`.
+message CalculateBadgeRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  CalculateBadgeRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateBadge`.
+message CalculateBadgeResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateBadgeResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Badge badge = 1;
+  CalculateBadgeResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateBadge`.
+message EstimateBadgeRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  EstimateBadgeRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateBadge`.
+message EstimateBadgeResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateBadgeResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Badge badge = 1;
+  EstimateBadgeResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteBadge`.
+message QuoteBadgeRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  QuoteBadgeRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteBadge`.
+message QuoteBadgeResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteBadgeResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Badge badge = 1;
+  QuoteBadgeResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculateBadges`.
+message RecalculateBadgesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  RecalculateBadgesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculateBadges`.
+message RecalculateBadgesResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculateBadgesResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Badge badge = 1;
+  RecalculateBadgesResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateBadge`.
+message SimulateBadgeRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  SimulateBadgeRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateBadge`.
+message SimulateBadgeResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateBadgeResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Badge badge = 1;
+  SimulateBadgeResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainBadgeCalculation`.
+message ExplainBadgeCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  Badge badge = 3;
+  ExplainBadgeCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainBadgeCalculation`.
+message ExplainBadgeCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Badge badge = 1;
+  ExplainBadgeCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetBadgeRates`.
+message GetBadgeRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string badge_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetBadgeRates`.
+message GetBadgeRatesResponse {
+  Badge badge = 1;
+  acme.common.v1.OperationResult result = 2;
+}

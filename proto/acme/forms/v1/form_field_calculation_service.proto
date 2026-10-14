@@ -1,0 +1,253 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.forms.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/forms/v1/forms.proto";
+import "google/protobuf/field_mask.proto";
+
+option csharp_namespace = "Acme.Forms.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/forms/v1;formsv1";
+option java_multiple_files = true;
+option java_outer_classname = "FormFieldCalculationServiceProto";
+option java_package = "com.acme.forms.v1";
+
+// Computes the figures of a form field, such as totals, taxes, and estimates.
+service FormFieldCalculationService {
+  // Calculates a form field.
+  rpc CalculateFormField(CalculateFormFieldRequest) returns (CalculateFormFieldResponse);
+
+  // Estimates a form field.
+  rpc EstimateFormField(EstimateFormFieldRequest) returns (EstimateFormFieldResponse);
+
+  // Quotes a form field.
+  rpc QuoteFormField(QuoteFormFieldRequest) returns (QuoteFormFieldResponse);
+
+  // Compares a form field.
+  rpc CompareFormFieldOptions(CompareFormFieldOptionsRequest) returns (CompareFormFieldOptionsResponse);
+
+  // Simulates a form field.
+  rpc SimulateFormField(SimulateFormFieldRequest) returns (SimulateFormFieldResponse);
+
+  // Returns a form field.
+  rpc GetFormFieldRates(GetFormFieldRatesRequest) returns (GetFormFieldRatesResponse);
+}
+
+// The request of `CalculateFormField`.
+message CalculateFormFieldRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  FormField form_field = 3;
+  CalculateFormFieldRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateFormField`.
+message CalculateFormFieldResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateFormFieldResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  FormField form_field = 1;
+  CalculateFormFieldResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateFormField`.
+message EstimateFormFieldRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  FormField form_field = 3;
+  EstimateFormFieldRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateFormField`.
+message EstimateFormFieldResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateFormFieldResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  FormField form_field = 1;
+  EstimateFormFieldResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteFormField`.
+message QuoteFormFieldRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  FormField form_field = 3;
+  QuoteFormFieldRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteFormField`.
+message QuoteFormFieldResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteFormFieldResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  FormField form_field = 1;
+  QuoteFormFieldResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareFormFieldOptions`.
+message CompareFormFieldOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  FormField form_field = 3;
+  CompareFormFieldOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareFormFieldOptions`.
+message CompareFormFieldOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareFormFieldOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  FormField form_field = 1;
+  CompareFormFieldOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateFormField`.
+message SimulateFormFieldRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  FormField form_field = 3;
+  SimulateFormFieldRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateFormField`.
+message SimulateFormFieldResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateFormFieldResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  FormField form_field = 1;
+  SimulateFormFieldResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetFormFieldRates`.
+message GetFormFieldRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetFormFieldRates`.
+message GetFormFieldRatesResponse {
+  FormField form_field = 1;
+  acme.common.v1.OperationResult result = 2;
+}

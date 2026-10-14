@@ -1,0 +1,294 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.localization.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/localization/v1/localization.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Localization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/localization/v1;localizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "TranslationJobLifecycleServiceProto";
+option java_package = "com.acme.localization.v1";
+
+// Moves a translation job between the states of its lifecycle.
+service TranslationJobLifecycleService {
+  // Activates a translation job.
+  rpc ActivateTranslationJob(ActivateTranslationJobRequest) returns (ActivateTranslationJobResponse);
+
+  // Suspends a translation job.
+  rpc SuspendTranslationJob(SuspendTranslationJobRequest) returns (SuspendTranslationJobResponse);
+
+  // Reinstates a translation job.
+  rpc ReinstateTranslationJob(ReinstateTranslationJobRequest) returns (ReinstateTranslationJobResponse);
+
+  // Terminates a translation job.
+  rpc TerminateTranslationJob(TerminateTranslationJobRequest) returns (TerminateTranslationJobResponse);
+
+  // Renews a translation job.
+  rpc RenewTranslationJob(RenewTranslationJobRequest) returns (RenewTranslationJobResponse);
+
+  // Expires a translation job.
+  rpc ExpireTranslationJob(ExpireTranslationJobRequest) returns (ExpireTranslationJobResponse);
+
+  // Returns a translation job.
+  rpc GetTranslationJobLifecycle(GetTranslationJobLifecycleRequest) returns (GetTranslationJobLifecycleResponse);
+
+  // Schedules a translation job.
+  rpc ScheduleTranslationJobExpiry(ScheduleTranslationJobExpiryRequest) returns (ScheduleTranslationJobExpiryResponse);
+}
+
+// The request of `ActivateTranslationJob`.
+message ActivateTranslationJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  ActivateTranslationJobRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ActivateTranslationJob`.
+message ActivateTranslationJobResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  ActivateTranslationJobResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SuspendTranslationJob`.
+message SuspendTranslationJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  SuspendTranslationJobRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SuspendTranslationJob`.
+message SuspendTranslationJobResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  SuspendTranslationJobResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReinstateTranslationJob`.
+message ReinstateTranslationJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  ReinstateTranslationJobRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ReinstateTranslationJob`.
+message ReinstateTranslationJobResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  ReinstateTranslationJobResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `TerminateTranslationJob`.
+message TerminateTranslationJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TerminateTranslationJobRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `TerminateTranslationJob`.
+message TerminateTranslationJobResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  TerminateTranslationJobResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RenewTranslationJob`.
+message RenewTranslationJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  RenewTranslationJobRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `RenewTranslationJob`.
+message RenewTranslationJobResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  RenewTranslationJobResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExpireTranslationJob`.
+message ExpireTranslationJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  ExpireTranslationJobRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ExpireTranslationJob`.
+message ExpireTranslationJobResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  ExpireTranslationJobResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetTranslationJobLifecycle`.
+message GetTranslationJobLifecycleRequest {
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetTranslationJobLifecycle`.
+message GetTranslationJobLifecycleResponse {
+  TranslationJob translation_job = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ScheduleTranslationJobExpiry`.
+message ScheduleTranslationJobExpiryRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  ScheduleTranslationJobExpiryRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScheduleTranslationJobExpiry`.
+message ScheduleTranslationJobExpiryResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  ScheduleTranslationJobExpiryResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

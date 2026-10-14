@@ -1,0 +1,257 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.content.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/content/v1/content.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Content.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/content/v1;contentv1";
+option java_multiple_files = true;
+option java_outer_classname = "ArticleApprovalServiceProto";
+option java_package = "com.acme.content.v1";
+
+// Routes articles through approval, with escalation and delegation.
+service ArticleApprovalService {
+  // Submits an article.
+  rpc SubmitArticle(SubmitArticleRequest) returns (SubmitArticleResponse);
+
+  // Approves an article.
+  rpc ApproveArticle(ApproveArticleRequest) returns (ApproveArticleResponse);
+
+  // Rejects an article.
+  rpc RejectArticle(RejectArticleRequest) returns (RejectArticleResponse);
+
+  // Escalates an article.
+  rpc EscalateArticle(EscalateArticleRequest) returns (EscalateArticleResponse);
+
+  // Lists articles a page at a time.
+  rpc ListPendingArticles(ListPendingArticlesRequest) returns (ListPendingArticlesResponse);
+
+  // Delegates an article.
+  rpc DelegateArticleApproval(DelegateArticleApprovalRequest) returns (DelegateArticleApprovalResponse);
+
+  // Returns an article.
+  rpc GetArticleApprovalStatus(GetArticleApprovalStatusRequest) returns (GetArticleApprovalStatusResponse);
+}
+
+// The request of `SubmitArticle`.
+message SubmitArticleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  SubmitArticleRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitArticle`.
+message SubmitArticleResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Article article = 1;
+  SubmitArticleResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveArticle`.
+message ApproveArticleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  ApproveArticleRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveArticle`.
+message ApproveArticleResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Article article = 1;
+  ApproveArticleResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectArticle`.
+message RejectArticleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  RejectArticleRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectArticle`.
+message RejectArticleResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Article article = 1;
+  RejectArticleResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateArticle`.
+message EscalateArticleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  EscalateArticleRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateArticle`.
+message EscalateArticleResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Article article = 1;
+  EscalateArticleResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingArticles`.
+message ListPendingArticlesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ArticleStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingArticlesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingArticles`.
+message ListPendingArticlesResponse {
+  repeated Article articles = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateArticleApproval`.
+message DelegateArticleApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  DelegateArticleApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateArticleApproval`.
+message DelegateArticleApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Article article = 1;
+  DelegateArticleApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetArticleApprovalStatus`.
+message GetArticleApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetArticleApprovalStatus`.
+message GetArticleApprovalStatusResponse {
+  Article article = 1;
+  acme.common.v1.OperationResult result = 2;
+}

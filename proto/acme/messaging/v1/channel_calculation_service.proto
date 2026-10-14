@@ -1,0 +1,335 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.messaging.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/messaging/v1/messaging.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Messaging.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/messaging/v1;messagingv1";
+option java_multiple_files = true;
+option java_outer_classname = "ChannelCalculationServiceProto";
+option java_package = "com.acme.messaging.v1";
+
+// Computes the figures of a channel, such as totals, taxes, and estimates.
+service ChannelCalculationService {
+  // Calculates a channel.
+  rpc CalculateChannel(CalculateChannelRequest) returns (CalculateChannelResponse);
+
+  // Estimates a channel.
+  rpc EstimateChannel(EstimateChannelRequest) returns (EstimateChannelResponse);
+
+  // Quotes a channel.
+  rpc QuoteChannel(QuoteChannelRequest) returns (QuoteChannelResponse);
+
+  // Compares a channel.
+  rpc CompareChannelOptions(CompareChannelOptionsRequest) returns (CompareChannelOptionsResponse);
+
+  // Recalculates a channel.
+  rpc RecalculateChannels(RecalculateChannelsRequest) returns (RecalculateChannelsResponse);
+
+  // Simulates a channel.
+  rpc SimulateChannel(SimulateChannelRequest) returns (SimulateChannelResponse);
+
+  // Explains a channel.
+  rpc ExplainChannelCalculation(ExplainChannelCalculationRequest) returns (ExplainChannelCalculationResponse);
+
+  // Returns a channel.
+  rpc GetChannelRates(GetChannelRatesRequest) returns (GetChannelRatesResponse);
+}
+
+// The request of `CalculateChannel`.
+message CalculateChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  CalculateChannelRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateChannel`.
+message CalculateChannelResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateChannelResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Channel channel = 1;
+  CalculateChannelResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateChannel`.
+message EstimateChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  EstimateChannelRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateChannel`.
+message EstimateChannelResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateChannelResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Channel channel = 1;
+  EstimateChannelResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteChannel`.
+message QuoteChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  QuoteChannelRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteChannel`.
+message QuoteChannelResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteChannelResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Channel channel = 1;
+  QuoteChannelResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareChannelOptions`.
+message CompareChannelOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  CompareChannelOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareChannelOptions`.
+message CompareChannelOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareChannelOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Channel channel = 1;
+  CompareChannelOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculateChannels`.
+message RecalculateChannelsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  RecalculateChannelsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculateChannels`.
+message RecalculateChannelsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculateChannelsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Channel channel = 1;
+  RecalculateChannelsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateChannel`.
+message SimulateChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  SimulateChannelRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateChannel`.
+message SimulateChannelResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateChannelResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Channel channel = 1;
+  SimulateChannelResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainChannelCalculation`.
+message ExplainChannelCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  ExplainChannelCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainChannelCalculation`.
+message ExplainChannelCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  ExplainChannelCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetChannelRates`.
+message GetChannelRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetChannelRates`.
+message GetChannelRatesResponse {
+  Channel channel = 1;
+  acme.common.v1.OperationResult result = 2;
+}

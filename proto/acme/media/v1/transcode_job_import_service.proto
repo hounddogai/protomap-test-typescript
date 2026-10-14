@@ -1,0 +1,253 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.media.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/media/v1/media.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Media.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/media/v1;mediav1";
+option java_multiple_files = true;
+option java_outer_classname = "TranscodeJobImportServiceProto";
+option java_package = "com.acme.media.v1";
+
+// Takes transcode jobs in bulk from partners and legacy systems.
+service TranscodeJobImportService {
+  // Takes a stream of transcode jobs and answers once at the end.
+  rpc ImportTranscodeJobs(stream ImportTranscodeJobsRequest) returns (ImportTranscodeJobsResponse);
+
+  // Returns a transcode job.
+  rpc GetTranscodeJobImportStatus(GetTranscodeJobImportStatusRequest) returns (GetTranscodeJobImportStatusResponse);
+
+  // Cancels a transcode job.
+  rpc CancelTranscodeJobImport(CancelTranscodeJobImportRequest) returns (CancelTranscodeJobImportResponse);
+
+  // Validates a transcode job.
+  rpc ValidateTranscodeJobImport(ValidateTranscodeJobImportRequest) returns (ValidateTranscodeJobImportResponse);
+
+  // Lists transcode jobs a page at a time.
+  rpc ListTranscodeJobImports(ListTranscodeJobImportsRequest) returns (ListTranscodeJobImportsResponse);
+
+  // Retrys a transcode job.
+  rpc RetryTranscodeJobImport(RetryTranscodeJobImportRequest) returns (RetryTranscodeJobImportResponse);
+
+  // Maps a transcode job.
+  rpc MapTranscodeJobImportColumns(MapTranscodeJobImportColumnsRequest) returns (MapTranscodeJobImportColumnsResponse);
+}
+
+// The request of `ImportTranscodeJobs`.
+message ImportTranscodeJobsRequest {
+  // What a stream of records starts with.
+  message StreamHeader {
+    string source = 1;
+    string format = 2;
+    int64 total_records = 3;
+    acme.common.v1.ContactInfo submitted_by = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof chunk {
+    ImportTranscodeJobsRequest.StreamHeader header = 2;
+    TranscodeJob record = 3;
+  }
+  int64 sequence = 4;
+}
+
+// The response of `ImportTranscodeJobs`.
+message ImportTranscodeJobsResponse {
+  // A record the import turned down.
+  message Rejection {
+    int64 sequence = 1;
+    string reason = 2;
+    string transcode_job_id = 3;
+  }
+
+  int64 accepted = 1;
+  int64 rejected = 2;
+  repeated ImportTranscodeJobsResponse.Rejection rejections = 3;
+  acme.common.v1.OperationResult result = 4;
+}
+
+// The request of `GetTranscodeJobImportStatus`.
+message GetTranscodeJobImportStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetTranscodeJobImportStatus`.
+message GetTranscodeJobImportStatusResponse {
+  TranscodeJob transcode_job = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CancelTranscodeJobImport`.
+message CancelTranscodeJobImportRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  CancelTranscodeJobImportRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `CancelTranscodeJobImport`.
+message CancelTranscodeJobImportResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  CancelTranscodeJobImportResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ValidateTranscodeJobImport`.
+message ValidateTranscodeJobImportRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  ValidateTranscodeJobImportRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateTranscodeJobImport`.
+message ValidateTranscodeJobImportResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  ValidateTranscodeJobImportResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListTranscodeJobImports`.
+message ListTranscodeJobImportsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated TranscodeJobStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListTranscodeJobImportsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListTranscodeJobImports`.
+message ListTranscodeJobImportsResponse {
+  repeated TranscodeJob transcode_jobs = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryTranscodeJobImport`.
+message RetryTranscodeJobImportRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  RetryTranscodeJobImportRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryTranscodeJobImport`.
+message RetryTranscodeJobImportResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  RetryTranscodeJobImportResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `MapTranscodeJobImportColumns`.
+message MapTranscodeJobImportColumnsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string transcode_job_id = 2;
+  TranscodeJob transcode_job = 3;
+  MapTranscodeJobImportColumnsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `MapTranscodeJobImportColumns`.
+message MapTranscodeJobImportColumnsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranscodeJob transcode_job = 1;
+  MapTranscodeJobImportColumnsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

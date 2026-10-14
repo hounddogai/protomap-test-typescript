@@ -1,0 +1,234 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.webbff.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/webbff/v1/webbff.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Webbff.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/webbff/v1;webbffv1";
+option java_multiple_files = true;
+option java_outer_classname = "WidgetLayoutIntegrationServiceProto";
+option java_package = "com.acme.webbff.v1";
+
+// Connects external systems that send widget layout events.
+service WidgetLayoutIntegrationService {
+  // Connects a widget layout.
+  rpc ConnectWidgetLayoutSource(ConnectWidgetLayoutSourceRequest) returns (ConnectWidgetLayoutSourceResponse);
+
+  // Disconnects a widget layout.
+  rpc DisconnectWidgetLayoutSource(DisconnectWidgetLayoutSourceRequest) returns (DisconnectWidgetLayoutSourceResponse);
+
+  // Takes a stream of widget layouts and answers once at the end.
+  rpc IngestWidgetLayoutEvents(stream IngestWidgetLayoutEventsRequest) returns (IngestWidgetLayoutEventsResponse);
+
+  // Acknowledges a widget layout.
+  rpc AcknowledgeWidgetLayoutEvent(AcknowledgeWidgetLayoutEventRequest) returns (AcknowledgeWidgetLayoutEventResponse);
+
+  // Exchanges changes of widget layouts with a peer.
+  rpc RelayWidgetLayoutMessages(stream RelayWidgetLayoutMessagesRequest) returns (stream RelayWidgetLayoutMessagesResponse);
+
+  // Tests a widget layout.
+  rpc TestWidgetLayoutConnection(TestWidgetLayoutConnectionRequest) returns (TestWidgetLayoutConnectionResponse);
+}
+
+// The request of `ConnectWidgetLayoutSource`.
+message ConnectWidgetLayoutSourceRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string endpoint = 1;
+    google.protobuf.Any envelope = 2;
+    string message_id = 3;
+    string source_system = 4;
+    google.protobuf.Timestamp received_at = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string widget_layout_id = 2;
+  ConnectWidgetLayoutSourceRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ConnectWidgetLayoutSource`.
+message ConnectWidgetLayoutSourceResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WidgetLayout widget_layout = 1;
+  ConnectWidgetLayoutSourceResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DisconnectWidgetLayoutSource`.
+message DisconnectWidgetLayoutSourceRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string endpoint = 1;
+    google.protobuf.Any envelope = 2;
+    string message_id = 3;
+    string source_system = 4;
+    google.protobuf.Timestamp received_at = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string widget_layout_id = 2;
+  DisconnectWidgetLayoutSourceRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `DisconnectWidgetLayoutSource`.
+message DisconnectWidgetLayoutSourceResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WidgetLayout widget_layout = 1;
+  DisconnectWidgetLayoutSourceResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `IngestWidgetLayoutEvents`.
+message IngestWidgetLayoutEventsRequest {
+  // What a stream of records starts with.
+  message StreamHeader {
+    string source = 1;
+    string format = 2;
+    int64 total_records = 3;
+    acme.common.v1.ContactInfo submitted_by = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof chunk {
+    IngestWidgetLayoutEventsRequest.StreamHeader header = 2;
+    WidgetLayout record = 3;
+  }
+  int64 sequence = 4;
+}
+
+// The response of `IngestWidgetLayoutEvents`.
+message IngestWidgetLayoutEventsResponse {
+  // A record the import turned down.
+  message Rejection {
+    int64 sequence = 1;
+    string reason = 2;
+    string widget_layout_id = 3;
+  }
+
+  int64 accepted = 1;
+  int64 rejected = 2;
+  repeated IngestWidgetLayoutEventsResponse.Rejection rejections = 3;
+  acme.common.v1.OperationResult result = 4;
+}
+
+// The request of `AcknowledgeWidgetLayoutEvent`.
+message AcknowledgeWidgetLayoutEventRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string endpoint = 1;
+    google.protobuf.Any envelope = 2;
+    string message_id = 3;
+    string source_system = 4;
+    google.protobuf.Timestamp received_at = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string widget_layout_id = 2;
+  AcknowledgeWidgetLayoutEventRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `AcknowledgeWidgetLayoutEvent`.
+message AcknowledgeWidgetLayoutEventResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WidgetLayout widget_layout = 1;
+  AcknowledgeWidgetLayoutEventResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RelayWidgetLayoutMessages`.
+message RelayWidgetLayoutMessagesRequest {
+  // An acknowledgment of a change the peer sent.
+  message ChangeAck {
+    int64 sequence = 1;
+    string status = 2;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof frame {
+    WidgetLayout change = 2;
+    RelayWidgetLayoutMessagesRequest.ChangeAck ack = 3;
+  }
+  string cursor = 4;
+}
+
+// The response of `RelayWidgetLayoutMessages`.
+message RelayWidgetLayoutMessagesResponse {
+  WidgetLayout widget_layout = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `TestWidgetLayoutConnection`.
+message TestWidgetLayoutConnectionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string endpoint = 1;
+    google.protobuf.Any envelope = 2;
+    string message_id = 3;
+    string source_system = 4;
+    google.protobuf.Timestamp received_at = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string widget_layout_id = 2;
+  TestWidgetLayoutConnectionRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `TestWidgetLayoutConnection`.
+message TestWidgetLayoutConnectionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WidgetLayout widget_layout = 1;
+  TestWidgetLayoutConnectionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

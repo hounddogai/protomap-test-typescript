@@ -1,0 +1,294 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.messaging.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/messaging/v1/messaging.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Messaging.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/messaging/v1;messagingv1";
+option java_multiple_files = true;
+option java_outer_classname = "ConversationLifecycleServiceProto";
+option java_package = "com.acme.messaging.v1";
+
+// Moves a conversation between the states of its lifecycle.
+service ConversationLifecycleService {
+  // Activates a conversation.
+  rpc ActivateConversation(ActivateConversationRequest) returns (ActivateConversationResponse);
+
+  // Suspends a conversation.
+  rpc SuspendConversation(SuspendConversationRequest) returns (SuspendConversationResponse);
+
+  // Reinstates a conversation.
+  rpc ReinstateConversation(ReinstateConversationRequest) returns (ReinstateConversationResponse);
+
+  // Terminates a conversation.
+  rpc TerminateConversation(TerminateConversationRequest) returns (TerminateConversationResponse);
+
+  // Renews a conversation.
+  rpc RenewConversation(RenewConversationRequest) returns (RenewConversationResponse);
+
+  // Expires a conversation.
+  rpc ExpireConversation(ExpireConversationRequest) returns (ExpireConversationResponse);
+
+  // Returns a conversation.
+  rpc GetConversationLifecycle(GetConversationLifecycleRequest) returns (GetConversationLifecycleResponse);
+
+  // Schedules a conversation.
+  rpc ScheduleConversationExpiry(ScheduleConversationExpiryRequest) returns (ScheduleConversationExpiryResponse);
+}
+
+// The request of `ActivateConversation`.
+message ActivateConversationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string conversation_id = 2;
+  ActivateConversationRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ActivateConversation`.
+message ActivateConversationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Conversation conversation = 1;
+  ActivateConversationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SuspendConversation`.
+message SuspendConversationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string conversation_id = 2;
+  SuspendConversationRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `SuspendConversation`.
+message SuspendConversationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Conversation conversation = 1;
+  SuspendConversationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReinstateConversation`.
+message ReinstateConversationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string conversation_id = 2;
+  ReinstateConversationRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ReinstateConversation`.
+message ReinstateConversationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Conversation conversation = 1;
+  ReinstateConversationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `TerminateConversation`.
+message TerminateConversationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string conversation_id = 2;
+  TerminateConversationRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `TerminateConversation`.
+message TerminateConversationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Conversation conversation = 1;
+  TerminateConversationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RenewConversation`.
+message RenewConversationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string conversation_id = 2;
+  RenewConversationRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `RenewConversation`.
+message RenewConversationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Conversation conversation = 1;
+  RenewConversationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExpireConversation`.
+message ExpireConversationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string conversation_id = 2;
+  ExpireConversationRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ExpireConversation`.
+message ExpireConversationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Conversation conversation = 1;
+  ExpireConversationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetConversationLifecycle`.
+message GetConversationLifecycleRequest {
+  acme.common.v1.RequestContext context = 1;
+  string conversation_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetConversationLifecycle`.
+message GetConversationLifecycleResponse {
+  Conversation conversation = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ScheduleConversationExpiry`.
+message ScheduleConversationExpiryRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string conversation_id = 2;
+  Conversation conversation = 3;
+  ScheduleConversationExpiryRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScheduleConversationExpiry`.
+message ScheduleConversationExpiryResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Conversation conversation = 1;
+  ScheduleConversationExpiryResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

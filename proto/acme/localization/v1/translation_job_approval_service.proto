@@ -1,0 +1,316 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.localization.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/localization/v1/localization.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Localization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/localization/v1;localizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "TranslationJobApprovalServiceProto";
+option java_package = "com.acme.localization.v1";
+
+// Routes translation jobs through approval, with escalation and delegation.
+service TranslationJobApprovalService {
+  // Submits a translation job.
+  rpc SubmitTranslationJob(SubmitTranslationJobRequest) returns (SubmitTranslationJobResponse);
+
+  // Approves a translation job.
+  rpc ApproveTranslationJob(ApproveTranslationJobRequest) returns (ApproveTranslationJobResponse);
+
+  // Rejects a translation job.
+  rpc RejectTranslationJob(RejectTranslationJobRequest) returns (RejectTranslationJobResponse);
+
+  // Escalates a translation job.
+  rpc EscalateTranslationJob(EscalateTranslationJobRequest) returns (EscalateTranslationJobResponse);
+
+  // Lists translation jobs a page at a time.
+  rpc ListPendingTranslationJobs(ListPendingTranslationJobsRequest) returns (ListPendingTranslationJobsResponse);
+
+  // Delegates a translation job.
+  rpc DelegateTranslationJobApproval(DelegateTranslationJobApprovalRequest) returns (DelegateTranslationJobApprovalResponse);
+
+  // Recalls a translation job.
+  rpc RecallTranslationJob(RecallTranslationJobRequest) returns (RecallTranslationJobResponse);
+
+  // Comments a translation job.
+  rpc CommentTranslationJobApproval(CommentTranslationJobApprovalRequest) returns (CommentTranslationJobApprovalResponse);
+}
+
+// The request of `SubmitTranslationJob`.
+message SubmitTranslationJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  SubmitTranslationJobRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitTranslationJob`.
+message SubmitTranslationJobResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  SubmitTranslationJobResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveTranslationJob`.
+message ApproveTranslationJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  ApproveTranslationJobRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveTranslationJob`.
+message ApproveTranslationJobResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  ApproveTranslationJobResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectTranslationJob`.
+message RejectTranslationJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  RejectTranslationJobRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectTranslationJob`.
+message RejectTranslationJobResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  RejectTranslationJobResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateTranslationJob`.
+message EscalateTranslationJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  EscalateTranslationJobRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateTranslationJob`.
+message EscalateTranslationJobResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  EscalateTranslationJobResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingTranslationJobs`.
+message ListPendingTranslationJobsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated TranslationJobStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingTranslationJobsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingTranslationJobs`.
+message ListPendingTranslationJobsResponse {
+  repeated TranslationJob translation_jobs = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateTranslationJobApproval`.
+message DelegateTranslationJobApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  DelegateTranslationJobApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateTranslationJobApproval`.
+message DelegateTranslationJobApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  DelegateTranslationJobApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallTranslationJob`.
+message RecallTranslationJobRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  RecallTranslationJobRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallTranslationJob`.
+message RecallTranslationJobResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  RecallTranslationJobResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CommentTranslationJobApproval`.
+message CommentTranslationJobApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string translation_job_id = 2;
+  TranslationJob translation_job = 3;
+  CommentTranslationJobApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentTranslationJobApproval`.
+message CommentTranslationJobApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  TranslationJob translation_job = 1;
+  CommentTranslationJobApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

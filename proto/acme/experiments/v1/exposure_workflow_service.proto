@@ -1,0 +1,334 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.experiments.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/experiments/v1/experiments.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Experiments.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/experiments/v1;experimentsv1";
+option java_multiple_files = true;
+option java_outer_classname = "ExposureWorkflowServiceProto";
+option java_package = "com.acme.experiments.v1";
+
+// Runs the long-lived workflow that takes an exposure from start to finish.
+service ExposureWorkflowService {
+  // Starts an exposure.
+  rpc StartExposureWorkflow(StartExposureWorkflowRequest) returns (StartExposureWorkflowResponse);
+
+  // Advances an exposure.
+  rpc AdvanceExposureWorkflow(AdvanceExposureWorkflowRequest) returns (AdvanceExposureWorkflowResponse);
+
+  // Cancels an exposure.
+  rpc CancelExposureWorkflow(CancelExposureWorkflowRequest) returns (CancelExposureWorkflowResponse);
+
+  // Retrys an exposure.
+  rpc RetryExposureWorkflow(RetryExposureWorkflowRequest) returns (RetryExposureWorkflowResponse);
+
+  // Pauses an exposure.
+  rpc PauseExposureWorkflow(PauseExposureWorkflowRequest) returns (PauseExposureWorkflowResponse);
+
+  // Resumes an exposure.
+  rpc ResumeExposureWorkflow(ResumeExposureWorkflowRequest) returns (ResumeExposureWorkflowResponse);
+
+  // Returns an exposure.
+  rpc InspectExposureWorkflow(InspectExposureWorkflowRequest) returns (InspectExposureWorkflowResponse);
+
+  // Lists exposures a page at a time.
+  rpc ListExposureWorkflows(ListExposureWorkflowsRequest) returns (ListExposureWorkflowsResponse);
+
+  // Signals an exposure.
+  rpc SignalExposureWorkflow(SignalExposureWorkflowRequest) returns (SignalExposureWorkflowResponse);
+}
+
+// The request of `StartExposureWorkflow`.
+message StartExposureWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  StartExposureWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartExposureWorkflow`.
+message StartExposureWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  StartExposureWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceExposureWorkflow`.
+message AdvanceExposureWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  AdvanceExposureWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceExposureWorkflow`.
+message AdvanceExposureWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  AdvanceExposureWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelExposureWorkflow`.
+message CancelExposureWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  CancelExposureWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelExposureWorkflow`.
+message CancelExposureWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  CancelExposureWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryExposureWorkflow`.
+message RetryExposureWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  RetryExposureWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryExposureWorkflow`.
+message RetryExposureWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  RetryExposureWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseExposureWorkflow`.
+message PauseExposureWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  PauseExposureWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseExposureWorkflow`.
+message PauseExposureWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  PauseExposureWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumeExposureWorkflow`.
+message ResumeExposureWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  ResumeExposureWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumeExposureWorkflow`.
+message ResumeExposureWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  ResumeExposureWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectExposureWorkflow`.
+message InspectExposureWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectExposureWorkflow`.
+message InspectExposureWorkflowResponse {
+  Exposure exposure = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListExposureWorkflows`.
+message ListExposureWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ExposureStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListExposureWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListExposureWorkflows`.
+message ListExposureWorkflowsResponse {
+  repeated Exposure exposures = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalExposureWorkflow`.
+message SignalExposureWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  SignalExposureWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalExposureWorkflow`.
+message SignalExposureWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  SignalExposureWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

@@ -1,0 +1,284 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.notifications.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/notifications/v1/notifications.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Notifications.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/notifications/v1;notificationsv1";
+option java_multiple_files = true;
+option java_outer_classname = "DeliveryAttemptSyncServiceProto";
+option java_package = "com.acme.notifications.v1";
+
+// Keeps delivery attempts in step with the systems of record in other regions.
+service DeliveryAttemptSyncService {
+  // Syncs a delivery attempt.
+  rpc SyncDeliveryAttempts(SyncDeliveryAttemptsRequest) returns (SyncDeliveryAttemptsResponse);
+
+  // Pushs a delivery attempt.
+  rpc PushDeliveryAttempt(PushDeliveryAttemptRequest) returns (PushDeliveryAttemptResponse);
+
+  // Pulls a delivery attempt.
+  rpc PullDeliveryAttempts(PullDeliveryAttemptsRequest) returns (PullDeliveryAttemptsResponse);
+
+  // Reconciles a delivery attempt.
+  rpc ReconcileDeliveryAttempts(ReconcileDeliveryAttemptsRequest) returns (ReconcileDeliveryAttemptsResponse);
+
+  // Exchanges changes of delivery attempts with a peer.
+  rpc StreamDeliveryAttemptChanges(stream StreamDeliveryAttemptChangesRequest) returns (stream StreamDeliveryAttemptChangesResponse);
+
+  // Resolves a delivery attempt.
+  rpc ResolveDeliveryAttemptConflict(ResolveDeliveryAttemptConflictRequest) returns (ResolveDeliveryAttemptConflictResponse);
+
+  // Returns a delivery attempt.
+  rpc GetDeliveryAttemptSyncState(GetDeliveryAttemptSyncStateRequest) returns (GetDeliveryAttemptSyncStateResponse);
+
+  // Lists delivery attempts a page at a time.
+  rpc ListDeliveryAttemptConflicts(ListDeliveryAttemptConflictsRequest) returns (ListDeliveryAttemptConflictsResponse);
+}
+
+// The request of `SyncDeliveryAttempts`.
+message SyncDeliveryAttemptsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  SyncDeliveryAttemptsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SyncDeliveryAttempts`.
+message SyncDeliveryAttemptsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  SyncDeliveryAttemptsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PushDeliveryAttempt`.
+message PushDeliveryAttemptRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  PushDeliveryAttemptRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PushDeliveryAttempt`.
+message PushDeliveryAttemptResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  PushDeliveryAttemptResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PullDeliveryAttempts`.
+message PullDeliveryAttemptsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  PullDeliveryAttemptsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PullDeliveryAttempts`.
+message PullDeliveryAttemptsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  PullDeliveryAttemptsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReconcileDeliveryAttempts`.
+message ReconcileDeliveryAttemptsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  ReconcileDeliveryAttemptsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ReconcileDeliveryAttempts`.
+message ReconcileDeliveryAttemptsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  ReconcileDeliveryAttemptsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `StreamDeliveryAttemptChanges`.
+message StreamDeliveryAttemptChangesRequest {
+  // An acknowledgment of a change the peer sent.
+  message ChangeAck {
+    int64 sequence = 1;
+    string status = 2;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof frame {
+    DeliveryAttempt change = 2;
+    StreamDeliveryAttemptChangesRequest.ChangeAck ack = 3;
+  }
+  string cursor = 4;
+}
+
+// The response of `StreamDeliveryAttemptChanges`.
+message StreamDeliveryAttemptChangesResponse {
+  DeliveryAttempt delivery_attempt = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `ResolveDeliveryAttemptConflict`.
+message ResolveDeliveryAttemptConflictRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  ResolveDeliveryAttemptConflictRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResolveDeliveryAttemptConflict`.
+message ResolveDeliveryAttemptConflictResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  ResolveDeliveryAttemptConflictResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetDeliveryAttemptSyncState`.
+message GetDeliveryAttemptSyncStateRequest {
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetDeliveryAttemptSyncState`.
+message GetDeliveryAttemptSyncStateResponse {
+  DeliveryAttempt delivery_attempt = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListDeliveryAttemptConflicts`.
+message ListDeliveryAttemptConflictsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated DeliveryAttemptStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListDeliveryAttemptConflictsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListDeliveryAttemptConflicts`.
+message ListDeliveryAttemptConflictsResponse {
+  repeated DeliveryAttempt delivery_attempts = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}

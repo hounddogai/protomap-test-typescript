@@ -1,0 +1,279 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.content.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/content/v1/content.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Content.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/content/v1;contentv1";
+option java_multiple_files = true;
+option java_outer_classname = "ContentRevisionWorkflowServiceProto";
+option java_package = "com.acme.content.v1";
+
+// Runs the long-lived workflow that takes a content revision from start to finish.
+service ContentRevisionWorkflowService {
+  // Starts a content revision.
+  rpc StartContentRevisionWorkflow(StartContentRevisionWorkflowRequest) returns (StartContentRevisionWorkflowResponse);
+
+  // Advances a content revision.
+  rpc AdvanceContentRevisionWorkflow(AdvanceContentRevisionWorkflowRequest) returns (AdvanceContentRevisionWorkflowResponse);
+
+  // Cancels a content revision.
+  rpc CancelContentRevisionWorkflow(CancelContentRevisionWorkflowRequest) returns (CancelContentRevisionWorkflowResponse);
+
+  // Pauses a content revision.
+  rpc PauseContentRevisionWorkflow(PauseContentRevisionWorkflowRequest) returns (PauseContentRevisionWorkflowResponse);
+
+  // Resumes a content revision.
+  rpc ResumeContentRevisionWorkflow(ResumeContentRevisionWorkflowRequest) returns (ResumeContentRevisionWorkflowResponse);
+
+  // Lists content revisions a page at a time.
+  rpc ListContentRevisionWorkflows(ListContentRevisionWorkflowsRequest) returns (ListContentRevisionWorkflowsResponse);
+
+  // Signals a content revision.
+  rpc SignalContentRevisionWorkflow(SignalContentRevisionWorkflowRequest) returns (SignalContentRevisionWorkflowResponse);
+}
+
+// The request of `StartContentRevisionWorkflow`.
+message StartContentRevisionWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  StartContentRevisionWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartContentRevisionWorkflow`.
+message StartContentRevisionWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentRevision content_revision = 1;
+  StartContentRevisionWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceContentRevisionWorkflow`.
+message AdvanceContentRevisionWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  AdvanceContentRevisionWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceContentRevisionWorkflow`.
+message AdvanceContentRevisionWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentRevision content_revision = 1;
+  AdvanceContentRevisionWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelContentRevisionWorkflow`.
+message CancelContentRevisionWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  CancelContentRevisionWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelContentRevisionWorkflow`.
+message CancelContentRevisionWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentRevision content_revision = 1;
+  CancelContentRevisionWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseContentRevisionWorkflow`.
+message PauseContentRevisionWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  PauseContentRevisionWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseContentRevisionWorkflow`.
+message PauseContentRevisionWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentRevision content_revision = 1;
+  PauseContentRevisionWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumeContentRevisionWorkflow`.
+message ResumeContentRevisionWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  ResumeContentRevisionWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumeContentRevisionWorkflow`.
+message ResumeContentRevisionWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentRevision content_revision = 1;
+  ResumeContentRevisionWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListContentRevisionWorkflows`.
+message ListContentRevisionWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ContentRevisionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListContentRevisionWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListContentRevisionWorkflows`.
+message ListContentRevisionWorkflowsResponse {
+  repeated ContentRevision content_revisions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalContentRevisionWorkflow`.
+message SignalContentRevisionWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  SignalContentRevisionWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalContentRevisionWorkflow`.
+message SignalContentRevisionWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentRevision content_revision = 1;
+  SignalContentRevisionWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

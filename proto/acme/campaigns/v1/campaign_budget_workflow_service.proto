@@ -1,0 +1,258 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.campaigns.v1;
+
+import "acme/campaigns/v1/campaigns.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Campaigns.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/campaigns/v1;campaignsv1";
+option java_multiple_files = true;
+option java_outer_classname = "CampaignBudgetWorkflowServiceProto";
+option java_package = "com.acme.campaigns.v1";
+
+// Runs the long-lived workflow that takes a campaign budget from start to finish.
+service CampaignBudgetWorkflowService {
+  // Starts a campaign budget.
+  rpc StartCampaignBudgetWorkflow(StartCampaignBudgetWorkflowRequest) returns (StartCampaignBudgetWorkflowResponse);
+
+  // Advances a campaign budget.
+  rpc AdvanceCampaignBudgetWorkflow(AdvanceCampaignBudgetWorkflowRequest) returns (AdvanceCampaignBudgetWorkflowResponse);
+
+  // Cancels a campaign budget.
+  rpc CancelCampaignBudgetWorkflow(CancelCampaignBudgetWorkflowRequest) returns (CancelCampaignBudgetWorkflowResponse);
+
+  // Retrys a campaign budget.
+  rpc RetryCampaignBudgetWorkflow(RetryCampaignBudgetWorkflowRequest) returns (RetryCampaignBudgetWorkflowResponse);
+
+  // Pauses a campaign budget.
+  rpc PauseCampaignBudgetWorkflow(PauseCampaignBudgetWorkflowRequest) returns (PauseCampaignBudgetWorkflowResponse);
+
+  // Returns a campaign budget.
+  rpc InspectCampaignBudgetWorkflow(InspectCampaignBudgetWorkflowRequest) returns (InspectCampaignBudgetWorkflowResponse);
+
+  // Lists campaign budgets a page at a time.
+  rpc ListCampaignBudgetWorkflows(ListCampaignBudgetWorkflowsRequest) returns (ListCampaignBudgetWorkflowsResponse);
+}
+
+// The request of `StartCampaignBudgetWorkflow`.
+message StartCampaignBudgetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  CampaignBudget campaign_budget = 3;
+  StartCampaignBudgetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartCampaignBudgetWorkflow`.
+message StartCampaignBudgetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignBudget campaign_budget = 1;
+  StartCampaignBudgetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceCampaignBudgetWorkflow`.
+message AdvanceCampaignBudgetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  CampaignBudget campaign_budget = 3;
+  AdvanceCampaignBudgetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceCampaignBudgetWorkflow`.
+message AdvanceCampaignBudgetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignBudget campaign_budget = 1;
+  AdvanceCampaignBudgetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelCampaignBudgetWorkflow`.
+message CancelCampaignBudgetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  CampaignBudget campaign_budget = 3;
+  CancelCampaignBudgetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelCampaignBudgetWorkflow`.
+message CancelCampaignBudgetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignBudget campaign_budget = 1;
+  CancelCampaignBudgetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryCampaignBudgetWorkflow`.
+message RetryCampaignBudgetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  CampaignBudget campaign_budget = 3;
+  RetryCampaignBudgetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryCampaignBudgetWorkflow`.
+message RetryCampaignBudgetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignBudget campaign_budget = 1;
+  RetryCampaignBudgetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseCampaignBudgetWorkflow`.
+message PauseCampaignBudgetWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  CampaignBudget campaign_budget = 3;
+  PauseCampaignBudgetWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseCampaignBudgetWorkflow`.
+message PauseCampaignBudgetWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  CampaignBudget campaign_budget = 1;
+  PauseCampaignBudgetWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectCampaignBudgetWorkflow`.
+message InspectCampaignBudgetWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string campaign_budget_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectCampaignBudgetWorkflow`.
+message InspectCampaignBudgetWorkflowResponse {
+  CampaignBudget campaign_budget = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListCampaignBudgetWorkflows`.
+message ListCampaignBudgetWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated CampaignBudgetStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListCampaignBudgetWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListCampaignBudgetWorkflows`.
+message ListCampaignBudgetWorkflowsResponse {
+  repeated CampaignBudget campaign_budgets = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}

@@ -1,0 +1,293 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.notifications.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/notifications/v1/notifications.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Notifications.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/notifications/v1;notificationsv1";
+option java_multiple_files = true;
+option java_outer_classname = "DeliveryAttemptAdminServiceProto";
+option java_package = "com.acme.notifications.v1";
+
+// Operator actions on delivery attempts that support staff run by hand.
+service DeliveryAttemptAdminService {
+  // Archives a delivery attempt.
+  rpc ArchiveDeliveryAttempt(ArchiveDeliveryAttemptRequest) returns (ArchiveDeliveryAttemptResponse);
+
+  // Restores a delivery attempt.
+  rpc RestoreDeliveryAttempt(RestoreDeliveryAttemptRequest) returns (RestoreDeliveryAttemptResponse);
+
+  // Reassigns a delivery attempt.
+  rpc ReassignDeliveryAttempt(ReassignDeliveryAttemptRequest) returns (ReassignDeliveryAttemptResponse);
+
+  // Locks a delivery attempt.
+  rpc LockDeliveryAttempt(LockDeliveryAttemptRequest) returns (LockDeliveryAttemptResponse);
+
+  // Unlocks a delivery attempt.
+  rpc UnlockDeliveryAttempt(UnlockDeliveryAttemptRequest) returns (UnlockDeliveryAttemptResponse);
+
+  // Transfers a delivery attempt.
+  rpc TransferDeliveryAttempt(TransferDeliveryAttemptRequest) returns (TransferDeliveryAttemptResponse);
+
+  // Repairs a delivery attempt.
+  rpc RepairDeliveryAttempt(RepairDeliveryAttemptRequest) returns (RepairDeliveryAttemptResponse);
+
+  // Returns a delivery attempt.
+  rpc InspectDeliveryAttempt(InspectDeliveryAttemptRequest) returns (InspectDeliveryAttemptResponse);
+}
+
+// The request of `ArchiveDeliveryAttempt`.
+message ArchiveDeliveryAttemptRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  ArchiveDeliveryAttemptRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ArchiveDeliveryAttempt`.
+message ArchiveDeliveryAttemptResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  ArchiveDeliveryAttemptResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RestoreDeliveryAttempt`.
+message RestoreDeliveryAttemptRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  RestoreDeliveryAttemptRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `RestoreDeliveryAttempt`.
+message RestoreDeliveryAttemptResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  RestoreDeliveryAttemptResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReassignDeliveryAttempt`.
+message ReassignDeliveryAttemptRequest {
+  // What the operation needs besides the record.
+  message Details {
+    acme.identity.v1.UserRef assignee = 1;
+    string queue = 2;
+    int32 capacity = 3;
+    string assignee_email = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  ReassignDeliveryAttemptRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `ReassignDeliveryAttempt`.
+message ReassignDeliveryAttemptResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  ReassignDeliveryAttemptResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LockDeliveryAttempt`.
+message LockDeliveryAttemptRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  LockDeliveryAttemptRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `LockDeliveryAttempt`.
+message LockDeliveryAttemptResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  LockDeliveryAttemptResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `UnlockDeliveryAttempt`.
+message UnlockDeliveryAttemptRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  UnlockDeliveryAttemptRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `UnlockDeliveryAttempt`.
+message UnlockDeliveryAttemptResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  UnlockDeliveryAttemptResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `TransferDeliveryAttempt`.
+message TransferDeliveryAttemptRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string reason_code = 1;
+    google.protobuf.Timestamp effective_at = 2;
+    acme.identity.v1.UserRef new_owner = 3;
+    acme.common.v1.ContactInfo notify_contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  TransferDeliveryAttemptRequest.Details details = 3;
+  string reason = 4;
+  map<string, string> annotations = 5;
+}
+
+// The response of `TransferDeliveryAttempt`.
+message TransferDeliveryAttemptResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  TransferDeliveryAttemptResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RepairDeliveryAttempt`.
+message RepairDeliveryAttemptRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  DeliveryAttempt delivery_attempt = 3;
+  RepairDeliveryAttemptRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RepairDeliveryAttempt`.
+message RepairDeliveryAttemptResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  DeliveryAttempt delivery_attempt = 1;
+  RepairDeliveryAttemptResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectDeliveryAttempt`.
+message InspectDeliveryAttemptRequest {
+  acme.common.v1.RequestContext context = 1;
+  string delivery_attempt_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectDeliveryAttempt`.
+message InspectDeliveryAttemptResponse {
+  DeliveryAttempt delivery_attempt = 1;
+  acme.common.v1.OperationResult result = 2;
+}

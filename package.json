@@ -1,0 +1,35 @@
+{
+  "name": "@acme/engagement",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@12.14.0",
+  "scripts": {
+    "generate": "node scripts/generate.mjs",
+    "check": "pnpm generate && tsc --noEmit",
+    "build": "pnpm generate && tsc",
+    "start": "node dist/app/src/server/main.js",
+    "migrate": "node dist/app/src/admin/migrate.js",
+    "test": "node --test dist/app/src/platform/runtime.test.js dist/app/src/server/registration.test.js",
+    "reconcile": "node dist/app/src/jobs/reconcile.js",
+    "replay": "node dist/app/src/jobs/replay.js",
+    "admin": "node dist/app/src/admin/engagementctl.js"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "2.16.0",
+    "@grpc/grpc-js": "1.14.6",
+    "knex": "3.3.0",
+    "pg": "8.23.1",
+    "reflect-metadata": "0.2.2",
+    "tsyringe": "4.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.5",
+    "@types/pg": "8.23.1",
+    "ts-proto": "2.15.3",
+    "typescript": "7.0.2"
+  }
+}

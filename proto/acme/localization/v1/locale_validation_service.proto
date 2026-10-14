@@ -1,0 +1,305 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.localization.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/localization/v1/localization.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Localization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/localization/v1;localizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "LocaleValidationServiceProto";
+option java_package = "com.acme.localization.v1";
+
+// Checks locales against the rules before anything acts on them.
+service LocaleValidationService {
+  // Validates a locale.
+  rpc ValidateLocale(ValidateLocaleRequest) returns (ValidateLocaleResponse);
+
+  // Previews a locale.
+  rpc PreviewLocale(PreviewLocaleRequest) returns (PreviewLocaleResponse);
+
+  // Checks a locale.
+  rpc CheckLocaleEligibility(CheckLocaleEligibilityRequest) returns (CheckLocaleEligibilityResponse);
+
+  // Normalizes a locale.
+  rpc NormalizeLocale(NormalizeLocaleRequest) returns (NormalizeLocaleResponse);
+
+  // Explains a locale.
+  rpc ExplainLocaleDecision(ExplainLocaleDecisionRequest) returns (ExplainLocaleDecisionResponse);
+
+  // Scores a locale.
+  rpc ScoreLocale(ScoreLocaleRequest) returns (ScoreLocaleResponse);
+
+  // Lints a locale.
+  rpc LintLocales(LintLocalesRequest) returns (LintLocalesResponse);
+
+  // Returns a locale.
+  rpc GetLocaleRules(GetLocaleRulesRequest) returns (GetLocaleRulesResponse);
+}
+
+// The request of `ValidateLocale`.
+message ValidateLocaleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  ValidateLocaleRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateLocale`.
+message ValidateLocaleResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Locale locale = 1;
+  ValidateLocaleResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewLocale`.
+message PreviewLocaleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  PreviewLocaleRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewLocale`.
+message PreviewLocaleResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Locale locale = 1;
+  PreviewLocaleResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckLocaleEligibility`.
+message CheckLocaleEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  CheckLocaleEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckLocaleEligibility`.
+message CheckLocaleEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Locale locale = 1;
+  CheckLocaleEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeLocale`.
+message NormalizeLocaleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  NormalizeLocaleRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeLocale`.
+message NormalizeLocaleResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Locale locale = 1;
+  NormalizeLocaleResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainLocaleDecision`.
+message ExplainLocaleDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  ExplainLocaleDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainLocaleDecision`.
+message ExplainLocaleDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Locale locale = 1;
+  ExplainLocaleDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreLocale`.
+message ScoreLocaleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  ScoreLocaleRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreLocale`.
+message ScoreLocaleResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreLocaleResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Locale locale = 1;
+  ScoreLocaleResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintLocales`.
+message LintLocalesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  LintLocalesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintLocales`.
+message LintLocalesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Locale locale = 1;
+  LintLocalesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetLocaleRules`.
+message GetLocaleRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetLocaleRules`.
+message GetLocaleRulesResponse {
+  Locale locale = 1;
+  acme.common.v1.OperationResult result = 2;
+}

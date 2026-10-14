@@ -1,0 +1,240 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.messaging.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/messaging/v1/messaging.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Messaging.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/messaging/v1;messagingv1";
+option java_multiple_files = true;
+option java_outer_classname = "ChatMessageApprovalServiceProto";
+option java_package = "com.acme.messaging.v1";
+
+// Routes chat messages through approval, with escalation and delegation.
+service ChatMessageApprovalService {
+  // Submits a chat message.
+  rpc SubmitChatMessage(SubmitChatMessageRequest) returns (SubmitChatMessageResponse);
+
+  // Approves a chat message.
+  rpc ApproveChatMessage(ApproveChatMessageRequest) returns (ApproveChatMessageResponse);
+
+  // Rejects a chat message.
+  rpc RejectChatMessage(RejectChatMessageRequest) returns (RejectChatMessageResponse);
+
+  // Lists chat messages a page at a time.
+  rpc ListPendingChatMessages(ListPendingChatMessagesRequest) returns (ListPendingChatMessagesResponse);
+
+  // Delegates a chat message.
+  rpc DelegateChatMessageApproval(DelegateChatMessageApprovalRequest) returns (DelegateChatMessageApprovalResponse);
+
+  // Comments a chat message.
+  rpc CommentChatMessageApproval(CommentChatMessageApprovalRequest) returns (CommentChatMessageApprovalResponse);
+}
+
+// The request of `SubmitChatMessage`.
+message SubmitChatMessageRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_message_id = 2;
+  ChatMessage chat_message = 3;
+  SubmitChatMessageRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitChatMessage`.
+message SubmitChatMessageResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatMessage chat_message = 1;
+  SubmitChatMessageResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveChatMessage`.
+message ApproveChatMessageRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_message_id = 2;
+  ChatMessage chat_message = 3;
+  ApproveChatMessageRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveChatMessage`.
+message ApproveChatMessageResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatMessage chat_message = 1;
+  ApproveChatMessageResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectChatMessage`.
+message RejectChatMessageRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_message_id = 2;
+  ChatMessage chat_message = 3;
+  RejectChatMessageRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectChatMessage`.
+message RejectChatMessageResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatMessage chat_message = 1;
+  RejectChatMessageResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingChatMessages`.
+message ListPendingChatMessagesRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ChatMessageStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingChatMessagesRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingChatMessages`.
+message ListPendingChatMessagesResponse {
+  repeated ChatMessage chat_messages = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateChatMessageApproval`.
+message DelegateChatMessageApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_message_id = 2;
+  ChatMessage chat_message = 3;
+  DelegateChatMessageApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateChatMessageApproval`.
+message DelegateChatMessageApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatMessage chat_message = 1;
+  DelegateChatMessageApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CommentChatMessageApproval`.
+message CommentChatMessageApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string chat_message_id = 2;
+  ChatMessage chat_message = 3;
+  CommentChatMessageApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentChatMessageApproval`.
+message CommentChatMessageApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ChatMessage chat_message = 1;
+  CommentChatMessageApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

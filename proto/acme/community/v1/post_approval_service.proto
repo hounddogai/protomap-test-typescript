@@ -1,0 +1,304 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.community.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/community/v1/community.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Community.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/community/v1;communityv1";
+option java_multiple_files = true;
+option java_outer_classname = "PostApprovalServiceProto";
+option java_package = "com.acme.community.v1";
+
+// Routes posts through approval, with escalation and delegation.
+service PostApprovalService {
+  // Submits a post.
+  rpc SubmitPost(SubmitPostRequest) returns (SubmitPostResponse);
+
+  // Approves a post.
+  rpc ApprovePost(ApprovePostRequest) returns (ApprovePostResponse);
+
+  // Rejects a post.
+  rpc RejectPost(RejectPostRequest) returns (RejectPostResponse);
+
+  // Escalates a post.
+  rpc EscalatePost(EscalatePostRequest) returns (EscalatePostResponse);
+
+  // Delegates a post.
+  rpc DelegatePostApproval(DelegatePostApprovalRequest) returns (DelegatePostApprovalResponse);
+
+  // Recalls a post.
+  rpc RecallPost(RecallPostRequest) returns (RecallPostResponse);
+
+  // Returns a post.
+  rpc GetPostApprovalStatus(GetPostApprovalStatusRequest) returns (GetPostApprovalStatusResponse);
+
+  // Comments a post.
+  rpc CommentPostApproval(CommentPostApprovalRequest) returns (CommentPostApprovalResponse);
+}
+
+// The request of `SubmitPost`.
+message SubmitPostRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  Post post = 3;
+  SubmitPostRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitPost`.
+message SubmitPostResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Post post = 1;
+  SubmitPostResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApprovePost`.
+message ApprovePostRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  Post post = 3;
+  ApprovePostRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApprovePost`.
+message ApprovePostResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Post post = 1;
+  ApprovePostResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectPost`.
+message RejectPostRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  Post post = 3;
+  RejectPostRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectPost`.
+message RejectPostResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Post post = 1;
+  RejectPostResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalatePost`.
+message EscalatePostRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  Post post = 3;
+  EscalatePostRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalatePost`.
+message EscalatePostResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Post post = 1;
+  EscalatePostResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegatePostApproval`.
+message DelegatePostApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  Post post = 3;
+  DelegatePostApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegatePostApproval`.
+message DelegatePostApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Post post = 1;
+  DelegatePostApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallPost`.
+message RecallPostRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  Post post = 3;
+  RecallPostRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallPost`.
+message RecallPostResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Post post = 1;
+  RecallPostResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetPostApprovalStatus`.
+message GetPostApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetPostApprovalStatus`.
+message GetPostApprovalStatusResponse {
+  Post post = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentPostApproval`.
+message CommentPostApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  Post post = 3;
+  CommentPostApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentPostApproval`.
+message CommentPostApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Post post = 1;
+  CommentPostApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

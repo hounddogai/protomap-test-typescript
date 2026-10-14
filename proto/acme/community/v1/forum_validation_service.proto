@@ -1,0 +1,305 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.community.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/community/v1/community.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Community.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/community/v1;communityv1";
+option java_multiple_files = true;
+option java_outer_classname = "ForumValidationServiceProto";
+option java_package = "com.acme.community.v1";
+
+// Checks forums against the rules before anything acts on them.
+service ForumValidationService {
+  // Validates a forum.
+  rpc ValidateForum(ValidateForumRequest) returns (ValidateForumResponse);
+
+  // Previews a forum.
+  rpc PreviewForum(PreviewForumRequest) returns (PreviewForumResponse);
+
+  // Checks a forum.
+  rpc CheckForumEligibility(CheckForumEligibilityRequest) returns (CheckForumEligibilityResponse);
+
+  // Normalizes a forum.
+  rpc NormalizeForum(NormalizeForumRequest) returns (NormalizeForumResponse);
+
+  // Explains a forum.
+  rpc ExplainForumDecision(ExplainForumDecisionRequest) returns (ExplainForumDecisionResponse);
+
+  // Scores a forum.
+  rpc ScoreForum(ScoreForumRequest) returns (ScoreForumResponse);
+
+  // Lints a forum.
+  rpc LintForums(LintForumsRequest) returns (LintForumsResponse);
+
+  // Returns a forum.
+  rpc GetForumRules(GetForumRulesRequest) returns (GetForumRulesResponse);
+}
+
+// The request of `ValidateForum`.
+message ValidateForumRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string forum_id = 2;
+  Forum forum = 3;
+  ValidateForumRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateForum`.
+message ValidateForumResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Forum forum = 1;
+  ValidateForumResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewForum`.
+message PreviewForumRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string forum_id = 2;
+  Forum forum = 3;
+  PreviewForumRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewForum`.
+message PreviewForumResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Forum forum = 1;
+  PreviewForumResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckForumEligibility`.
+message CheckForumEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string forum_id = 2;
+  Forum forum = 3;
+  CheckForumEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckForumEligibility`.
+message CheckForumEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Forum forum = 1;
+  CheckForumEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `NormalizeForum`.
+message NormalizeForumRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string forum_id = 2;
+  Forum forum = 3;
+  NormalizeForumRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `NormalizeForum`.
+message NormalizeForumResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Forum forum = 1;
+  NormalizeForumResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainForumDecision`.
+message ExplainForumDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string forum_id = 2;
+  Forum forum = 3;
+  ExplainForumDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainForumDecision`.
+message ExplainForumDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Forum forum = 1;
+  ExplainForumDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreForum`.
+message ScoreForumRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string forum_id = 2;
+  Forum forum = 3;
+  ScoreForumRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreForum`.
+message ScoreForumResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreForumResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Forum forum = 1;
+  ScoreForumResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintForums`.
+message LintForumsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string forum_id = 2;
+  Forum forum = 3;
+  LintForumsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintForums`.
+message LintForumsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Forum forum = 1;
+  LintForumsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetForumRules`.
+message GetForumRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string forum_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetForumRules`.
+message GetForumRulesResponse {
+  Forum forum = 1;
+  acme.common.v1.OperationResult result = 2;
+}

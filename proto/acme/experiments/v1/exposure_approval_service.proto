@@ -1,0 +1,295 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.experiments.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/experiments/v1/experiments.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Experiments.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/experiments/v1;experimentsv1";
+option java_multiple_files = true;
+option java_outer_classname = "ExposureApprovalServiceProto";
+option java_package = "com.acme.experiments.v1";
+
+// Routes exposures through approval, with escalation and delegation.
+service ExposureApprovalService {
+  // Submits an exposure.
+  rpc SubmitExposure(SubmitExposureRequest) returns (SubmitExposureResponse);
+
+  // Approves an exposure.
+  rpc ApproveExposure(ApproveExposureRequest) returns (ApproveExposureResponse);
+
+  // Rejects an exposure.
+  rpc RejectExposure(RejectExposureRequest) returns (RejectExposureResponse);
+
+  // Escalates an exposure.
+  rpc EscalateExposure(EscalateExposureRequest) returns (EscalateExposureResponse);
+
+  // Lists exposures a page at a time.
+  rpc ListPendingExposures(ListPendingExposuresRequest) returns (ListPendingExposuresResponse);
+
+  // Delegates an exposure.
+  rpc DelegateExposureApproval(DelegateExposureApprovalRequest) returns (DelegateExposureApprovalResponse);
+
+  // Recalls an exposure.
+  rpc RecallExposure(RecallExposureRequest) returns (RecallExposureResponse);
+
+  // Returns an exposure.
+  rpc GetExposureApprovalStatus(GetExposureApprovalStatusRequest) returns (GetExposureApprovalStatusResponse);
+}
+
+// The request of `SubmitExposure`.
+message SubmitExposureRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  SubmitExposureRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitExposure`.
+message SubmitExposureResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  SubmitExposureResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveExposure`.
+message ApproveExposureRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  ApproveExposureRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveExposure`.
+message ApproveExposureResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  ApproveExposureResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectExposure`.
+message RejectExposureRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  RejectExposureRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectExposure`.
+message RejectExposureResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  RejectExposureResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateExposure`.
+message EscalateExposureRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  EscalateExposureRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateExposure`.
+message EscalateExposureResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  EscalateExposureResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingExposures`.
+message ListPendingExposuresRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ExposureStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingExposuresRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingExposures`.
+message ListPendingExposuresResponse {
+  repeated Exposure exposures = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateExposureApproval`.
+message DelegateExposureApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  DelegateExposureApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateExposureApproval`.
+message DelegateExposureApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  DelegateExposureApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallExposure`.
+message RecallExposureRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  Exposure exposure = 3;
+  RecallExposureRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallExposure`.
+message RecallExposureResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Exposure exposure = 1;
+  RecallExposureResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetExposureApprovalStatus`.
+message GetExposureApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string exposure_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetExposureApprovalStatus`.
+message GetExposureApprovalStatusResponse {
+  Exposure exposure = 1;
+  acme.common.v1.OperationResult result = 2;
+}

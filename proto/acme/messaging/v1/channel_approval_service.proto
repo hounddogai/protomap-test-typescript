@@ -1,0 +1,266 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.messaging.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/messaging/v1/messaging.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Messaging.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/messaging/v1;messagingv1";
+option java_multiple_files = true;
+option java_outer_classname = "ChannelApprovalServiceProto";
+option java_package = "com.acme.messaging.v1";
+
+// Routes channels through approval, with escalation and delegation.
+service ChannelApprovalService {
+  // Submits a channel.
+  rpc SubmitChannel(SubmitChannelRequest) returns (SubmitChannelResponse);
+
+  // Approves a channel.
+  rpc ApproveChannel(ApproveChannelRequest) returns (ApproveChannelResponse);
+
+  // Rejects a channel.
+  rpc RejectChannel(RejectChannelRequest) returns (RejectChannelResponse);
+
+  // Escalates a channel.
+  rpc EscalateChannel(EscalateChannelRequest) returns (EscalateChannelResponse);
+
+  // Delegates a channel.
+  rpc DelegateChannelApproval(DelegateChannelApprovalRequest) returns (DelegateChannelApprovalResponse);
+
+  // Recalls a channel.
+  rpc RecallChannel(RecallChannelRequest) returns (RecallChannelResponse);
+
+  // Returns a channel.
+  rpc GetChannelApprovalStatus(GetChannelApprovalStatusRequest) returns (GetChannelApprovalStatusResponse);
+}
+
+// The request of `SubmitChannel`.
+message SubmitChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  SubmitChannelRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitChannel`.
+message SubmitChannelResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  SubmitChannelResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveChannel`.
+message ApproveChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  ApproveChannelRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveChannel`.
+message ApproveChannelResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  ApproveChannelResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectChannel`.
+message RejectChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  RejectChannelRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectChannel`.
+message RejectChannelResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  RejectChannelResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateChannel`.
+message EscalateChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  EscalateChannelRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateChannel`.
+message EscalateChannelResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  EscalateChannelResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateChannelApproval`.
+message DelegateChannelApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  DelegateChannelApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateChannelApproval`.
+message DelegateChannelApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  DelegateChannelApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallChannel`.
+message RecallChannelRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  Channel channel = 3;
+  RecallChannelRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallChannel`.
+message RecallChannelResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Channel channel = 1;
+  RecallChannelResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetChannelApprovalStatus`.
+message GetChannelApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string channel_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetChannelApprovalStatus`.
+message GetChannelApprovalStatusResponse {
+  Channel channel = 1;
+  acme.common.v1.OperationResult result = 2;
+}

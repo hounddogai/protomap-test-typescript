@@ -1,0 +1,335 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.localization.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/localization/v1/localization.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Localization.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/localization/v1;localizationv1";
+option java_multiple_files = true;
+option java_outer_classname = "LocaleCalculationServiceProto";
+option java_package = "com.acme.localization.v1";
+
+// Computes the figures of a locale, such as totals, taxes, and estimates.
+service LocaleCalculationService {
+  // Calculates a locale.
+  rpc CalculateLocale(CalculateLocaleRequest) returns (CalculateLocaleResponse);
+
+  // Estimates a locale.
+  rpc EstimateLocale(EstimateLocaleRequest) returns (EstimateLocaleResponse);
+
+  // Quotes a locale.
+  rpc QuoteLocale(QuoteLocaleRequest) returns (QuoteLocaleResponse);
+
+  // Compares a locale.
+  rpc CompareLocaleOptions(CompareLocaleOptionsRequest) returns (CompareLocaleOptionsResponse);
+
+  // Recalculates a locale.
+  rpc RecalculateLocales(RecalculateLocalesRequest) returns (RecalculateLocalesResponse);
+
+  // Simulates a locale.
+  rpc SimulateLocale(SimulateLocaleRequest) returns (SimulateLocaleResponse);
+
+  // Explains a locale.
+  rpc ExplainLocaleCalculation(ExplainLocaleCalculationRequest) returns (ExplainLocaleCalculationResponse);
+
+  // Returns a locale.
+  rpc GetLocaleRates(GetLocaleRatesRequest) returns (GetLocaleRatesResponse);
+}
+
+// The request of `CalculateLocale`.
+message CalculateLocaleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  CalculateLocaleRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateLocale`.
+message CalculateLocaleResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateLocaleResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Locale locale = 1;
+  CalculateLocaleResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateLocale`.
+message EstimateLocaleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  EstimateLocaleRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateLocale`.
+message EstimateLocaleResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateLocaleResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Locale locale = 1;
+  EstimateLocaleResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteLocale`.
+message QuoteLocaleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  QuoteLocaleRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteLocale`.
+message QuoteLocaleResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteLocaleResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Locale locale = 1;
+  QuoteLocaleResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareLocaleOptions`.
+message CompareLocaleOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  CompareLocaleOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareLocaleOptions`.
+message CompareLocaleOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareLocaleOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Locale locale = 1;
+  CompareLocaleOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculateLocales`.
+message RecalculateLocalesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  RecalculateLocalesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculateLocales`.
+message RecalculateLocalesResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculateLocalesResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Locale locale = 1;
+  RecalculateLocalesResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateLocale`.
+message SimulateLocaleRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  SimulateLocaleRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateLocale`.
+message SimulateLocaleResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateLocaleResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Locale locale = 1;
+  SimulateLocaleResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainLocaleCalculation`.
+message ExplainLocaleCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  Locale locale = 3;
+  ExplainLocaleCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainLocaleCalculation`.
+message ExplainLocaleCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Locale locale = 1;
+  ExplainLocaleCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetLocaleRates`.
+message GetLocaleRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string locale_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetLocaleRates`.
+message GetLocaleRatesResponse {
+  Locale locale = 1;
+  acme.common.v1.OperationResult result = 2;
+}

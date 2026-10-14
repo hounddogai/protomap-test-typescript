@@ -1,0 +1,333 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.messaging.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/identity/v1/refs.proto";
+import "acme/messaging/v1/messaging.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Messaging.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/messaging/v1;messagingv1";
+option java_multiple_files = true;
+option java_outer_classname = "ParticipantApprovalServiceProto";
+option java_package = "com.acme.messaging.v1";
+
+// Routes participants through approval, with escalation and delegation.
+service ParticipantApprovalService {
+  // Submits a participant.
+  rpc SubmitParticipant(SubmitParticipantRequest) returns (SubmitParticipantResponse);
+
+  // Approves a participant.
+  rpc ApproveParticipant(ApproveParticipantRequest) returns (ApproveParticipantResponse);
+
+  // Rejects a participant.
+  rpc RejectParticipant(RejectParticipantRequest) returns (RejectParticipantResponse);
+
+  // Escalates a participant.
+  rpc EscalateParticipant(EscalateParticipantRequest) returns (EscalateParticipantResponse);
+
+  // Lists participants a page at a time.
+  rpc ListPendingParticipants(ListPendingParticipantsRequest) returns (ListPendingParticipantsResponse);
+
+  // Delegates a participant.
+  rpc DelegateParticipantApproval(DelegateParticipantApprovalRequest) returns (DelegateParticipantApprovalResponse);
+
+  // Recalls a participant.
+  rpc RecallParticipant(RecallParticipantRequest) returns (RecallParticipantResponse);
+
+  // Returns a participant.
+  rpc GetParticipantApprovalStatus(GetParticipantApprovalStatusRequest) returns (GetParticipantApprovalStatusResponse);
+
+  // Comments a participant.
+  rpc CommentParticipantApproval(CommentParticipantApprovalRequest) returns (CommentParticipantApprovalResponse);
+}
+
+// The request of `SubmitParticipant`.
+message SubmitParticipantRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  Participant participant = 3;
+  SubmitParticipantRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitParticipant`.
+message SubmitParticipantResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Participant participant = 1;
+  SubmitParticipantResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveParticipant`.
+message ApproveParticipantRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  Participant participant = 3;
+  ApproveParticipantRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveParticipant`.
+message ApproveParticipantResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Participant participant = 1;
+  ApproveParticipantResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectParticipant`.
+message RejectParticipantRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  Participant participant = 3;
+  RejectParticipantRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectParticipant`.
+message RejectParticipantResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Participant participant = 1;
+  RejectParticipantResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateParticipant`.
+message EscalateParticipantRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  Participant participant = 3;
+  EscalateParticipantRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateParticipant`.
+message EscalateParticipantResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Participant participant = 1;
+  EscalateParticipantResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingParticipants`.
+message ListPendingParticipantsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ParticipantStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingParticipantsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingParticipants`.
+message ListPendingParticipantsResponse {
+  repeated Participant participants = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateParticipantApproval`.
+message DelegateParticipantApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  Participant participant = 3;
+  DelegateParticipantApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateParticipantApproval`.
+message DelegateParticipantApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Participant participant = 1;
+  DelegateParticipantApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallParticipant`.
+message RecallParticipantRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  Participant participant = 3;
+  RecallParticipantRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallParticipant`.
+message RecallParticipantResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Participant participant = 1;
+  RecallParticipantResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetParticipantApprovalStatus`.
+message GetParticipantApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetParticipantApprovalStatus`.
+message GetParticipantApprovalStatusResponse {
+  Participant participant = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentParticipantApproval`.
+message CommentParticipantApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string participant_id = 2;
+  Participant participant = 3;
+  CommentParticipantApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentParticipantApproval`.
+message CommentParticipantApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Participant participant = 1;
+  CommentParticipantApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

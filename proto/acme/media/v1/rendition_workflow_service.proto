@@ -1,0 +1,296 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.media.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/media/v1/media.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Media.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/media/v1;mediav1";
+option java_multiple_files = true;
+option java_outer_classname = "RenditionWorkflowServiceProto";
+option java_package = "com.acme.media.v1";
+
+// Runs the long-lived workflow that takes a rendition from start to finish.
+service RenditionWorkflowService {
+  // Starts a rendition.
+  rpc StartRenditionWorkflow(StartRenditionWorkflowRequest) returns (StartRenditionWorkflowResponse);
+
+  // Advances a rendition.
+  rpc AdvanceRenditionWorkflow(AdvanceRenditionWorkflowRequest) returns (AdvanceRenditionWorkflowResponse);
+
+  // Cancels a rendition.
+  rpc CancelRenditionWorkflow(CancelRenditionWorkflowRequest) returns (CancelRenditionWorkflowResponse);
+
+  // Retrys a rendition.
+  rpc RetryRenditionWorkflow(RetryRenditionWorkflowRequest) returns (RetryRenditionWorkflowResponse);
+
+  // Pauses a rendition.
+  rpc PauseRenditionWorkflow(PauseRenditionWorkflowRequest) returns (PauseRenditionWorkflowResponse);
+
+  // Returns a rendition.
+  rpc InspectRenditionWorkflow(InspectRenditionWorkflowRequest) returns (InspectRenditionWorkflowResponse);
+
+  // Lists renditions a page at a time.
+  rpc ListRenditionWorkflows(ListRenditionWorkflowsRequest) returns (ListRenditionWorkflowsResponse);
+
+  // Signals a rendition.
+  rpc SignalRenditionWorkflow(SignalRenditionWorkflowRequest) returns (SignalRenditionWorkflowResponse);
+}
+
+// The request of `StartRenditionWorkflow`.
+message StartRenditionWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  Rendition rendition = 3;
+  StartRenditionWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartRenditionWorkflow`.
+message StartRenditionWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  StartRenditionWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceRenditionWorkflow`.
+message AdvanceRenditionWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  Rendition rendition = 3;
+  AdvanceRenditionWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceRenditionWorkflow`.
+message AdvanceRenditionWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  AdvanceRenditionWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelRenditionWorkflow`.
+message CancelRenditionWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  Rendition rendition = 3;
+  CancelRenditionWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelRenditionWorkflow`.
+message CancelRenditionWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  CancelRenditionWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryRenditionWorkflow`.
+message RetryRenditionWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  Rendition rendition = 3;
+  RetryRenditionWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryRenditionWorkflow`.
+message RetryRenditionWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  RetryRenditionWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseRenditionWorkflow`.
+message PauseRenditionWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  Rendition rendition = 3;
+  PauseRenditionWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseRenditionWorkflow`.
+message PauseRenditionWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  PauseRenditionWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectRenditionWorkflow`.
+message InspectRenditionWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectRenditionWorkflow`.
+message InspectRenditionWorkflowResponse {
+  Rendition rendition = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListRenditionWorkflows`.
+message ListRenditionWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated RenditionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListRenditionWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListRenditionWorkflows`.
+message ListRenditionWorkflowsResponse {
+  repeated Rendition renditions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalRenditionWorkflow`.
+message SignalRenditionWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rendition_id = 2;
+  Rendition rendition = 3;
+  SignalRenditionWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalRenditionWorkflow`.
+message SignalRenditionWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Rendition rendition = 1;
+  SignalRenditionWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

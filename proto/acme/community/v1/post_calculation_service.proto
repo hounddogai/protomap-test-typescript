@@ -1,0 +1,253 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.community.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/community/v1/community.proto";
+import "google/protobuf/field_mask.proto";
+
+option csharp_namespace = "Acme.Community.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/community/v1;communityv1";
+option java_multiple_files = true;
+option java_outer_classname = "PostCalculationServiceProto";
+option java_package = "com.acme.community.v1";
+
+// Computes the figures of a post, such as totals, taxes, and estimates.
+service PostCalculationService {
+  // Calculates a post.
+  rpc CalculatePost(CalculatePostRequest) returns (CalculatePostResponse);
+
+  // Estimates a post.
+  rpc EstimatePost(EstimatePostRequest) returns (EstimatePostResponse);
+
+  // Quotes a post.
+  rpc QuotePost(QuotePostRequest) returns (QuotePostResponse);
+
+  // Compares a post.
+  rpc ComparePostOptions(ComparePostOptionsRequest) returns (ComparePostOptionsResponse);
+
+  // Simulates a post.
+  rpc SimulatePost(SimulatePostRequest) returns (SimulatePostResponse);
+
+  // Returns a post.
+  rpc GetPostRates(GetPostRatesRequest) returns (GetPostRatesResponse);
+}
+
+// The request of `CalculatePost`.
+message CalculatePostRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  Post post = 3;
+  CalculatePostRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculatePost`.
+message CalculatePostResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculatePostResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Post post = 1;
+  CalculatePostResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimatePost`.
+message EstimatePostRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  Post post = 3;
+  EstimatePostRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimatePost`.
+message EstimatePostResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimatePostResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Post post = 1;
+  EstimatePostResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuotePost`.
+message QuotePostRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  Post post = 3;
+  QuotePostRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuotePost`.
+message QuotePostResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuotePostResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Post post = 1;
+  QuotePostResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ComparePostOptions`.
+message ComparePostOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  Post post = 3;
+  ComparePostOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ComparePostOptions`.
+message ComparePostOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ComparePostOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Post post = 1;
+  ComparePostOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulatePost`.
+message SimulatePostRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  Post post = 3;
+  SimulatePostRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulatePost`.
+message SimulatePostResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulatePostResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  Post post = 1;
+  SimulatePostResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetPostRates`.
+message GetPostRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string post_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetPostRates`.
+message GetPostRatesResponse {
+  Post post = 1;
+  acme.common.v1.OperationResult result = 2;
+}

@@ -1,0 +1,334 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.content.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/content/v1/content.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Content.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/content/v1;contentv1";
+option java_multiple_files = true;
+option java_outer_classname = "ArticleWorkflowServiceProto";
+option java_package = "com.acme.content.v1";
+
+// Runs the long-lived workflow that takes an article from start to finish.
+service ArticleWorkflowService {
+  // Starts an article.
+  rpc StartArticleWorkflow(StartArticleWorkflowRequest) returns (StartArticleWorkflowResponse);
+
+  // Advances an article.
+  rpc AdvanceArticleWorkflow(AdvanceArticleWorkflowRequest) returns (AdvanceArticleWorkflowResponse);
+
+  // Cancels an article.
+  rpc CancelArticleWorkflow(CancelArticleWorkflowRequest) returns (CancelArticleWorkflowResponse);
+
+  // Retrys an article.
+  rpc RetryArticleWorkflow(RetryArticleWorkflowRequest) returns (RetryArticleWorkflowResponse);
+
+  // Pauses an article.
+  rpc PauseArticleWorkflow(PauseArticleWorkflowRequest) returns (PauseArticleWorkflowResponse);
+
+  // Resumes an article.
+  rpc ResumeArticleWorkflow(ResumeArticleWorkflowRequest) returns (ResumeArticleWorkflowResponse);
+
+  // Returns an article.
+  rpc InspectArticleWorkflow(InspectArticleWorkflowRequest) returns (InspectArticleWorkflowResponse);
+
+  // Lists articles a page at a time.
+  rpc ListArticleWorkflows(ListArticleWorkflowsRequest) returns (ListArticleWorkflowsResponse);
+
+  // Signals an article.
+  rpc SignalArticleWorkflow(SignalArticleWorkflowRequest) returns (SignalArticleWorkflowResponse);
+}
+
+// The request of `StartArticleWorkflow`.
+message StartArticleWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  StartArticleWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartArticleWorkflow`.
+message StartArticleWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Article article = 1;
+  StartArticleWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceArticleWorkflow`.
+message AdvanceArticleWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  AdvanceArticleWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceArticleWorkflow`.
+message AdvanceArticleWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Article article = 1;
+  AdvanceArticleWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelArticleWorkflow`.
+message CancelArticleWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  CancelArticleWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelArticleWorkflow`.
+message CancelArticleWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Article article = 1;
+  CancelArticleWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryArticleWorkflow`.
+message RetryArticleWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  RetryArticleWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryArticleWorkflow`.
+message RetryArticleWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Article article = 1;
+  RetryArticleWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PauseArticleWorkflow`.
+message PauseArticleWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  PauseArticleWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PauseArticleWorkflow`.
+message PauseArticleWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Article article = 1;
+  PauseArticleWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumeArticleWorkflow`.
+message ResumeArticleWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  ResumeArticleWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumeArticleWorkflow`.
+message ResumeArticleWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Article article = 1;
+  ResumeArticleWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `InspectArticleWorkflow`.
+message InspectArticleWorkflowRequest {
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `InspectArticleWorkflow`.
+message InspectArticleWorkflowResponse {
+  Article article = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListArticleWorkflows`.
+message ListArticleWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ArticleStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListArticleWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListArticleWorkflows`.
+message ListArticleWorkflowsResponse {
+  repeated Article articles = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SignalArticleWorkflow`.
+message SignalArticleWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string article_id = 2;
+  Article article = 3;
+  SignalArticleWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SignalArticleWorkflow`.
+message SignalArticleWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Article article = 1;
+  SignalArticleWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

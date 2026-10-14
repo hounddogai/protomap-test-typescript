@@ -1,0 +1,284 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.notifications.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/notifications/v1/notifications.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Notifications.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/notifications/v1;notificationsv1";
+option java_multiple_files = true;
+option java_outer_classname = "SubscriptionSyncServiceProto";
+option java_package = "com.acme.notifications.v1";
+
+// Keeps subscriptions in step with the systems of record in other regions.
+service SubscriptionSyncService {
+  // Syncs a subscription.
+  rpc SyncSubscriptions(SyncSubscriptionsRequest) returns (SyncSubscriptionsResponse);
+
+  // Pushs a subscription.
+  rpc PushSubscription(PushSubscriptionRequest) returns (PushSubscriptionResponse);
+
+  // Pulls a subscription.
+  rpc PullSubscriptions(PullSubscriptionsRequest) returns (PullSubscriptionsResponse);
+
+  // Reconciles a subscription.
+  rpc ReconcileSubscriptions(ReconcileSubscriptionsRequest) returns (ReconcileSubscriptionsResponse);
+
+  // Exchanges changes of subscriptions with a peer.
+  rpc StreamSubscriptionChanges(stream StreamSubscriptionChangesRequest) returns (stream StreamSubscriptionChangesResponse);
+
+  // Resolves a subscription.
+  rpc ResolveSubscriptionConflict(ResolveSubscriptionConflictRequest) returns (ResolveSubscriptionConflictResponse);
+
+  // Returns a subscription.
+  rpc GetSubscriptionSyncState(GetSubscriptionSyncStateRequest) returns (GetSubscriptionSyncStateResponse);
+
+  // Lists subscriptions a page at a time.
+  rpc ListSubscriptionConflicts(ListSubscriptionConflictsRequest) returns (ListSubscriptionConflictsResponse);
+}
+
+// The request of `SyncSubscriptions`.
+message SyncSubscriptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  Subscription subscription = 3;
+  SyncSubscriptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SyncSubscriptions`.
+message SyncSubscriptionsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Subscription subscription = 1;
+  SyncSubscriptionsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PushSubscription`.
+message PushSubscriptionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  Subscription subscription = 3;
+  PushSubscriptionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PushSubscription`.
+message PushSubscriptionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Subscription subscription = 1;
+  PushSubscriptionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PullSubscriptions`.
+message PullSubscriptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  Subscription subscription = 3;
+  PullSubscriptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PullSubscriptions`.
+message PullSubscriptionsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Subscription subscription = 1;
+  PullSubscriptionsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ReconcileSubscriptions`.
+message ReconcileSubscriptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  Subscription subscription = 3;
+  ReconcileSubscriptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ReconcileSubscriptions`.
+message ReconcileSubscriptionsResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Subscription subscription = 1;
+  ReconcileSubscriptionsResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `StreamSubscriptionChanges`.
+message StreamSubscriptionChangesRequest {
+  // An acknowledgment of a change the peer sent.
+  message ChangeAck {
+    int64 sequence = 1;
+    string status = 2;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  oneof frame {
+    Subscription change = 2;
+    StreamSubscriptionChangesRequest.ChangeAck ack = 3;
+  }
+  string cursor = 4;
+}
+
+// The response of `StreamSubscriptionChanges`.
+message StreamSubscriptionChangesResponse {
+  Subscription subscription = 1;
+  string change_type = 2;
+  google.protobuf.Timestamp changed_at = 3;
+  int64 sequence = 4;
+  acme.common.v1.OperationResult result = 5;
+}
+
+// The request of `ResolveSubscriptionConflict`.
+message ResolveSubscriptionConflictRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string cursor = 1;
+    bytes payload = 2;
+    string resolution = 3;
+    string peer_region = 4;
+    string checksum = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  Subscription subscription = 3;
+  ResolveSubscriptionConflictRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResolveSubscriptionConflict`.
+message ResolveSubscriptionConflictResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  Subscription subscription = 1;
+  ResolveSubscriptionConflictResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetSubscriptionSyncState`.
+message GetSubscriptionSyncStateRequest {
+  acme.common.v1.RequestContext context = 1;
+  string subscription_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetSubscriptionSyncState`.
+message GetSubscriptionSyncStateResponse {
+  Subscription subscription = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `ListSubscriptionConflicts`.
+message ListSubscriptionConflictsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated SubscriptionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListSubscriptionConflictsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListSubscriptionConflicts`.
+message ListSubscriptionConflictsResponse {
+  repeated Subscription subscriptions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}

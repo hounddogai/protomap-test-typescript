@@ -1,0 +1,292 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.notifications.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/notifications/v1/notifications.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Notifications.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/notifications/v1;notificationsv1";
+option java_multiple_files = true;
+option java_outer_classname = "NotificationTemplateCalculationServiceProto";
+option java_package = "com.acme.notifications.v1";
+
+// Computes the figures of a notification template, such as totals, taxes, and estimates.
+service NotificationTemplateCalculationService {
+  // Calculates a notification template.
+  rpc CalculateNotificationTemplate(CalculateNotificationTemplateRequest) returns (CalculateNotificationTemplateResponse);
+
+  // Estimates a notification template.
+  rpc EstimateNotificationTemplate(EstimateNotificationTemplateRequest) returns (EstimateNotificationTemplateResponse);
+
+  // Compares a notification template.
+  rpc CompareNotificationTemplateOptions(CompareNotificationTemplateOptionsRequest) returns (CompareNotificationTemplateOptionsResponse);
+
+  // Recalculates a notification template.
+  rpc RecalculateNotificationTemplates(RecalculateNotificationTemplatesRequest) returns (RecalculateNotificationTemplatesResponse);
+
+  // Simulates a notification template.
+  rpc SimulateNotificationTemplate(SimulateNotificationTemplateRequest) returns (SimulateNotificationTemplateResponse);
+
+  // Explains a notification template.
+  rpc ExplainNotificationTemplateCalculation(ExplainNotificationTemplateCalculationRequest) returns (ExplainNotificationTemplateCalculationResponse);
+
+  // Returns a notification template.
+  rpc GetNotificationTemplateRates(GetNotificationTemplateRatesRequest) returns (GetNotificationTemplateRatesResponse);
+}
+
+// The request of `CalculateNotificationTemplate`.
+message CalculateNotificationTemplateRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  NotificationTemplate notification_template = 3;
+  CalculateNotificationTemplateRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateNotificationTemplate`.
+message CalculateNotificationTemplateResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateNotificationTemplateResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  NotificationTemplate notification_template = 1;
+  CalculateNotificationTemplateResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateNotificationTemplate`.
+message EstimateNotificationTemplateRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  NotificationTemplate notification_template = 3;
+  EstimateNotificationTemplateRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateNotificationTemplate`.
+message EstimateNotificationTemplateResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateNotificationTemplateResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  NotificationTemplate notification_template = 1;
+  EstimateNotificationTemplateResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareNotificationTemplateOptions`.
+message CompareNotificationTemplateOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  NotificationTemplate notification_template = 3;
+  CompareNotificationTemplateOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareNotificationTemplateOptions`.
+message CompareNotificationTemplateOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareNotificationTemplateOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  NotificationTemplate notification_template = 1;
+  CompareNotificationTemplateOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculateNotificationTemplates`.
+message RecalculateNotificationTemplatesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  NotificationTemplate notification_template = 3;
+  RecalculateNotificationTemplatesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculateNotificationTemplates`.
+message RecalculateNotificationTemplatesResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculateNotificationTemplatesResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  NotificationTemplate notification_template = 1;
+  RecalculateNotificationTemplatesResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateNotificationTemplate`.
+message SimulateNotificationTemplateRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  NotificationTemplate notification_template = 3;
+  SimulateNotificationTemplateRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateNotificationTemplate`.
+message SimulateNotificationTemplateResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateNotificationTemplateResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  NotificationTemplate notification_template = 1;
+  SimulateNotificationTemplateResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainNotificationTemplateCalculation`.
+message ExplainNotificationTemplateCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  NotificationTemplate notification_template = 3;
+  ExplainNotificationTemplateCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainNotificationTemplateCalculation`.
+message ExplainNotificationTemplateCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  NotificationTemplate notification_template = 1;
+  ExplainNotificationTemplateCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetNotificationTemplateRates`.
+message GetNotificationTemplateRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string notification_template_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetNotificationTemplateRates`.
+message GetNotificationTemplateRatesResponse {
+  NotificationTemplate notification_template = 1;
+  acme.common.v1.OperationResult result = 2;
+}

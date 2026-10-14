@@ -1,0 +1,278 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.forms.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/forms/v1/forms.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Forms.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/forms/v1;formsv1";
+option java_multiple_files = true;
+option java_outer_classname = "FormFieldApprovalServiceProto";
+option java_package = "com.acme.forms.v1";
+
+// Routes form fields through approval, with escalation and delegation.
+service FormFieldApprovalService {
+  // Submits a form field.
+  rpc SubmitFormField(SubmitFormFieldRequest) returns (SubmitFormFieldResponse);
+
+  // Approves a form field.
+  rpc ApproveFormField(ApproveFormFieldRequest) returns (ApproveFormFieldResponse);
+
+  // Rejects a form field.
+  rpc RejectFormField(RejectFormFieldRequest) returns (RejectFormFieldResponse);
+
+  // Escalates a form field.
+  rpc EscalateFormField(EscalateFormFieldRequest) returns (EscalateFormFieldResponse);
+
+  // Lists form fields a page at a time.
+  rpc ListPendingFormFields(ListPendingFormFieldsRequest) returns (ListPendingFormFieldsResponse);
+
+  // Delegates a form field.
+  rpc DelegateFormFieldApproval(DelegateFormFieldApprovalRequest) returns (DelegateFormFieldApprovalResponse);
+
+  // Comments a form field.
+  rpc CommentFormFieldApproval(CommentFormFieldApprovalRequest) returns (CommentFormFieldApprovalResponse);
+}
+
+// The request of `SubmitFormField`.
+message SubmitFormFieldRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  FormField form_field = 3;
+  SubmitFormFieldRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitFormField`.
+message SubmitFormFieldResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormField form_field = 1;
+  SubmitFormFieldResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveFormField`.
+message ApproveFormFieldRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  FormField form_field = 3;
+  ApproveFormFieldRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveFormField`.
+message ApproveFormFieldResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormField form_field = 1;
+  ApproveFormFieldResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectFormField`.
+message RejectFormFieldRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  FormField form_field = 3;
+  RejectFormFieldRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectFormField`.
+message RejectFormFieldResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormField form_field = 1;
+  RejectFormFieldResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateFormField`.
+message EscalateFormFieldRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  FormField form_field = 3;
+  EscalateFormFieldRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateFormField`.
+message EscalateFormFieldResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormField form_field = 1;
+  EscalateFormFieldResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingFormFields`.
+message ListPendingFormFieldsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated FormFieldStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingFormFieldsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingFormFields`.
+message ListPendingFormFieldsResponse {
+  repeated FormField form_fields = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateFormFieldApproval`.
+message DelegateFormFieldApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  FormField form_field = 3;
+  DelegateFormFieldApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateFormFieldApproval`.
+message DelegateFormFieldApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormField form_field = 1;
+  DelegateFormFieldApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CommentFormFieldApproval`.
+message CommentFormFieldApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string form_field_id = 2;
+  FormField form_field = 3;
+  CommentFormFieldApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentFormFieldApproval`.
+message CommentFormFieldApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  FormField form_field = 1;
+  CommentFormFieldApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

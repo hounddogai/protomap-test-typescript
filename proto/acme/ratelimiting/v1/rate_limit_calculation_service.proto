@@ -1,0 +1,335 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.ratelimiting.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/ratelimiting/v1/ratelimiting.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Ratelimiting.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/ratelimiting/v1;ratelimitingv1";
+option java_multiple_files = true;
+option java_outer_classname = "RateLimitCalculationServiceProto";
+option java_package = "com.acme.ratelimiting.v1";
+
+// Computes the figures of a rate limit, such as totals, taxes, and estimates.
+service RateLimitCalculationService {
+  // Calculates a rate limit.
+  rpc CalculateRateLimit(CalculateRateLimitRequest) returns (CalculateRateLimitResponse);
+
+  // Estimates a rate limit.
+  rpc EstimateRateLimit(EstimateRateLimitRequest) returns (EstimateRateLimitResponse);
+
+  // Quotes a rate limit.
+  rpc QuoteRateLimit(QuoteRateLimitRequest) returns (QuoteRateLimitResponse);
+
+  // Compares a rate limit.
+  rpc CompareRateLimitOptions(CompareRateLimitOptionsRequest) returns (CompareRateLimitOptionsResponse);
+
+  // Recalculates a rate limit.
+  rpc RecalculateRateLimits(RecalculateRateLimitsRequest) returns (RecalculateRateLimitsResponse);
+
+  // Simulates a rate limit.
+  rpc SimulateRateLimit(SimulateRateLimitRequest) returns (SimulateRateLimitResponse);
+
+  // Explains a rate limit.
+  rpc ExplainRateLimitCalculation(ExplainRateLimitCalculationRequest) returns (ExplainRateLimitCalculationResponse);
+
+  // Returns a rate limit.
+  rpc GetRateLimitRates(GetRateLimitRatesRequest) returns (GetRateLimitRatesResponse);
+}
+
+// The request of `CalculateRateLimit`.
+message CalculateRateLimitRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rate_limit_id = 2;
+  RateLimit rate_limit = 3;
+  CalculateRateLimitRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CalculateRateLimit`.
+message CalculateRateLimitResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CalculateRateLimitResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  RateLimit rate_limit = 1;
+  CalculateRateLimitResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EstimateRateLimit`.
+message EstimateRateLimitRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rate_limit_id = 2;
+  RateLimit rate_limit = 3;
+  EstimateRateLimitRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EstimateRateLimit`.
+message EstimateRateLimitResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated EstimateRateLimitResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  RateLimit rate_limit = 1;
+  EstimateRateLimitResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `QuoteRateLimit`.
+message QuoteRateLimitRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rate_limit_id = 2;
+  RateLimit rate_limit = 3;
+  QuoteRateLimitRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `QuoteRateLimit`.
+message QuoteRateLimitResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated QuoteRateLimitResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  RateLimit rate_limit = 1;
+  QuoteRateLimitResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CompareRateLimitOptions`.
+message CompareRateLimitOptionsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rate_limit_id = 2;
+  RateLimit rate_limit = 3;
+  CompareRateLimitOptionsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CompareRateLimitOptions`.
+message CompareRateLimitOptionsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated CompareRateLimitOptionsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  RateLimit rate_limit = 1;
+  CompareRateLimitOptionsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecalculateRateLimits`.
+message RecalculateRateLimitsRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rate_limit_id = 2;
+  RateLimit rate_limit = 3;
+  RecalculateRateLimitsRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecalculateRateLimits`.
+message RecalculateRateLimitsResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated RecalculateRateLimitsResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  RateLimit rate_limit = 1;
+  RecalculateRateLimitsResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `SimulateRateLimit`.
+message SimulateRateLimitRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rate_limit_id = 2;
+  RateLimit rate_limit = 3;
+  SimulateRateLimitRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SimulateRateLimit`.
+message SimulateRateLimitResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated SimulateRateLimitResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  RateLimit rate_limit = 1;
+  SimulateRateLimitResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainRateLimitCalculation`.
+message ExplainRateLimitCalculationRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string rate_limit_id = 2;
+  RateLimit rate_limit = 3;
+  ExplainRateLimitCalculationRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainRateLimitCalculation`.
+message ExplainRateLimitCalculationResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  RateLimit rate_limit = 1;
+  ExplainRateLimitCalculationResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetRateLimitRates`.
+message GetRateLimitRatesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string rate_limit_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetRateLimitRates`.
+message GetRateLimitRatesResponse {
+  RateLimit rate_limit = 1;
+  acme.common.v1.OperationResult result = 2;
+}

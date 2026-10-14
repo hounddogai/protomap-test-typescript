@@ -1,0 +1,268 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.webhooks.v1;
+
+import "acme/common/v1/address.proto";
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/money.proto";
+import "acme/common/v1/operation.proto";
+import "acme/webhooks/v1/webhooks.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Webhooks.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/webhooks/v1;webhooksv1";
+option java_multiple_files = true;
+option java_outer_classname = "WebhookDeliveryValidationServiceProto";
+option java_package = "com.acme.webhooks.v1";
+
+// Checks webhook deliveries against the rules before anything acts on them.
+service WebhookDeliveryValidationService {
+  // Validates a webhook delivery.
+  rpc ValidateWebhookDelivery(ValidateWebhookDeliveryRequest) returns (ValidateWebhookDeliveryResponse);
+
+  // Previews a webhook delivery.
+  rpc PreviewWebhookDelivery(PreviewWebhookDeliveryRequest) returns (PreviewWebhookDeliveryResponse);
+
+  // Checks a webhook delivery.
+  rpc CheckWebhookDeliveryEligibility(CheckWebhookDeliveryEligibilityRequest) returns (CheckWebhookDeliveryEligibilityResponse);
+
+  // Explains a webhook delivery.
+  rpc ExplainWebhookDeliveryDecision(ExplainWebhookDeliveryDecisionRequest) returns (ExplainWebhookDeliveryDecisionResponse);
+
+  // Scores a webhook delivery.
+  rpc ScoreWebhookDelivery(ScoreWebhookDeliveryRequest) returns (ScoreWebhookDeliveryResponse);
+
+  // Lints a webhook delivery.
+  rpc LintWebhookDeliveries(LintWebhookDeliveriesRequest) returns (LintWebhookDeliveriesResponse);
+
+  // Returns a webhook delivery.
+  rpc GetWebhookDeliveryRules(GetWebhookDeliveryRulesRequest) returns (GetWebhookDeliveryRulesResponse);
+}
+
+// The request of `ValidateWebhookDelivery`.
+message ValidateWebhookDeliveryRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_delivery_id = 2;
+  WebhookDelivery webhook_delivery = 3;
+  ValidateWebhookDeliveryRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ValidateWebhookDelivery`.
+message ValidateWebhookDeliveryResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookDelivery webhook_delivery = 1;
+  ValidateWebhookDeliveryResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `PreviewWebhookDelivery`.
+message PreviewWebhookDeliveryRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_delivery_id = 2;
+  WebhookDelivery webhook_delivery = 3;
+  PreviewWebhookDeliveryRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `PreviewWebhookDelivery`.
+message PreviewWebhookDeliveryResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookDelivery webhook_delivery = 1;
+  PreviewWebhookDeliveryResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CheckWebhookDeliveryEligibility`.
+message CheckWebhookDeliveryEligibilityRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_delivery_id = 2;
+  WebhookDelivery webhook_delivery = 3;
+  CheckWebhookDeliveryEligibilityRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CheckWebhookDeliveryEligibility`.
+message CheckWebhookDeliveryEligibilityResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookDelivery webhook_delivery = 1;
+  CheckWebhookDeliveryEligibilityResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ExplainWebhookDeliveryDecision`.
+message ExplainWebhookDeliveryDecisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_delivery_id = 2;
+  WebhookDelivery webhook_delivery = 3;
+  ExplainWebhookDeliveryDecisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ExplainWebhookDeliveryDecision`.
+message ExplainWebhookDeliveryDecisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookDelivery webhook_delivery = 1;
+  ExplainWebhookDeliveryDecisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ScoreWebhookDelivery`.
+message ScoreWebhookDeliveryRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string currency_code = 1;
+    acme.common.v1.PostalAddress destination = 2;
+    repeated string scenario_ids = 3;
+    bool include_breakdown = 4;
+    acme.common.v1.Money budget = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_delivery_id = 2;
+  WebhookDelivery webhook_delivery = 3;
+  ScoreWebhookDeliveryRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ScoreWebhookDelivery`.
+message ScoreWebhookDeliveryResponse {
+  // How a figure was reached.
+  message Breakdown {
+    // One line of a breakdown.
+    message Line {
+      string label = 1;
+      acme.common.v1.Money amount = 2;
+      double rate = 3;
+    }
+
+    acme.common.v1.Money total = 1;
+    repeated ScoreWebhookDeliveryResponse.Breakdown.Line lines = 2;
+    string currency_code = 3;
+  }
+
+  WebhookDelivery webhook_delivery = 1;
+  ScoreWebhookDeliveryResponse.Breakdown breakdown = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `LintWebhookDeliveries`.
+message LintWebhookDeliveriesRequest {
+  // What the operation needs besides the record.
+  message Details {
+    repeated string rules = 1;
+    bool strict = 2;
+    string locale = 3;
+    acme.common.v1.ContactInfo contact = 4;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string webhook_delivery_id = 2;
+  WebhookDelivery webhook_delivery = 3;
+  LintWebhookDeliveriesRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `LintWebhookDeliveries`.
+message LintWebhookDeliveriesResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  WebhookDelivery webhook_delivery = 1;
+  LintWebhookDeliveriesResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetWebhookDeliveryRules`.
+message GetWebhookDeliveryRulesRequest {
+  acme.common.v1.RequestContext context = 1;
+  string webhook_delivery_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetWebhookDeliveryRules`.
+message GetWebhookDeliveryRulesResponse {
+  WebhookDelivery webhook_delivery = 1;
+  acme.common.v1.OperationResult result = 2;
+}

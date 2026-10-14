@@ -1,0 +1,333 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.content.v1;
+
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/content/v1/content.proto";
+import "acme/identity/v1/refs.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Content.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/content/v1;contentv1";
+option java_multiple_files = true;
+option java_outer_classname = "ContentRevisionApprovalServiceProto";
+option java_package = "com.acme.content.v1";
+
+// Routes content revisions through approval, with escalation and delegation.
+service ContentRevisionApprovalService {
+  // Submits a content revision.
+  rpc SubmitContentRevision(SubmitContentRevisionRequest) returns (SubmitContentRevisionResponse);
+
+  // Approves a content revision.
+  rpc ApproveContentRevision(ApproveContentRevisionRequest) returns (ApproveContentRevisionResponse);
+
+  // Rejects a content revision.
+  rpc RejectContentRevision(RejectContentRevisionRequest) returns (RejectContentRevisionResponse);
+
+  // Escalates a content revision.
+  rpc EscalateContentRevision(EscalateContentRevisionRequest) returns (EscalateContentRevisionResponse);
+
+  // Lists content revisions a page at a time.
+  rpc ListPendingContentRevisions(ListPendingContentRevisionsRequest) returns (ListPendingContentRevisionsResponse);
+
+  // Delegates a content revision.
+  rpc DelegateContentRevisionApproval(DelegateContentRevisionApprovalRequest) returns (DelegateContentRevisionApprovalResponse);
+
+  // Recalls a content revision.
+  rpc RecallContentRevision(RecallContentRevisionRequest) returns (RecallContentRevisionResponse);
+
+  // Returns a content revision.
+  rpc GetContentRevisionApprovalStatus(GetContentRevisionApprovalStatusRequest) returns (GetContentRevisionApprovalStatusResponse);
+
+  // Comments a content revision.
+  rpc CommentContentRevisionApproval(CommentContentRevisionApprovalRequest) returns (CommentContentRevisionApprovalResponse);
+}
+
+// The request of `SubmitContentRevision`.
+message SubmitContentRevisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  SubmitContentRevisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `SubmitContentRevision`.
+message SubmitContentRevisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentRevision content_revision = 1;
+  SubmitContentRevisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ApproveContentRevision`.
+message ApproveContentRevisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  ApproveContentRevisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ApproveContentRevision`.
+message ApproveContentRevisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentRevision content_revision = 1;
+  ApproveContentRevisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RejectContentRevision`.
+message RejectContentRevisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  RejectContentRevisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RejectContentRevision`.
+message RejectContentRevisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentRevision content_revision = 1;
+  RejectContentRevisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `EscalateContentRevision`.
+message EscalateContentRevisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  EscalateContentRevisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `EscalateContentRevision`.
+message EscalateContentRevisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentRevision content_revision = 1;
+  EscalateContentRevisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListPendingContentRevisions`.
+message ListPendingContentRevisionsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ContentRevisionStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListPendingContentRevisionsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListPendingContentRevisions`.
+message ListPendingContentRevisionsResponse {
+  repeated ContentRevision content_revisions = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `DelegateContentRevisionApproval`.
+message DelegateContentRevisionApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  DelegateContentRevisionApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `DelegateContentRevisionApproval`.
+message DelegateContentRevisionApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentRevision content_revision = 1;
+  DelegateContentRevisionApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RecallContentRevision`.
+message RecallContentRevisionRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  RecallContentRevisionRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RecallContentRevision`.
+message RecallContentRevisionResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentRevision content_revision = 1;
+  RecallContentRevisionResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `GetContentRevisionApprovalStatus`.
+message GetContentRevisionApprovalStatusRequest {
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// The response of `GetContentRevisionApprovalStatus`.
+message GetContentRevisionApprovalStatusResponse {
+  ContentRevision content_revision = 1;
+  acme.common.v1.OperationResult result = 2;
+}
+
+// The request of `CommentContentRevisionApproval`.
+message CommentContentRevisionApprovalRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string approver_email = 1;
+    string comment = 2;
+    repeated string conditions = 3;
+    google.protobuf.Timestamp effective_at = 4;
+    acme.identity.v1.UserRef approver = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_revision_id = 2;
+  ContentRevision content_revision = 3;
+  CommentContentRevisionApprovalRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CommentContentRevisionApproval`.
+message CommentContentRevisionApprovalResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentRevision content_revision = 1;
+  CommentContentRevisionApprovalResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}

@@ -1,0 +1,241 @@
+// Copyright 2026 Acme Corp. All rights reserved.
+// Use of this file is governed by the Acme API license in LICENSE.
+
+syntax = "proto3";
+
+package acme.content.v1;
+
+import "acme/common/v1/contact.proto";
+import "acme/common/v1/context.proto";
+import "acme/common/v1/operation.proto";
+import "acme/common/v1/paging.proto";
+import "acme/content/v1/content.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Acme.Content.V1";
+option go_package = "github.com/hounddogai/protomap-test-golang/gen/acme/content/v1;contentv1";
+option java_multiple_files = true;
+option java_outer_classname = "ContentBlockWorkflowServiceProto";
+option java_package = "com.acme.content.v1";
+
+// Runs the long-lived workflow that takes a content block from start to finish.
+service ContentBlockWorkflowService {
+  // Starts a content block.
+  rpc StartContentBlockWorkflow(StartContentBlockWorkflowRequest) returns (StartContentBlockWorkflowResponse);
+
+  // Advances a content block.
+  rpc AdvanceContentBlockWorkflow(AdvanceContentBlockWorkflowRequest) returns (AdvanceContentBlockWorkflowResponse);
+
+  // Cancels a content block.
+  rpc CancelContentBlockWorkflow(CancelContentBlockWorkflowRequest) returns (CancelContentBlockWorkflowResponse);
+
+  // Retrys a content block.
+  rpc RetryContentBlockWorkflow(RetryContentBlockWorkflowRequest) returns (RetryContentBlockWorkflowResponse);
+
+  // Resumes a content block.
+  rpc ResumeContentBlockWorkflow(ResumeContentBlockWorkflowRequest) returns (ResumeContentBlockWorkflowResponse);
+
+  // Lists content blocks a page at a time.
+  rpc ListContentBlockWorkflows(ListContentBlockWorkflowsRequest) returns (ListContentBlockWorkflowsResponse);
+}
+
+// The request of `StartContentBlockWorkflow`.
+message StartContentBlockWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_block_id = 2;
+  ContentBlock content_block = 3;
+  StartContentBlockWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `StartContentBlockWorkflow`.
+message StartContentBlockWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentBlock content_block = 1;
+  StartContentBlockWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `AdvanceContentBlockWorkflow`.
+message AdvanceContentBlockWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_block_id = 2;
+  ContentBlock content_block = 3;
+  AdvanceContentBlockWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `AdvanceContentBlockWorkflow`.
+message AdvanceContentBlockWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentBlock content_block = 1;
+  AdvanceContentBlockWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `CancelContentBlockWorkflow`.
+message CancelContentBlockWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_block_id = 2;
+  ContentBlock content_block = 3;
+  CancelContentBlockWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `CancelContentBlockWorkflow`.
+message CancelContentBlockWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentBlock content_block = 1;
+  CancelContentBlockWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `RetryContentBlockWorkflow`.
+message RetryContentBlockWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_block_id = 2;
+  ContentBlock content_block = 3;
+  RetryContentBlockWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `RetryContentBlockWorkflow`.
+message RetryContentBlockWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentBlock content_block = 1;
+  RetryContentBlockWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ResumeContentBlockWorkflow`.
+message ResumeContentBlockWorkflowRequest {
+  // What the operation needs besides the record.
+  message Details {
+    string step = 1;
+    map<string, string> parameters = 2;
+    google.protobuf.Duration timeout = 3;
+    string initiated_by = 4;
+    acme.common.v1.ContactInfo notify = 5;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  string content_block_id = 2;
+  ContentBlock content_block = 3;
+  ResumeContentBlockWorkflowRequest.Details details = 4;
+  string reason = 5;
+  map<string, string> annotations = 6;
+}
+
+// The response of `ResumeContentBlockWorkflow`.
+message ResumeContentBlockWorkflowResponse {
+  // What the operation decided.
+  message Outcome {
+    string status = 1;
+    string message = 2;
+    string reference_id = 3;
+    repeated string next_steps = 4;
+    google.protobuf.Timestamp effective_at = 5;
+  }
+
+  ContentBlock content_block = 1;
+  ResumeContentBlockWorkflowResponse.Outcome outcome = 2;
+  acme.common.v1.OperationResult result = 3;
+}
+
+// The request of `ListContentBlockWorkflows`.
+message ListContentBlockWorkflowsRequest {
+  // Which records to include.
+  message Filter {
+    string query = 1;
+    repeated ContentBlockStatus statuses = 2;
+    google.protobuf.Timestamp created_after = 3;
+    map<string, string> labels = 4;
+    string owner_id = 5;
+    string region = 6;
+  }
+
+  acme.common.v1.RequestContext context = 1;
+  acme.common.v1.PageRequest page = 2;
+  ListContentBlockWorkflowsRequest.Filter filter = 3;
+  string order_by = 4;
+}
+
+// The response of `ListContentBlockWorkflows`.
+message ListContentBlockWorkflowsResponse {
+  repeated ContentBlock content_blocks = 1;
+  acme.common.v1.PageInfo page_info = 2;
+  acme.common.v1.OperationResult result = 3;
+}
